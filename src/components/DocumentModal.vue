@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue'
+import type { Document } from '../stores/chroma'
+import { useChromaStore } from '../stores/chroma'
 
-interface Document {
-  id: string
-  metadata: Record<string, any>
-  document: string
-}
-
+const chromaStore = useChromaStore()
 const props = defineProps<{
   show: boolean
   document: Document | null
@@ -24,11 +21,16 @@ const closeModal = () => {
   emit('close')
 }
 
-const handleDelete = () => {
-  if (props.document) {
-    emit('delete', props.document.id)
+const handleDelete = async () => {
+  if (props.document && chromaStore.currentCollection) {
+    try {
+      await chromaStore.deleteDocument(chromaStore.currentCollection, props.document.id)
+      emit('delete', props.document.id)
+      closeModal()
+    } catch (error) {
+      console.error('Failed to delete document:', error)
+    }
   }
-  closeModal()
 }
 
 const stringifyMetadata = (metadata: Record<string, any>) => {

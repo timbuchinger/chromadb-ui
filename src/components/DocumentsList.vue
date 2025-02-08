@@ -1,27 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useChromaStore } from '../stores/chroma'
 import DocumentModal from './DocumentModal.vue'
+import type { Document } from '../stores/chroma'
 
-interface Document {
-  id: string
-  metadata: Record<string, any>
-  document: string
-}
-
-// Example documents for static display
-const documents = ref<Document[]>([
-  {
-    id: 'doc1',
-    metadata: { source: 'example.txt', author: 'John Doe', date: '2025-02-08' },
-    document: 'This is a sample document with some content that will need to be truncated when displayed in the table view.'
-  },
-  {
-    id: 'doc2',
-    metadata: { source: 'sample.pdf', author: 'Jane Smith', date: '2025-02-07' },
-    document: 'Another example document with different content that demonstrates the truncation functionality.'
-  }
-])
-
+const chromaStore = useChromaStore()
 const selectedDocument = ref<Document | null>(null)
 const showModal = ref(false)
 
@@ -44,21 +27,38 @@ const closeModal = () => {
   selectedDocument.value = null
 }
 
-const handleDeleteDocument = (id: string) => {
-  // In the future, this will make an API call to delete the document
-  documents.value = documents.value.filter(doc => doc.id !== id)
+const handleDeleteDocument = async (id: string) => {
+  if (chromaStore.currentCollection) {
+    try {
+      await chromaStore.deleteDocument(chromaStore.currentCollection, id)
+    } catch (error) {
+      console.error('Failed to delete document:', error)
+    }
+  }
 }
 </script>
 
 <template>
   <div>
-    <div class="mb-4 flex justify-between items-center">
-      <h2 class="text-lg font-medium text-[#1F2937] dark:text-[#F9FAFB]">
-        Documents ({{ documents.length }})
-      </h2>
+    <!-- Loading state -->
+    <div v-if="chromaStore.loading" class="text-center text-gray-500 dark:text-gray-400 py-4">
+      Loading...
     </div>
 
-    <div class="overflow-x-auto">
+    <!-- Error state -->
+    <div v-else-if="chromaStore.error" class="text-center text-red-500 py-4">
+      {{ chromaStore.error }}
+    </div>
+
+    <!-- Documents list -->
+    <div v-else>
+      <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-lg font-medium text-[#1F2937] dark:text-[#F9FAFB]">
+          Documents ({{ chromaStore.documents.length }})
+        </h2>
+      </div>
+
+      <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
@@ -75,7 +75,7 @@ const handleDeleteDocument = (id: string) => {
         </thead>
         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           <tr
-            v-for="doc in documents"
+            v-for="doc in chromaStore.documents"
             :key="doc.id"
             @click="openDocument(doc)"
             class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
@@ -92,6 +92,7 @@ const handleDeleteDocument = (id: string) => {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 

@@ -7,13 +7,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../components/LoginScreen.vue')
+      component: () => import('../components/LoginScreen.vue'),
+      meta: { title: 'ChromaDB UI - Login' }
     },
     {
       path: '/',
       name: 'collections',
       component: () => import('../components/CollectionsScreen.vue'),
-      meta: { requiresAuth: true }
+      meta: {
+        requiresAuth: true,
+        title: 'ChromaDB UI - Collections'
+      }
     }
   ]
 })
@@ -29,6 +33,11 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+
+// Update page title after each navigation
+router.afterEach((to) => {
+  document.title = to.meta.title as string || 'ChromaDB UI'
 })
 
 export default router
