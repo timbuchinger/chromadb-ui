@@ -1,17 +1,21 @@
 # AI Instructions
 
 1. Write code that is maintainable by .
-2. Only generated code that is required.
+2. Only generate code that is required.
 
 ## Project Specific Instructions
 
-1. Use Alembic for all database schema changes. Do NOT make database schema changes outside Alembic.
+This project will be a web-based UI for ChromaDB, allowing users to browse collections and search documents within them.
 
+1. Leverage Vue components for reusability and modularity.
+2. Use the ChromaDB library for all interactions with the database: <https://www.npmjs.com/package/chromadb>.
+3. Use a responsive design.
 
 ## Tech Stack
 
-Review the list of tools in the tech stack below. If a tool outside of this list would be more appropriate, provide the option to the user.
+Review the list of tools in the tech stack below. If a tool outside of this list would be more appropriate, provide the option to the user. Otherwise, use only the tools listed below.
 
-* Python is used for all code.
-* PostgreSQL is used for the database.
-* Gradio is used for visualizations.
+* Vue with TypeScript.
+* TailwindCSS v4 for styling.
+* Heroicons are used, as needed.
+* Dark mode and light modes are available.
