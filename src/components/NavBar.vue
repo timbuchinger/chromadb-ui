@@ -1,15 +1,24 @@
-<!-- NavBar.vue -->
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import ThemeToggle from './ThemeToggle.vue'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+function handleLogout() {
+  authStore.logout()
+  router.push('/login')
+}
 </script>
 
 <template>
-  <nav class="bg-[#F3F4F6] dark:bg-[#1F2937] border-b border-[#E5E7EB] dark:border-[#374151]">
+  <nav class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left side -->
         <div class="flex items-center">
-          <button class="text-[#1F2937] dark:text-[#F9FAFB] hover:text-[#2563EB] dark:hover:text-[#3B82F6] font-medium">
+          <button class="text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
             Collections
           </button>
         </div>
@@ -17,7 +26,10 @@ import ThemeToggle from './ThemeToggle.vue'
         <!-- Right side -->
         <div class="flex items-center space-x-4">
           <ThemeToggle />
-          <button class="text-[#1F2937] dark:text-[#F9FAFB] hover:text-[#8B5CF6] dark:hover:text-[#A78BFA] font-medium">
+          <button
+            @click="handleLogout"
+            class="text-gray-800 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 font-medium"
+          >
             Logout
           </button>
         </div>
