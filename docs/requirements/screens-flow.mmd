@@ -1,0 +1,15 @@
+graph TD
+    %% Collections View
+    subgraph Collections
+        E[Collections Screen]
+        F[Collection: notes]
+        G[Collection: pdfs]
+        H[Collection: images]
+
+        E --> F & G & H
+
+        %% Action buttons for each collection
+        F --> I1[View<br>inoperable] & J1[Delete<br>inoperable]
+        G --> I2[View<br>inoperable] & J2[Delete<br>inoperable]
+        H --> I3[View<br>inoperable] & J3[Delete<br>inoperable]
+    end
