@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useViewStore } from '../stores/view'
 import ThemeToggle from './ThemeToggle.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const viewStore = useViewStore()
 
 function handleLogout() {
   authStore.logout()
@@ -18,9 +20,14 @@ function handleLogout() {
       <div class="flex items-center justify-between h-16">
         <!-- Left side -->
         <div class="flex items-center">
-          <button class="text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
-            Collections
-          </button>
+          <div class="flex items-center space-x-4">
+            <button
+              class="text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              @click="viewStore.toggleView"
+            >
+              {{ viewStore.isTableView ? 'Table View' : 'Card View' }}
+            </button>
+          </div>
         </div>
 
         <!-- Right side -->
