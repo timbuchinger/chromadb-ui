@@ -5,5 +5,11 @@ export default defineConfig({
   plugins: [vue()],
   css: {
     postcss: './postcss.config.js'
+  },
+  optimizeDeps: {
+    exclude: ['chromadb']
+  },
+  build: {
+    target: 'esnext'
   }
 })

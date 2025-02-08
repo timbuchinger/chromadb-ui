@@ -6,11 +6,3 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-body {
-  @apply min-h-screen bg-white dark:bg-[#111827] text-[#1F2937] dark:text-[#F9FAFB];
-}
-
-#app {
-  @apply min-h-screen;
-}
