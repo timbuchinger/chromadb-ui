@@ -9,4 +9,4 @@ As a user, I want to be able to trigger between light, dark and default mode for
 ## Acceptance Critera
 
 1. Default (or system) is the default value that will inherit its value from the setting the user has configured in their system.
-2. The uesr can toggle through light, dark and system.
+2. The user can toggle through light, dark and system.
