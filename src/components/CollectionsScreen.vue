@@ -1,35 +1,22 @@
+<!-- CollectionsScreen.vue -->
 <script setup lang="ts">
-const collections = ['notes', 'pdfs', 'images'];
-
-const handleView = () => {
-  // Inoperable at this stage
-};
-
-const handleDelete = () => {
-  // Inoperable at this stage
-};
+// Import ChromaDB when we implement collection functionality
 </script>
 
 <template>
-  <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Collections</h2>
-    <ul class="space-y-4">
-      <li v-for="collection in collections" :key="collection"
-          class="flex items-center justify-between p-4 bg-white rounded-lg shadow">
-        <span class="text-lg text-gray-800">{{ collection }}</span>
-        <div class="space-x-2">
-          <button
-            @click="handleView"
-            class="px-4 py-2 text-blue-600 border border-blue-600 rounded hover:bg-blue-50">
-            View
-          </button>
-          <button
-            @click="handleDelete"
-            class="px-4 py-2 text-red-600 border border-red-600 rounded hover:bg-red-50">
-            Delete
-          </button>
+  <div class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+        Collections
+      </h1>
+      <div class="mt-6">
+        <!-- Collection cards will be added here -->
+        <div class="bg-white dark:bg-[#111827] border border-[#E5E7EB] dark:border-[#374151] rounded-lg p-4">
+          <p class="text-[#6B7280] dark:text-[#9CA3AF]">
+            No collections found
+          </p>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
