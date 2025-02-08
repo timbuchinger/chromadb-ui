@@ -10,6 +10,8 @@ This project will be a web-based UI for ChromaDB, allowing users to browse colle
 1. Leverage Vue components for reusability and modularity.
 2. Use the ChromaDB library for all interactions with the database: <https://www.npmjs.com/package/chromadb>.
 3. Use a responsive design.
+4. Use the ChromaDB OpenAPI spec: <http://localhost:8000/openapi.json>
+5. Keep docs/screens.flow.mmd up to date as changes are made.
 
 ## Tech Stack
 

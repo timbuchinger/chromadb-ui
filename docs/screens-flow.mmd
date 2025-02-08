@@ -1,0 +1,19 @@
+graph TD
+    %% Login Flow
+    A[Login Screen] -->|Successful Auth| B[Collections Screen]
+    A -->|Failed Auth| A
+
+    %% Authentication Guard
+    C[Any Screen] -->|No Auth| A
+
+    %% Collections View
+    subgraph Collections
+        B --> D[Collection: notes]
+        B --> E[Collection: pdfs]
+        B --> F[Collection: images]
+
+        %% Action buttons for each collection
+        D --> G1[View] & H1[Delete]
+        E --> G2[View] & H2[Delete]
+        F --> G3[View] & H3[Delete]
+    end
