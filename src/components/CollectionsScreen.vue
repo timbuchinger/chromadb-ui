@@ -9,7 +9,7 @@ const chromaStore = useChromaStore()
 
 const showDocuments = computed(() => chromaStore.currentCollection !== null)
 
-// Load collections when component mounts
+// Fetch collections when component mounts
 onMounted(async () => {
   try {
     await chromaStore.fetchCollections()
@@ -56,8 +56,13 @@ const handleReturnToCollections = () => {
         {{ chromaStore.error }}
       </div>
 
+      <!-- Empty state -->
+      <div v-else-if="!showDocuments && chromaStore.collections.length === 0" class="mt-6 text-center text-gray-500 dark:text-gray-400">
+        There are no collections.
+      </div>
+
       <!-- Collections list -->
-      <div v-else-if="!showDocuments" :class="[
+      <div v-else-if="!showDocuments && chromaStore.collections.length > 0" :class="[
         'mt-6',
         viewStore.isTableView ? 'divide-y divide-gray-200 dark:divide-gray-700' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
       ]">
