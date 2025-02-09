@@ -13,7 +13,7 @@ function handleLogout() {
 </script>
 
 <template>
-  <nav class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+  <nav class="bg-surface-secondary-light dark:bg-surface-secondary-dark border-b border-border-primary-light dark:border-border-primary-dark">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left side -->
@@ -21,7 +21,7 @@ function handleLogout() {
           <img src="/icon.png" alt="App Logo" class="h-8 w-8 mr-4" />
           <div class="flex items-center space-x-4">
             <button
-              class="text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              class="text-content-primary-light dark:text-content-primary-dark hover:text-accent-primary font-medium"
               @click="router.push('/')"
             >
               Collections
@@ -34,7 +34,7 @@ function handleLogout() {
           <ThemeToggle />
           <button
             @click="handleLogout"
-            class="text-gray-800 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 font-medium"
+            class="text-content-primary-light dark:text-content-primary-dark hover:text-accent-secondary font-medium"
           >
             Logout
           </button>

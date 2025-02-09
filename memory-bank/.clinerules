@@ -3,27 +3,31 @@
 ## Project Patterns
 
 ### File Organization
+
 1. Vue components are organized by feature/screen
 2. Requirements are structured hierarchically in docs/requirements/
 3. Core system files are separated by function (stores, composables, etc.)
 
 ### Component Naming
+
 - Screen components end with 'Screen' (e.g., CollectionsScreen)
 - Modal components end with 'Modal' (e.g., AddCollectionModal)
 - List components end with 'List' (e.g., DocumentsList)
 
 ### Styling Patterns
+
 1. TailwindCSS is the primary styling solution
 2. Dark/Light theme support is required for all components
 3. Input and button styles follow consistent patterns
 4. Color schemes are strictly defined for both themes
 
 ### Implementation Practices
+
 1. Collections:
    - Names must be lowercase, numbers, dashes, underscores only
    - No duplicate names allowed
    - List views paginate at 20 items
-   
+
 2. Modals:
    - Used for collection creation
    - Used for deletion confirmation
@@ -37,6 +41,7 @@
 ## Project Context
 
 ### Memory Bank Files
+
 1. Located in /memory-bank directory
 2. Core files:
    - projectbrief.md: Core requirements and goals
@@ -47,6 +52,7 @@
    - progress.md: Feature tracking
 
 ### Development Flow
+
 1. Features start with requirements in docs/requirements/
 2. Screen components handle layout and composition
 3. Feature components provide specific functionality
@@ -55,12 +61,20 @@
 ## Tool Usage Patterns
 
 ### File Operations
+
 - Use replace_in_file for targeted changes
 - Use write_to_file for new files or complete rewrites
 - Check memory bank before making structural changes
 
 ### Documentation
+
 - Update activeContext.md for current work
 - Update progress.md for feature status
 - Update systemPatterns.md for new patterns
 - Keep .clinerules updated with new insights
+- Follow markdown-lint standards:
+  - ATX-style headers
+  - Language-specified code blocks
+  - 120-char line length limit
+  - No trailing spaces
+  - Single blank lines between sections

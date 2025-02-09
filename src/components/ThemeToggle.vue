@@ -7,7 +7,7 @@ const { theme, cycleTheme } = useTheme()
 
 <template>
   <button
-    class="p-2 rounded-md text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+    class="p-2 rounded-md text-content-primary-light dark:text-content-primary-dark hover:bg-surface-secondary-light dark:hover:bg-surface-secondary-dark transition-colors duration-200"
     @click="cycleTheme"
     :title="`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`"
   >

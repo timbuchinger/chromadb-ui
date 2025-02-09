@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules",
+    "lint:md:fix": "markdownlint --fix '**/*.md' --ignore node_modules"
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
@@ -24,6 +26,7 @@
     "tailwindcss": "^3.2.4",
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "markdownlint-cli": "^0.39.0"
   }
 }

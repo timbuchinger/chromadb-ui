@@ -3,23 +3,27 @@
 ## Architecture Overview
 
 ### Component Structure
+
 - Vue.js Single File Components (.vue)
 - Organized by feature/screen
 - Modal components for overlays
 - Shared components for reusability
 
 ### State Management
+
 - Pinia stores for state management
   - auth.ts: Authentication state
   - chroma.ts: ChromaDB data and operations
 
 ### Routing
+
 - Vue Router based navigation
 - Protected routes requiring authentication
 
 ## Design Patterns
 
 ### Component Patterns
+
 1. Screen Components
    - High-level view components
    - Handle layout and composition
@@ -36,6 +40,7 @@
    - Examples: ThemeToggle, NavBar
 
 ### State Management Patterns
+
 1. Authentication Flow
    - Centralized auth state
    - Login/logout handling
@@ -47,6 +52,7 @@
    - API interaction patterns
 
 ### UI Patterns
+
 1. Modal Pattern
    - Used for collection creation
    - Confirmation dialogs
@@ -64,26 +70,51 @@
 
 ## Common Implementation Patterns
 
-### Input Styling
+### Common UI Patterns
+
+#### Input Fields
+
 ```css
 relative block w-full rounded-md border-0 py-1.5 px-3 
-text-gray-900 dark:text-white 
-dark:bg-gray-800 
-ring-1 ring-inset ring-gray-300 dark:ring-gray-700 
+text-content-primary-light dark:text-content-primary-dark 
+dark:bg-surface-secondary-dark 
+ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark 
 placeholder:text-gray-400 
-focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 
+focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary 
 sm:text-sm sm:leading-6
 ```
 
-### Button Styling
+#### Primary Button
+
 ```css
-rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white 
-hover:bg-purple-600 
-focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 
+rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white 
+hover:bg-accent-secondary 
+focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary 
 disabled:opacity-50
 ```
 
+#### Status Indicators
+
+```css
+/* Success */
+bg-status-success-bg-light dark:bg-status-success-bg-dark 
+text-status-success-text-light dark:text-status-success-text-dark
+
+/* Error */
+bg-status-error-bg-light dark:bg-status-error-bg-dark 
+text-status-error-text-light dark:text-status-error-text-dark
+
+/* Warning */
+bg-status-warning-bg-light dark:bg-status-warning-bg-dark 
+text-status-warning-text-light dark:text-status-warning-text-dark
+
+/* Info */
+bg-status-info-bg-light dark:bg-status-info-bg-dark 
+text-status-info-text-light dark:text-status-info-text-dark
+```
+
 ### Collection Name Validation
+
 - Lowercase letters
 - Numbers
 - Dashes
@@ -93,6 +124,7 @@ disabled:opacity-50
 ## Testing Patterns
 
 ### E2E Test Structure
+
 - Page Object Model for test organization
 - Custom commands for common operations
 - Viewport configurations for responsive testing
@@ -100,12 +132,14 @@ disabled:opacity-50
 - Reusable test utilities
 
 ### Test Data Management
+
 - Fixture-based test data
 - Dynamic data generation
 - Clean state between tests
 - Mocked API responses when needed
 
 ### Common Test Patterns
+
 1. Navigation Testing
    - Route transitions
    - Protected route handling
@@ -130,8 +164,41 @@ disabled:opacity-50
    - State changes
 
 ### CI/CD Integration Patterns
+
 - PR validation workflow
 - Test report generation
 - Screenshot comparisons
 - Performance metrics tracking
 - Test failure notifications
+
+## Documentation Patterns
+
+### Markdown Standards
+
+1. Header Structure
+   - Use ATX-style headers (`#` instead of `===`)
+   - Headers must increment by one level only
+   - Headers must be surrounded by blank lines
+   - First heading should be level 1
+
+2. Code Block Standards
+   - All code blocks must specify a language
+   - Code blocks must be surrounded by blank lines
+   - Use triple backticks for fenced code blocks
+
+3. Content Guidelines
+   - Maximum line length of 120 characters
+   - No trailing spaces allowed
+   - Single blank line between sections
+   - No HTML tags in markdown (except where required)
+
+4. File Organization
+   - Each file must start with a level 1 heading
+   - Logical section progression
+   - Clear hierarchy in headings
+
+### Documentation Tools
+
+- markdownlint for style enforcement
+- Configuration in `.markdownlint.json`
+- Integrated with development workflow

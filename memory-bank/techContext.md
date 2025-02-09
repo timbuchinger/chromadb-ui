@@ -3,16 +3,19 @@
 ## Development Stack
 
 ### Frontend Framework
+
 - Vue.js 3
 - Vue Router for navigation
 - Pinia for state management
 
 ### Build Tools
+
 - Vite
 - TypeScript configuration
 - PostCSS for CSS processing
 
 ### Styling
+
 - TailwindCSS for utility-first styling
 - Custom theme configuration
 - Dark/Light mode support
@@ -20,7 +23,8 @@
 ## Project Structure
 
 ### Core Directories
-```
+
+```plaintext
 src/
 ├── components/     # Vue components
 ├── composables/    # Vue composable functions
@@ -30,6 +34,7 @@ src/
 ```
 
 ### Key Files
+
 - `vite.config.ts` - Vite configuration
 - `tsconfig.json` - TypeScript configuration
 - `tailwind.config.cjs` - TailwindCSS configuration
@@ -38,12 +43,14 @@ src/
 ## Dependencies
 
 ### Production Dependencies
+
 - Vue.js ecosystem
   - Vue 3
   - Vue Router
   - Pinia
 
 ### Development Dependencies
+
 - Build tools
   - Vite
   - TypeScript
@@ -55,9 +62,13 @@ src/
 - Styling
   - TailwindCSS
   - PostCSS plugins
+- Documentation
+  - markdownlint for Markdown style enforcement
 
 ## Testing Infrastructure
+
 ### E2E Tests (Cypress)
+
 - Test directory: /tests/e2e/
 - Key test areas:
   - Navigation flows
@@ -66,11 +77,13 @@ src/
   - Collection operations
 
 ### Unit Tests (Vitest)
+
 - Integration with Vue Test Utils
 - Component-level testing
 - Store testing
 
 ### CI/CD Integration
+
 - GitHub Actions workflow
 - Automated test runs on PRs
 - Test report generation
@@ -78,35 +91,65 @@ src/
 ## Development Environment
 
 ### Requirements
+
 - Node.js
 - npm/yarn
 - Docker (optional, for containerized development)
 
 ### Docker Support
+
 - Dockerfile provided
 - docker-compose configuration available
 - Environment variables managed via .env file
 
 ## Theme Configuration
 
-### Light Mode Colors
-- Primary background: `bg-gray-50`
-- Secondary background: `bg-gray-100`
-- Text: `text-gray-900`
-- Border: `ring-gray-300`
+### Theme Colors
 
-### Dark Mode Colors
-- Primary background: `bg-gray-900`
-- Secondary background: `bg-gray-800`
-- Text: `text-white`
-- Border: `ring-gray-700`
+#### Surface Colors
 
-### Accent Colors
-- Primary: `blue-600`
-- Secondary: `purple-600`
-- Error: `red-500`
+- Primary:
+  - Light: `bg-surface-primary-light` (gray-50)
+  - Dark: `bg-surface-primary-dark` (gray-900)
+- Secondary:
+  - Light: `bg-surface-secondary-light` (gray-100)
+  - Dark: `bg-surface-secondary-dark` (gray-800)
+
+#### Content Colors
+
+- Primary:
+  - Light: `text-content-primary-light` (gray-900)
+  - Dark: `text-content-primary-dark` (white)
+
+#### Border Colors
+
+- Primary:
+  - Light: `border-border-primary-light` (gray-300)
+  - Dark: `border-border-primary-dark` (gray-700)
+
+#### Accent Colors
+
+- Primary: `accent-primary` (blue-600)
+- Secondary: `accent-secondary` (purple-600)
+- Error: `accent-error` (red-500)
+
+#### Status Colors
+
+- Success:
+  - Background: `bg-status-success-bg-light/dark`
+  - Text: `text-status-success-text-light/dark`
+- Error:
+  - Background: `bg-status-error-bg-light/dark`
+  - Text: `text-status-error-text-light/dark`
+- Warning:
+  - Background: `bg-status-warning-bg-light/dark`
+  - Text: `text-status-warning-text-light/dark`
+- Info:
+  - Background: `bg-status-info-bg-light/dark`
+  - Text: `text-status-info-text-light/dark`
 
 ## Technical Constraints
+
 1. Collection names:
    - Must be unique
    - Allow only lowercase letters, numbers, dashes, underscores

@@ -7,10 +7,10 @@
         :class="[
           'rounded-md p-4 shadow-lg cursor-pointer transform transition-all duration-300',
           {
-            'bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-100': notification.type === 'success',
-            'bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-100': notification.type === 'error',
-            'bg-yellow-50 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-100': notification.type === 'warning',
-            'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-100': notification.type === 'info'
+            'bg-status-success-bg-light dark:bg-status-success-bg-dark text-status-success-text-light dark:text-status-success-text-dark': notification.type === 'success',
+            'bg-status-error-bg-light dark:bg-status-error-bg-dark text-status-error-text-light dark:text-status-error-text-dark': notification.type === 'error',
+            'bg-status-warning-bg-light dark:bg-status-warning-bg-dark text-status-warning-text-light dark:text-status-warning-text-dark': notification.type === 'warning',
+            'bg-status-info-bg-light dark:bg-status-info-bg-dark text-status-info-text-light dark:text-status-info-text-dark': notification.type === 'info'
           }
         ]"
         @click="removeNotification(notification.id)"
