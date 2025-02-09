@@ -98,6 +98,7 @@ export const useChromaStore = defineStore('chroma', {
       if (!collection) {
         this.error = 'Collection not found'
         notificationStore.error(this.error || 'Collection not found')
+        return
       }
 
       this.currentCollection = collection
@@ -159,7 +160,7 @@ export const useChromaStore = defineStore('chroma', {
         notificationStore.success('Document deleted successfully');
       });
       return loadingResult;
-    }
+    },
 
     async createCollection(name: string) {
       const authStore = useAuthStore()

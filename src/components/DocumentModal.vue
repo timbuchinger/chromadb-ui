@@ -24,7 +24,7 @@ const closeModal = () => {
 const handleDelete = async () => {
   if (props.document && chromaStore.currentCollection) {
     try {
-      await chromaStore.deleteDocument(chromaStore.currentCollection, props.document.id)
+      await chromaStore.deleteDocument(chromaStore.currentCollection.name, props.document.id)
       emit('delete', props.document.id)
       closeModal()
     } catch (error) {

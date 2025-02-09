@@ -61,7 +61,7 @@
 
 ## Planned Features
 
-- [ ] Add Gemini Flash 2.0 Provider (High Priority)
+- [x] Add Gemini Flash 2.0 Provider (High Priority)
   - Enhanced AI capabilities for Cline
   - Integration with existing infrastructure
   - Provider configuration and documentation
@@ -86,13 +86,7 @@
 
 ## Known Issues
 
-1. Document Deletion (High Priority)
-   - Document deletion fails with "Collection not found" error
-   - Error messages displayed redundantly in three locations
-   - Need to consolidate error handling to use notification system
-   - Requires immediate attention for core functionality
-
-2. Metadata Management (High Priority)
+1. Metadata Management (High Priority)
    - Cannot remove individual metadata items in Add Document modal
    - Must close modal and start fresh to remove fields
    - Missing remove functionality for each metadata field
