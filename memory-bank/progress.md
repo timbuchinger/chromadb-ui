@@ -64,19 +64,6 @@
 
 1. Colors inconsistent on login screen
 
-## Technical Debt
-
-1. Extract primary and secondary colors into common Tailwind config
-   - Define primary and secondary colors centrally in tailwind.config.cjs
-   - Refactor codebase to reference these colors consistently
-   - Improves maintainability and consistency of theming
-
-2. Extract Add Document Modal to its own component
-   - Move modal code from DocumentsList.vue to AddDocumentModal.vue
-   - Consistent with project pattern of separate modal components
-   - Improves code organization and maintainability
-   - Reduces complexity in DocumentsList.vue
-
 ## Next Development Priorities
 
 1. Complete document management interface
