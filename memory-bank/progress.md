@@ -20,7 +20,6 @@
 - [x] Navigation bar
 - [x] Dark/Light mode toggle
 - [x] Consistent theme implementation
-- [x] Notification system
 
 ### Collections Management
 - [x] Collections list view
@@ -36,22 +35,24 @@
 - [ ] Loading states implementation
 
 ## Planned Features
+- [ ] Notification system for user feedback
 - [ ] Search functionality
 - [ ] Sorting and filtering
 - [ ] Batch operations
 - [ ] Performance optimizations
 
 ## Known Issues
-1. None documented at initialization
+1. Missing notification system for user feedback and error handling
 
 ## Technical Debt
 1. None identified at initialization
 
 ## Next Development Priorities
-1. Complete document management interface
-2. Implement advanced collection features
-3. Add loading states for better UX
-4. Enhance error handling
+1. Implement notification system for user feedback
+2. Complete document management interface
+3. Implement advanced collection features
+4. Add loading states for better UX
+5. Enhance error handling
 
 ## Testing Status
 - Basic functionality tested
