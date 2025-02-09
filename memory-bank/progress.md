@@ -132,10 +132,14 @@
     - Once logged in, refreshing the page redirects to the login screen
     - Users should remain authenticated after a refresh
 
-13. Navbar UI Enhancements
+14. Navbar UI Enhancements
     - Add app name to the right of the logo with distinct styling
     - Add GitHub link beside the light/dark toggle
     - Fix inconsistent hover states for Collections and Logout links
+
+15. Add Document Modal UI Issue
+    - When adding the first field, the 'Add Field' button jumps
+    - 'Clear All' button should be placed to the left of 'Add Field'
 
 ## Next Development Priorities
 

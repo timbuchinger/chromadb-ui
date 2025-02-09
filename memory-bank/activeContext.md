@@ -122,6 +122,11 @@
    - Implement proper auth state management
    - Tags: ux, auth
 
+15. Enhance Add Document Modal UI
+    - Fix the jumping 'Add Field' button when adding the first field
+    - Ensure 'Clear All' button is placed to the left of 'Add Field'
+    - Tags: ux
+
 13. Enhance Navbar Branding and Navigation
    - Add app name next to logo with distinct styling
    - Add GitHub link (https://github.com/timbuchinger/chromadb-ui)
