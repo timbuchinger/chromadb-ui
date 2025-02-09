@@ -53,24 +53,47 @@
    - Document management
    - API interaction patterns
 
-3. Loading State Management
-   - Centralized loading states
-   - Support for multiple concurrent operations
-   - withLoading helper for async operations
-   - Loading state tracking by operation type
+3. Loading State Pattern
+   - **Store Integration:**
+     - Centralized loading state in Pinia store (loading.ts)
+     - Loading states tracked by operation type
+     - Helper methods for managing loading states
+     - Support for concurrent loading states
+     - withLoading utility for async operations
+   
+   - **Component Integration:**
+     - LoadingSpinner for active operations
+       - Size variants: sm, md, lg
+       - Theme-aware styling
+       - Button loading states
+     - LoadingSkeleton for content placeholders
+       - Matches final content dimensions
+       - Preserves layout during loading
+       - Theme-aware styling
+     - Layout Stability
+       - Fixed height containers
+       - Consistent dimensions between states
+       - Fixed column widths in tables
+       - Content placement preservation
+     - Error State Handling
+       - Clear loading on error
+       - Error notifications
+       - Graceful state transitions
+       - Layout stability maintained
 
 ### Authentication Persistence
 
 1.  **Storage:**
-    -   Utilizes `localStorage` to persist authentication state across page reloads.
+    - Utilizes `localStorage` to persist authentication state across page reloads
 
 2.  **Token Management:**
-    -   Authentication tokens are stored in `localStorage` upon successful login.
-    -   Tokens are removed from `localStorage` upon logout.
+    - Authentication tokens stored in `localStorage` upon login
+    - Tokens removed from `localStorage` upon logout
 
 3.  **Session Recovery:**
-    -   On page load, the application checks for existing authentication data in `localStorage`.
-    -   If valid data is found, the authentication state is restored, allowing the user to bypass the login screen.
+    - Checks for existing authentication data on page load
+    - Restores authentication state if valid data found
+    - Bypasses login screen for authenticated users
 
 ### UI Patterns
 
@@ -89,27 +112,20 @@
    - Consistent color schemes
    - TailwindCSS utility classes
 
-4. Loading Pattern
-   - Spinner component with size variants
-   - Skeleton loading for content placeholders
-   - Theme-aware loading states
-   - Loading state for buttons and operations
-   - Full-screen loading overlay option
-
 ### Metadata Management
 
 1.  **Type Selection:**
-    -   Users can select the data type for each metadata field using a dropdown menu.
-    -   Supported data types: String, Integer, Float, Boolean.
+    - Data type selection via dropdown menu
+    - Supported types: String, Integer, Float, Boolean
 
 2.  **Validation:**
-    -   The application validates the metadata values based on the selected data type.
-    -   Error messages are displayed if the values do not match the selected data type.
+    - Type-based value validation
+    - Error messages for invalid data
 
 3.  **UI Interactions:**
-    -   Add Field button to add new metadata fields.
-    -   Clear All button to clear all metadata fields.
-    -   Remove button to remove individual metadata fields.
+    - Add Field button for new fields
+    - Clear All button for reset
+    - Remove button per field
 
 ## Common Implementation Patterns
 
@@ -136,22 +152,19 @@ focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 foc
 disabled:opacity-50
 ```
 
-#### Loading Spinner
+#### Loading Components
 
 ```css
-/* Base */
+/* Spinner Base */
 animate-spin rounded-full border-4 border-surface-secondary-light dark:border-surface-secondary-dark
 border-t-accent-primary
 
-/* Sizes */
+/* Spinner Sizes */
 sm: h-4 w-4
 md: h-8 w-8
 lg: h-12 w-12
-```
 
-#### Loading Skeleton
-
-```css
+/* Skeleton */
 animate-pulse bg-surface-secondary-light dark:bg-surface-secondary-dark rounded
 ```
 
@@ -182,29 +195,6 @@ text-status-info-text-light dark:text-status-info-text-dark
 - Dashes
 - Underscores
 - No duplicates allowed
-
-### Loading State Management
-
-1. Store Pattern
-   - Centralized loading state in Pinia store
-   - Loading states tracked by operation type
-   - Helper methods for managing loading states
-   - Support for concurrent loading states
-
-2. Component Integration
-   - LoadingSpinner for active operations
-   - LoadingSkeleton for content placeholders during data fetching
-   - Skeleton layouts match final content dimensions
-   - Consistent heights between loading/loaded states
-   - Layout preservation during state transitions
-   - Fixed column widths in tables
-   - Disabled states during loading
-
-3. Error Handling
-   - Loading states cleared on error
-   - Error notifications with loading feedback
-   - Graceful error state transitions
-   - Maintains consistent layout during error states
 
 ## Testing Patterns
 

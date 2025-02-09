@@ -2,20 +2,6 @@
 
 ## Implemented Features
 
-### Core Infrastructure & UI Components
-
-- [x] Notification system
-  - Success/Error/Warning/Info types
-  - Auto-dismiss functionality
-  - Dark/Light mode compatible
-
-- [x] Loading system
-  - Centralized loading state management
-  - LoadingSpinner component with size variants
-  - LoadingSkeleton for content placeholders
-  - Loading states in all operations
-  - Theme-aware loading indicators
-
 ### Core Infrastructure
 
 - [x] Project setup with Vue.js and Vite
@@ -23,6 +9,8 @@
 - [x] TypeScript configuration
 - [x] Router setup
 - [x] State management with Pinia
+- [x] Loading system (see systemPatterns.md for details)
+- [x] Notification system with auto-dismiss and theme support
 
 ### Authentication
 
@@ -80,7 +68,7 @@
 
 - [ ] Add navbar to Login screen
   - Ensures consistent UI across all screens
-  - Provides light/dark mode toggle functionality to users on the Login screen
+  - Provides light/dark mode toggle functionality
   - Maintains app's visual identity pre-authentication
 
 - [ ] Add metadata type selection
@@ -106,423 +94,37 @@
    - Two success notifications appear when deleting a document
    - Need to consolidate notification handling to a single point
 
-3. Content Layout Issues
-   - Content jumps during navigation when loading indicator appears
-   - Need to implement better layout preservation during loading states
-   - Implement fixed height containers or skeleton placeholders
+3. Navigation Content Layout
+   - Content jumps during navigation due to loading indicator
+   - Need to implement fixed height containers or skeleton placeholders
+   - Affects user experience during page transitions
 
-4. Awkward Delete Confirmation UX
+4. Delete Confirmation UX
    - In DocumentModal, delete and confirm buttons are red and far apart
    - Should switch position of confirm button for better flow
 
-5. Protocol dropdown in dark mode has white background
-   - Fixed by adding dark:[&>option]:bg-surface-secondary-dark to select element
-   - Now follows dark theme color scheme
+5. Protocol Dropdown Theme Issue
+   - White background in dark mode
+   - Fixed with dark:[&>option]:bg-surface-secondary-dark
 
-5. Favicon not displaying in browser tab
-   - Need to investigate favicon.ico configuration in index.html
-   - Ensure proper path and format for browser compatibility
+6. Favicon Missing
+   - Not displaying in browser tab
+   - Need to verify favicon.ico configuration
 
-6. Notifications UI
-   - Notifications expand too far to the right and need width limiting
-   - Text should wrap when it exceeds the width limit
-   - Close button in top-right corner is missing or hard to see
+7. Notifications UI
+   - Width needs limiting and text wrapping
+   - Close button visibility needs improvement
+   - Better layout management needed
 
-8. Content Layout
-   - Content jumps during navigation when loading indicator appears
-   - Need to implement better layout preservation during loading states
+8. Documents Screen Contrast
+   - Header color matches active row
+   - Need to improve color contrast for visual hierarchy
 
-11. Documents Screen Color Scheme
-   - Header has the same color as the active row
-   - Need to improve color contrast for better visual hierarchy
+9. Navbar Enhancements Needed
+   - Add app name with distinct styling
+   - Add GitHub link
+   - Fix hover states for navigation links
 
-14. Navbar UI Enhancements
-    - Add app name to the right of the logo with distinct styling
-    - Add GitHub link beside the light/dark toggle
-    - Fix inconsistent hover states for Collections and Logout links
-
-15. Add Document Modal UI Issue
-    - When adding the first field, the 'Add Field' button jumps
-    - 'Clear All' button should be placed to the left of 'Add Field'
-</file_content>
-</error>
-</tool_code>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
-</step>
-<step>
-<tool_code>
-<tool_name>
-</tool_name>
+10. Add Document Modal Layout
+    - 'Add Field' button jumps on first field addition
+    - 'Clear All' button positioning needs adjustment

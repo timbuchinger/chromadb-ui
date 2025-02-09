@@ -23,26 +23,17 @@
   - Optional values support
   - Improved UX with clear validation feedback
   - Enhanced form validation to show all errors simultaneously
+
 - Created initial memory bank structure
 - Documented core project requirements
 - Captured technical patterns and constraints
 - Established product context
-- Implemented comprehensive loading system:
-  - Loading store for state management
-  - LoadingSpinner component with size variants
-  - LoadingSkeleton component for content placeholders
-  - Loading states integrated in Collections and Documents screens
-  - Loading indicators in all modals
-- Fixed double notifications issue by removing notification from store's deleteDocument action
-- Improved Metadata Management UI:
-  - Fixed remove button visibility
-  - Added clear all functionality
-  - Improved validation feedback
-- Implemented Layout Stability Improvements:
-  - Added fixed height containers to CollectionsScreen and CollectionScreen
-- Implemented Authentication Persistence:
-  - Stored authentication state in localStorage
-  - Added automatic session recovery on page load
+
+- Implemented comprehensive loading system (see systemPatterns.md for details)
+- Fixed double notifications issue
+- Improved Metadata Management UI
+- Implemented Layout Stability Improvements
+- Implemented Authentication Persistence
 
 ## Current Work Focus
 
@@ -98,33 +89,33 @@
    - Add skeleton placeholders
    - Ensure smooth transitions during loading states
 
-5. Fix notification system UX issues
+4. Fix notification system UX issues
    - High value: affects all error/success feedback
    - Low effort: mainly CSS changes for width/wrapping
    - Add visible close button
    - Will improve overall user experience
 
-7. Resolve content jumping during navigation
+5. Resolve content jumping during navigation
    - High value: affects user experience on every page transition
    - Medium effort: implement fixed height containers or skeleton placeholders
    - Critical for professional feel of the application
 
-9. Add metadata type selection
+6. Add metadata type selection
    - High value: ensures proper data handling in ChromaDB
    - Medium effort: UI updates and validation logic
    - Will prevent data type mismatches and improve data quality
 
-11. Add navbar to Login screen
+7. Add navbar to Login screen
    - Medium value: consistent UI and theme toggle access
    - Low effort: reuse existing navbar component
    - Quick win for user experience improvement
 
-15. Enhance Add Document Modal UI
-    - Fix the jumping 'Add Field' button when adding the first field
-    - Ensure 'Clear All' button is placed to the left of 'Add Field'
-    - Tags: ux
+8. Enhance Add Document Modal UI
+   - Fix the jumping 'Add Field' button when adding the first field
+   - Ensure 'Clear All' button is placed to the left of 'Add Field'
+   - Tags: ux
 
-13. Enhance Navbar Branding and Navigation
+9. Enhance Navbar Branding and Navigation
    - Add app name next to logo with distinct styling
    - Add GitHub link (https://github.com/timbuchinger/chromadb-ui)
    - Fix hover states for Collections and Logout links
