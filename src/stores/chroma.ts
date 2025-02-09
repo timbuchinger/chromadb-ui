@@ -157,7 +157,6 @@ export const useChromaStore = defineStore('chroma', {
         );
 
         this.documents = this.documents.filter(doc => doc.id !== documentId);
-        notificationStore.success('Document deleted successfully');
       });
       return loadingResult;
     },

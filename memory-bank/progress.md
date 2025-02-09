@@ -37,6 +37,7 @@
 - [x] Navigation bar
 - [x] Dark/Light mode toggle
 - [x] Consistent theme implementation
+- [x] Fixed height containers in CollectionsScreen and CollectionScreen
 
 ### Collections Management
 
@@ -63,10 +64,11 @@
 
 - [x] Add Gemini Flash 2.0 Provider (High Priority)
   - Enhanced AI capabilities for Cline
-  - Integration with existing infrastructure
-  - Provider configuration and documentation
-  - Performance optimization and testing
-  - Extend memory bank for provider context
+  - Integration with OpenRouter API
+  - Configuration and authentication setup
+  - Provider-specific optimizations
+  - Testing and performance evaluation
+  - Documentation updates
 
 - [ ] Add navbar to Login screen
   - Ensures consistent UI across all screens
@@ -92,22 +94,48 @@
    - Missing remove functionality for each metadata field
    - Critical UX improvement needed for document creation workflow
 
-3. Protocol dropdown in dark mode has white background
+2. Double Notifications on Document Deletion
+   - Two success notifications appear when deleting a document
+   - Need to consolidate notification handling to a single point
+
+3. Content Layout Issues
+   - Content jumps during navigation when loading indicator appears
+   - Need to implement better layout preservation during loading states
+   - Implement fixed height containers or skeleton placeholders
+
+4. Awkward Delete Confirmation UX
+   - In DocumentModal, delete and confirm buttons are red and far apart
+   - Should switch position of confirm button for better flow
+
+5. Protocol dropdown in dark mode has white background
    - Fixed by adding dark:[&>option]:bg-surface-secondary-dark to select element
    - Now follows dark theme color scheme
 
-4. Favicon not displaying in browser tab
+5. Favicon not displaying in browser tab
    - Need to investigate favicon.ico configuration in index.html
    - Ensure proper path and format for browser compatibility
 
-5. Notifications UI
+6. Notifications UI
    - Notifications expand too far to the right and need width limiting
    - Text should wrap when it exceeds the width limit
    - Close button in top-right corner is missing or hard to see
-   
-6. Content Layout
+
+8. Content Layout
    - Content jumps during navigation when loading indicator appears
    - Need to implement better layout preservation during loading states
+
+11. Documents Screen Color Scheme
+   - Header has the same color as the active row
+   - Need to improve color contrast for better visual hierarchy
+
+12. Authentication Persistence Issue
+    - Once logged in, refreshing the page redirects to the login screen
+    - Users should remain authenticated after a refresh
+
+13. Navbar UI Enhancements
+    - Add app name to the right of the logo with distinct styling
+    - Add GitHub link beside the light/dark toggle
+    - Fix inconsistent hover states for Collections and Logout links
 
 ## Next Development Priorities
 
@@ -150,3 +178,11 @@ Planned implementation:
 - [ ] API documentation
 - [ ] User guide
 - [ ] Development guide
+
+### Layout & Theme
+
+- [x] Basic layout structure
+- [x] Navigation bar
+- [x] Dark/Light mode toggle
+- [x] Consistent theme implementation
+- [x] Fixed height containers in CollectionsScreen and CollectionScreen

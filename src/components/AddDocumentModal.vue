@@ -21,7 +21,6 @@ const newDocumentId = ref('')
 const newDocumentContent = ref('')
 const metadataPairs = ref<Array<{ key: string; value: string }>>([])
 const documentError = ref('')
-const metadataError = ref('')
 
 const addMetadataPair = () => {
   metadataPairs.value.push({ key: '', value: '' })
@@ -33,28 +32,25 @@ const removeMetadataPair = (index: number) => {
 
 const handleCreateDocument = async () => {
   // Reset error states
-  documentError.value = ''
-  metadataError.value = ''
+  documentError.value = '';
 
-  // Collect all validation errors
-  let hasErrors = false
-
+  // Validate document content
   if (!newDocumentContent.value) {
-    documentError.value = 'Document content is required'
-    hasErrors = true
+    documentError.value = 'Document content is required';
+    return; // Stop if document content is invalid
   }
 
-  if (metadataPairs.value.length > 0) {
-    const emptyKeys = metadataPairs.value.some(pair => !pair.key.trim())
-    if (emptyKeys) {
-      metadataError.value = 'All metadata fields require a key'
-      hasErrors = true
+  // Validate metadata pairs and set individual errors
+  let hasMetadataErrors = false;
+  metadataPairs.value.forEach((pair, index) => {
+    if (!pair.key.trim()) {
+      documentError.value = 'All metadata fields require a key';
+      hasMetadataErrors = true;
     }
-  }
+  });
 
-  // Only proceed if there are no validation errors
-  if (hasErrors) {
-    return
+  if (hasMetadataErrors) {
+    return; // Stop if metadata is invalid
   }
 
   if (chromaStore.currentCollection) {
@@ -64,19 +60,19 @@ const handleCreateDocument = async () => {
           acc[pair.key.trim()] = pair.value.trim()
         }
         return acc
-      }, {} as Record<string, string>)
+      }, {} as Record<string, string>);
 
       await chromaStore.addDocument(chromaStore.currentCollection.name, {
         id: newDocumentId.value || undefined,
         document: newDocumentContent.value,
         metadata
-      })
-      handleClose()
-      emit('documentAdded')
+      });
+      handleClose();
+      emit('documentAdded');
     } catch (error: any) {
-      console.error('Failed to add document:', error)
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to add document'
-      notificationStore.error(errorMessage)
+      console.error('Failed to add document:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add document';
+      notificationStore.error(errorMessage);
     }
   }
 }
@@ -85,7 +81,6 @@ const handleClose = () => {
   newDocumentId.value = ''
   newDocumentContent.value = ''
   metadataPairs.value = []
-  metadataError.value = ''
   documentError.value = ''
   emit('close')
 }
@@ -148,6 +143,13 @@ const handleClose = () => {
               >
                 + Add Field
               </button>
+              <button
+                v-if="metadataPairs.length > 0"
+                @click="metadataPairs = []"
+                class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                Clear All
+              </button>
             </div>
             <div class="space-y-2">
               <div
@@ -160,7 +162,7 @@ const handleClose = () => {
                     v-model="pair.key"
                     type="text"
                     class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                    :class="{'border-red-500 dark:border-red-500': metadataError && !pair.key.trim()}"
+                    :class="{'border-red-500 dark:border-red-500': documentError && !pair.key.trim()}"
                     placeholder="Key*"
                   />
                 </div>
@@ -171,7 +173,7 @@ const handleClose = () => {
                   placeholder="Value"
                 />
                 <button
-                  v-if="index > 0"
+                  v-if="true"
                   @click="removeMetadataPair(index)"
                   class="p-2 text-red-600 hover:text-red-700"
                 >
@@ -179,7 +181,6 @@ const handleClose = () => {
                 </button>
               </div>
             </div>
-            <p v-if="metadataError" class="mt-1 text-sm text-red-600">{{ metadataError }}</p>
           </div>
 
           <!-- Buttons -->

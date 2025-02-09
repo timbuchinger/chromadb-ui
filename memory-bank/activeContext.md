@@ -6,6 +6,7 @@
 - Error handling improved with user feedback via notifications
 - Loading system implemented with centralized state management
 - Document metadata handling improved with clearer UX and validation
+- Layout stability improved with fixed height containers
 
 ## Recent Changes
 
@@ -32,6 +33,13 @@
   - LoadingSkeleton component for content placeholders
   - Loading states integrated in Collections and Documents screens
   - Loading indicators in all modals
+- Fixed double notifications issue by removing notification from store's deleteDocument action
+- Improved Metadata Management UI:
+  - Fixed remove button visibility
+  - Added clear all functionality
+  - Improved validation feedback
+- Implemented Layout Stability Improvements:
+  - Added fixed height containers to CollectionsScreen and CollectionScreen
 
 ## Current Work Focus
 
@@ -73,68 +81,78 @@
 
 ## Next Steps
 
-1. Add Gemini Flash 2.0 Provider (High Priority)
-   - Enhanced AI capabilities for Cline
-   - Integration with existing infrastructure
-   - Provider configuration and documentation
-   - Performance optimization
+1. Configure Deepseek through OpenRouter (High Priority)
+   - Integration with OpenRouter API
+   - Configuration and authentication setup
+   - Provider-specific optimizations
+   - Testing and performance evaluation
 
-2. Fix notification system UX issues
+2. Improve Delete Confirmation UX
+   - Address awkward button placement in DocumentModal
+   - Switch position of confirm button for better flow
+
+3. Implement Layout Stability Improvements
+   - Add skeleton placeholders
+   - Ensure smooth transitions during loading states
+
+5. Fix notification system UX issues
    - High value: affects all error/success feedback
    - Low effort: mainly CSS changes for width/wrapping
    - Add visible close button
    - Will improve overall user experience
 
-3. Resolve content jumping during navigation
+7. Resolve content jumping during navigation
    - High value: affects user experience on every page transition
    - Medium effort: implement fixed height containers or skeleton placeholders
    - Critical for professional feel of the application
 
-4. Add metadata type selection
+9. Add metadata type selection
    - High value: ensures proper data handling in ChromaDB
    - Medium effort: UI updates and validation logic
    - Will prevent data type mismatches and improve data quality
 
-5. Add navbar to Login screen
+11. Add navbar to Login screen
    - Medium value: consistent UI and theme toggle access
    - Low effort: reuse existing navbar component
    - Quick win for user experience improvement
 
+12. Fix Authentication Persistence (High Priority)
+   - Add proper session persistence after login
+   - Prevent unnecessary redirects to login screen
+   - Implement proper auth state management
+   - Tags: ux, auth
+
+13. Enhance Navbar Branding and Navigation
+   - Add app name next to logo with distinct styling
+   - Add GitHub link (https://github.com/timbuchinger/chromadb-ui)
+   - Fix hover states for Collections and Logout links
+   - Tags: ux, branding
+
 ## Current Considerations
 
-1. High Priority Issues
-   - Document deletion not working
-     * Returns "Collection not found" error
-     * Error messages appear in three places
-     * Should consolidate to use notification system only
-   - Metadata removal in Add Document modal
-     * Cannot remove metadata items without closing modal
-     * Need to add remove functionality for individual fields
-     * Critical UX improvement needed
-
-2. UI Issues
+1. UI Issues
    - Notifications expand too far to the right and need width limiting/text wrapping
    - Missing or hard to see notification close button in top-right corner
    - Content jumps during navigation due to loading indicator placement
 
-3. Feature Completeness
+2. Feature Completeness
    - Loading states implemented across all components
    - Verify consistent loading behavior
    - Address any loading state edge cases
    - Maintain accurate progress tracking
 
-4. User Experience
+3. User Experience
    - Loading indicators provide clear feedback
    - Improved error handling with notifications
    - Consistent loading patterns across app
    - Notification system needs UX improvements
 
-5. Documentation Maintenance
+4. Documentation Maintenance
    - Keep progress tracking accurate
    - Document implementation status clearly
    - Track technical decisions and patterns
 
-6. Theme System (Completed)
+5. Theme System (Completed)
    - Extracted and centralized theme colors in Tailwind config
    - Implemented semantic color naming system
    - Updated components to use semantic color classes
