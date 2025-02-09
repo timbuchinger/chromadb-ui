@@ -192,7 +192,7 @@ const handleClose = () => {
             </button>
             <button
               @click="handleCreateDocument"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-4 py-2 text-sm font-medium text-white bg-accent-primary hover:bg-accent-secondary rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="loadingStore.isLoading('documents')"
             >
               <LoadingSpinner v-if="loadingStore.isLoading('documents')" size="sm" class="mr-2" />

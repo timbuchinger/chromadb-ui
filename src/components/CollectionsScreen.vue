@@ -51,7 +51,7 @@ const viewCollection = (collection: string) => {
       <!-- Add Collection Button (always visible) -->
       <button
         @click="showAddModal = true"
-        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="mt-4 px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="loadingStore.isLoading('collections')"
       >
         <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
@@ -89,13 +89,13 @@ const viewCollection = (collection: string) => {
         >
           <button
             @click="viewCollection(collection.name)"
-            class="font-medium text-[#1F2937] dark:text-[#F9FAFB] text-base hover:text-blue-500 dark:hover:text-blue-400 text-left"
+            class="font-medium text-[#1F2937] dark:text-[#F9FAFB] text-base hover:text-accent-primary dark:hover:text-accent-primary text-left"
           >
             {{ collection.name }}
           </button>
           <div class="flex space-x-2">
             <button
-              class="px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              class="px-3 py-1 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary"
               @click="viewCollection(collection.name)"
             >
               View

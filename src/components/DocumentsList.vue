@@ -73,7 +73,7 @@ const handleDeleteDocument = async (id: string) => {
         </h2>
         <button
           @click="showAddModal = true"
-          class="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="loadingStore.isLoading('documents')"
         >
           Add Document

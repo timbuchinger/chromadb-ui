@@ -9,6 +9,13 @@
 
 ## Recent Changes
 
+- Implemented ChromaDB-inspired refined color scheme:
+  - Updated primary accent to deeper blue (#2563eb) for better accessibility
+  - Changed secondary accent to balanced orange (#f97316) for interactive elements
+  - Added tertiary accent in rich yellow (#eab308) for highlights
+  - Updated all components to use semantic color classes
+  - Documented new color system in techContext.md
+
 - Enhanced document metadata handling in Add Document modal:
   - Initially no metadata fields shown
   - Required key validation when fields are present

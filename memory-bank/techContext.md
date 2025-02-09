@@ -129,9 +129,17 @@ src/
 
 #### Accent Colors
 
-- Primary: `accent-primary` (blue-600)
-- Secondary: `accent-secondary` (purple-600)
-- Error: `accent-error` (red-500)
+ChromaDB-inspired refined color scheme:
+- Primary: `accent-primary` (blue-600, #2563eb) - Main actions and focus elements
+- Secondary: `accent-secondary` (orange-500, #f97316) - Interactive elements and hover states
+- Tertiary: `accent-tertiary` (yellow-500, #eab308) - Additional accents and indicators
+- Error: `accent-error` (red-500) - Error states and destructive actions
+
+Usage:
+- Primary: Main CTAs, important actions
+- Secondary: Hover states, interactive elements
+- Tertiary: Highlights, badges, indicators
+- Error: Delete buttons, error messages
 
 #### Status Colors
 

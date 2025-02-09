@@ -39,7 +39,7 @@ const handleReturnToCollections = () => {
         <div class="flex items-center space-x-4">
           <button
             @click="handleReturnToCollections"
-            class="px-3 py-1 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+            class="px-3 py-1 text-sm text-accent-primary hover:text-accent-secondary dark:text-accent-primary dark:hover:text-accent-secondary font-medium"
           >
             ← Back to Collections
           </button>

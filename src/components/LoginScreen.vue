@@ -191,7 +191,7 @@ async function handleSubmit() {
           <button
             type="submit"
             :disabled="loading"
-            class="group relative flex w-full justify-center rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary disabled:opacity-50"
+            class="group relative flex w-full justify-center rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white hover:bg-accent-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary disabled:opacity-50"
           >
             <span v-if="loading">Connecting...</span>
             <span v-else>Connect</span>
