@@ -49,7 +49,7 @@ const handleDeleteDocument = async (id: string) => {
     try {
       await chromaStore.deleteDocument(chromaStore.currentCollection.name, id)
     } catch (error) {
-      console.error('Failed to delete document:', error)
+      // Error handled by chromaStore
     }
   }
 }
@@ -81,13 +81,7 @@ const handleDeleteDocument = async (id: string) => {
       </div>
     </div>
 
-    <!-- Error state -->
-    <div v-if="chromaStore.error" class="text-center text-red-500 py-4">
-      {{ chromaStore.error }}
-    </div>
-
-    <!-- Loading state -->
-    <div v-else-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')">
+    <div v-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
           <thead class="bg-gray-50 dark:bg-gray-700">
@@ -119,11 +113,8 @@ const handleDeleteDocument = async (id: string) => {
         </table>
       </div>
     </div>
-
-    <!-- Documents list -->
     <div v-else>
-        <!-- Empty state -->
-        <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-8">
+      <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-8">
         There are no documents in the collection
       </div>
 
@@ -144,12 +135,7 @@ const handleDeleteDocument = async (id: string) => {
               </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr
-                v-for="doc in paginatedDocuments"
-                :key="doc.id"
-                @click="openDocument(doc)"
-                class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-              >
+              <tr v-for="doc in paginatedDocuments" :key="doc.id" @click="openDocument(doc)" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {{ doc.id }}
                 </td>
@@ -165,21 +151,13 @@ const handleDeleteDocument = async (id: string) => {
         </div>
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2">
-          <button
-            :disabled="currentPage === 1"
-            @click="currentPage--"
-            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
-          >
+          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50">
             Previous
           </button>
           <span class="px-3 py-1 text-sm">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
-          <button
-            :disabled="currentPage === totalPages"
-            @click="currentPage++"
-            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
-          >
+          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50">
             Next
           </button>
         </div>
@@ -187,16 +165,7 @@ const handleDeleteDocument = async (id: string) => {
     </div>
   </div>
 
-  <AddDocumentModal
-    :show="showAddModal"
-    @close="showAddModal = false"
-    @document-added="chromaStore.fetchCollectionDocuments(chromaStore.currentCollection!.name)"
-  />
+  <AddDocumentModal :show="showAddModal" @close="showAddModal = false" @document-added="chromaStore.fetchCollectionDocuments(chromaStore.currentCollection!.name)" />
 
-  <DocumentModal
-    :show="showModal"
-    :document="selectedDocument"
-    @close="closeModal"
-    @delete="handleDeleteDocument"
-  />
+  <DocumentModal :show="showModal" :document="selectedDocument" @close="closeModal" @delete="handleDeleteDocument" />
 </template>

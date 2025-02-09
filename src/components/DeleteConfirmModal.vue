@@ -21,7 +21,7 @@ const handleDelete = async () => {
     await chromaStore.deleteCollection(props.collectionName)
     emit('deleted', props.collectionName)
   } catch (error) {
-    console.error('Failed to delete collection:', error)
+    // Error handled by chromaStore
   }
 }
 </script>
