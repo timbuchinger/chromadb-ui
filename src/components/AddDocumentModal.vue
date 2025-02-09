@@ -109,6 +109,36 @@ const handleCreateDocument = async () => {
   }
 }
 
+const getTypeDescription = (type: string): string => {
+  switch (type) {
+    case 'string':
+      return 'Text value (e.g., "hello")'
+    case 'integer':
+      return 'Whole number (e.g., 42)'
+    case 'float':
+      return 'Decimal number (e.g., 3.14)'
+    case 'boolean':
+      return 'True or false value'
+    default:
+      return ''
+  }
+}
+
+const getTypePlaceholder = (type: string): string => {
+  switch (type) {
+    case 'string':
+      return 'Enter text value'
+    case 'integer':
+      return 'Enter whole number'
+    case 'float':
+      return 'Enter decimal number'
+    case 'boolean':
+      return 'Select true or false'
+    default:
+      return 'Enter value'
+  }
+}
+
 const handleClose = () => {
   newDocumentId.value = ''
   newDocumentContent.value = ''
@@ -159,7 +189,7 @@ const handleClose = () => {
 
           <!-- Metadata Fields -->
           <div>
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-4 mb-2">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Metadata
                 <span v-if="metadataPairs.length > 0" class="text-xs text-gray-500 dark:text-gray-400">
@@ -169,57 +199,86 @@ const handleClose = () => {
                   (optional)
                 </span>
               </label>
-              <button
-                @click="addMetadataPair"
-                class="flex-shrink-0 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                + Add Field
-              </button>
-              <button
-                v-if="metadataPairs.length > 0"
-                @click="metadataPairs = []"
-                class="flex-shrink-0 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                Clear All
-              </button>
-            </div>
-            <div class="space-y-2">
-              <div
-                v-for="(pair, index) in metadataPairs"
-                :key="index"
-                class="flex gap-2 items-center"
-              >
-                <div class="flex-1 flex flex-col">
-                  <input
-                    v-model="pair.key"
-                    type="text"
-                    class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                    :class="{'border-red-500 dark:border-red-500': documentError && !pair.key.trim()}"
-                    placeholder="Key*"
-                  />
-                  <select
-                    v-model="pair.type"
-                    class="mt-1 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                  >
-                    <option value="string">String</option>
-                    <option value="integer">Integer</option>
-                    <option value="float">Float</option>
-                    <option value="boolean">Boolean</option>
-                  </select>
-                </div>
-                <input
-                  v-model="pair.value"
-                  type="text"
-                  class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                  placeholder="Value"
-                />
+              <div class="flex items-center gap-2 ml-auto">
                 <button
-                  @click="removeMetadataPair(index)"
-                  class="p-2 text-red-600 hover:text-red-700"
+                  v-if="metadataPairs.length > 0"
+                  @click="metadataPairs = []"
+                  class="h-8 px-3 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
-                  ×
+                  Clear All
+                </button>
+                <button
+                  @click="addMetadataPair"
+                  class="h-8 px-3 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                >
+                  + Add Field
                 </button>
               </div>
+            </div>
+            <div class="space-y-2">
+              <transition-group name="list">
+                <div
+                  v-for="(pair, index) in metadataPairs"
+                  :key="index"
+                  class="flex gap-2 items-start group"
+                >
+                  <div class="flex-1 flex flex-col gap-1">
+                    <div class="relative">
+                      <input
+                        v-model="pair.key"
+                        type="text"
+                        class="w-full h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
+                        :class="{'border-red-500 dark:border-red-500': documentError && !pair.key.trim()}"
+                        placeholder="Key*"
+                      />
+                      <div v-if="documentError && !pair.key.trim()" class="absolute -bottom-5 left-0 text-xs text-red-500">
+                        Key is required
+                      </div>
+                    </div>
+                    <select
+                      v-model="pair.type"
+                      class="w-full h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
+                      :title="getTypeDescription(pair.type)"
+                    >
+                      <option value="string">String</option>
+                      <option value="integer">Integer</option>
+                      <option value="float">Float</option>
+                      <option value="boolean">Boolean</option>
+                    </select>
+                  </div>
+                  <div class="flex-1 relative">
+                    <template v-if="pair.type === 'boolean'">
+                      <select
+                        v-model="pair.value"
+                        class="w-full h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
+                      >
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                      </select>
+                    </template>
+                    <template v-else>
+                      <input
+                        v-model="pair.value"
+                        type="text"
+                        class="w-full h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
+                        :class="{'border-red-500 dark:border-red-500': documentError && pair.key.includes(pair.key)}"
+                        :placeholder="getTypePlaceholder(pair.type)"
+                      />
+                    </template>
+                    <div v-if="documentError && pair.key.includes(pair.key)" class="absolute -bottom-5 left-0 text-xs text-red-500">
+                      {{ documentError }}
+                    </div>
+                  </div>
+                  <button
+                    @click="removeMetadataPair(index)"
+                    class="h-10 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                    title="Remove field"
+                  >
+                    <span class="sr-only">Remove field</span>
+                    ×
+                  </button>
+                </div>
+              </transition-group>
             </div>
           </div>
 
@@ -245,3 +304,15 @@ const handleClose = () => {
     </div>
   </div>
 </template>
+
+<style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+</style>

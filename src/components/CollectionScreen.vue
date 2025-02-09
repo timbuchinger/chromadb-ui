@@ -32,35 +32,40 @@ const handleReturnToCollections = () => {
 </script>
 
 <template>
-  <div class="py-6 min-h-[400px]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Back button and title (always visible) -->
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center space-x-4">
-          <button
-            @click="handleReturnToCollections"
-            class="px-3 py-1 text-sm text-accent-primary hover:text-accent-secondary dark:text-accent-primary dark:hover:text-accent-secondary font-medium"
-          >
-            ← Back to Collections
-          </button>
-          <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
-            <template v-if="!loadingStore.isLoading('collections') && !loadingStore.isLoading('documents')">
-              Collection: {{ route.params.name }}
-            </template>
-            <template v-else>
-              <LoadingSkeleton width="200px" height="32px" />
-            </template>
-          </h1>
+  <div class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-10rem)]">
+      <!-- Main Content with Transition -->
+      <div class="transition-all duration-300">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center space-x-4">
+            <button
+              @click="handleReturnToCollections"
+              class="px-3 py-1 text-sm text-accent-primary hover:text-accent-secondary dark:text-accent-primary dark:hover:text-accent-secondary font-medium transition-colors duration-200"
+            >
+              ← Back to Collections
+            </button>
+            <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+              <template v-if="!loadingStore.isLoading('collections') && !loadingStore.isLoading('documents')">
+                Collection: {{ route.params.name }}
+              </template>
+              <template v-else>
+                <LoadingSkeleton width="200px" height="32px" />
+              </template>
+            </h1>
+          </div>
+        </div>
+
+        <!-- Error state -->
+        <div v-if="chromaStore.error" class="text-center text-red-500 mb-6">
+          {{ chromaStore.error }}
+        </div>
+
+        <!-- Content with Loading State -->
+        <div class="transition-opacity duration-300" :class="{ 'opacity-50': loadingStore.isLoading('documents') }">
+          <DocumentsList />
         </div>
       </div>
-
-      <!-- Error state -->
-      <div v-if="chromaStore.error" class="text-center text-red-500">
-        {{ chromaStore.error }}
-      </div>
-
-      <!-- Content -->
-      <DocumentsList />
     </div>
   </div>
 </template>

@@ -29,6 +29,11 @@
 - [x] Dark/Light mode toggle
 - [x] Consistent theme implementation
 - [x] Fixed height containers in CollectionsScreen and CollectionScreen
+- [x] Loading States and Layout Stability
+  - Smooth transitions between states
+  - Consistent container dimensions
+  - Skeleton placeholders during loading
+  - Content height preservation
 
 ### Collections Management
 
@@ -84,13 +89,7 @@
 
 ## Known Issues
 
-1. Metadata Management (High Priority)
-   - Cannot remove individual metadata items in Add Document modal
-   - Must close modal and start fresh to remove fields
-   - Missing remove functionality for each metadata field
-   - Critical UX improvement needed for document creation workflow
-
-2. Double Notifications on Document Deletion
+1. Double Notifications on Document Deletion
    - Two success notifications appear when deleting a document
    - Need to consolidate notification handling to a single point
 
@@ -125,6 +124,7 @@
    - Add GitHub link
    - Fix hover states for navigation links
 
-10. Add Document Modal Layout
-    - 'Add Field' button jumps on first field addition
-    - 'Clear All' button positioning needs adjustment
+10. Field Validation Enhancement
+    - Add clearer validation messages
+    - Show validation status icons
+    - Improve form field feedback
