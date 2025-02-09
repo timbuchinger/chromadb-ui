@@ -61,15 +61,24 @@
 
 ## Planned Features
 
+- [ ] Add Gemini Flash 2.0 Provider (High Priority)
+  - Enhanced AI capabilities for Cline
+  - Integration with existing infrastructure
+  - Provider configuration and documentation
+  - Performance optimization and testing
+  - Extend memory bank for provider context
+
 - [ ] Add navbar to Login screen
   - Ensures consistent UI across all screens
   - Provides light/dark mode toggle functionality to users on the Login screen
   - Maintains app's visual identity pre-authentication
+
 - [ ] Add metadata type selection
   - Allow users to specify data type for metadata fields
   - Support strings, integers, floats, and booleans
   - Add dropdown to select type when adding metadata
   - Ensures proper data type handling in ChromaDB
+
 - [ ] Search functionality
 - [ ] Sorting and filtering
 - [ ] Batch operations
@@ -83,20 +92,26 @@
    - Need to consolidate error handling to use notification system
    - Requires immediate attention for core functionality
 
-2. Protocol dropdown in dark mode has white background
+2. Metadata Management (High Priority)
+   - Cannot remove individual metadata items in Add Document modal
+   - Must close modal and start fresh to remove fields
+   - Missing remove functionality for each metadata field
+   - Critical UX improvement needed for document creation workflow
+
+3. Protocol dropdown in dark mode has white background
    - Fixed by adding dark:[&>option]:bg-surface-secondary-dark to select element
    - Now follows dark theme color scheme
 
-3. Favicon not displaying in browser tab
+4. Favicon not displaying in browser tab
    - Need to investigate favicon.ico configuration in index.html
    - Ensure proper path and format for browser compatibility
 
-4. Notifications UI
+5. Notifications UI
    - Notifications expand too far to the right and need width limiting
    - Text should wrap when it exceeds the width limit
    - Close button in top-right corner is missing or hard to see
    
-5. Content Layout
+6. Content Layout
    - Content jumps during navigation when loading indicator appears
    - Need to implement better layout preservation during loading states
 
