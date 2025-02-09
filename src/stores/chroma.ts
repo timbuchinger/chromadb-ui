@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from './auth'
+import { useNotificationStore } from './notifications'
 
 export interface CollectionInfo {
   name: string
@@ -71,6 +72,7 @@ export const useChromaStore = defineStore('chroma', {
   actions: {
     async fetchCollections() {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
@@ -88,6 +90,7 @@ export const useChromaStore = defineStore('chroma', {
           : axios.isAxiosError(error) && error.response?.status === 404
             ? 'Collection not found'
             : 'Failed to fetch collections'
+        notificationStore.error(this.error || 'An unknown error occurred')
         throw error
       } finally {
         this.loading = false
@@ -96,13 +99,15 @@ export const useChromaStore = defineStore('chroma', {
 
     async fetchCollectionDocuments(name: string) {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
       const collection = this.getCollectionByName(name)
       if (!collection) {
         this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        notificationStore.error(this.error || 'An unknown error occurred')
+        throw new Error(this.error || 'Collection not found')
       }
 
       this.currentCollection = collection
@@ -113,7 +118,6 @@ export const useChromaStore = defineStore('chroma', {
           {
             collection_name: name,
             include: ['documents', 'metadatas'] as IncludeEnum[],
-            // where: { $and: [] }, // Use $and operator with empty condition array to match all documents
             limit: 100,
             tenant: DEFAULT_PARAMS.tenant,
             database: DEFAULT_PARAMS.database
@@ -140,6 +144,7 @@ export const useChromaStore = defineStore('chroma', {
         } else {
           this.error = 'Failed to fetch documents'
         }
+        notificationStore.error(this.error || 'An unknown error occurred')
         throw error
       } finally {
         this.loading = false
@@ -148,13 +153,15 @@ export const useChromaStore = defineStore('chroma', {
 
     async deleteDocument(collectionName: string, documentId: string) {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
       const collection = this.getCollectionByName(collectionName)
       if (!collection) {
         this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        notificationStore.error(this.error || 'Collection not found')
+        throw new Error(this.error || 'Collection not found')
       }
 
       try {
@@ -172,12 +179,14 @@ export const useChromaStore = defineStore('chroma', {
 
         // Remove the document from the local state
         this.documents = this.documents.filter(doc => doc.id !== documentId)
+        notificationStore.success('Document deleted successfully')
       } catch (error) {
         this.error = error instanceof Error
           ? error.message
           : axios.isAxiosError(error) && error.response?.status === 404
             ? 'Document or collection not found'
             : 'Failed to delete document'
+        notificationStore.error(this.error || 'An unknown error occurred')
         throw error
       } finally {
         this.loading = false
@@ -186,6 +195,7 @@ export const useChromaStore = defineStore('chroma', {
 
     async createCollection(name: string) {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
@@ -203,12 +213,14 @@ export const useChromaStore = defineStore('chroma', {
         )
         // Add the new collection to local state
         this.collections.push(response.data)
+        notificationStore.success('Collection created successfully')
       } catch (error) {
         this.error = error instanceof Error
           ? error.message
           : axios.isAxiosError(error)
             ? error.response?.data?.message || 'Failed to create collection'
             : 'Failed to create collection'
+        notificationStore.error(this.error)
         throw error
       } finally {
         this.loading = false
@@ -217,13 +229,15 @@ export const useChromaStore = defineStore('chroma', {
 
     async addDocument(collectionName: string, params: { id?: string; document: string; metadata: Record<string, any> }) {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
       const collection = this.getCollectionByName(collectionName)
       if (!collection) {
         this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        notificationStore.error(this.error || 'Collection not found')
+        throw new Error(this.error || 'Collection not found')
       }
 
       try {
@@ -244,12 +258,14 @@ export const useChromaStore = defineStore('chroma', {
 
         // Refresh documents list
         await this.fetchCollectionDocuments(collectionName)
+        notificationStore.success('Document added successfully')
       } catch (error) {
         this.error = error instanceof Error
           ? error.message
           : axios.isAxiosError(error)
             ? error.response?.data?.message || 'Failed to add document'
             : 'Failed to add document'
+        notificationStore.error(this.error || 'An unknown error occurred')
         throw error
       } finally {
         this.loading = false
@@ -258,13 +274,15 @@ export const useChromaStore = defineStore('chroma', {
 
     async deleteCollection(name: string) {
       const authStore = useAuthStore()
+      const notificationStore = useNotificationStore()
       this.loading = true
       this.error = null
 
       const collection = this.getCollectionByName(name)
       if (!collection) {
         this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        notificationStore.error(this.error || 'Collection not found')
+        throw new Error(this.error || 'Collection not found')
       }
 
       try {
@@ -280,12 +298,14 @@ export const useChromaStore = defineStore('chroma', {
           this.currentCollection = null
           this.documents = []
         }
+        notificationStore.success('Collection deleted successfully')
       } catch (error) {
         this.error = error instanceof Error
           ? error.message
           : axios.isAxiosError(error) && error.response?.status === 404
             ? 'Collection not found'
             : 'Failed to delete collection'
+        notificationStore.error(this.error || 'An unknown error occurred')
         throw error
       } finally {
         this.loading = false

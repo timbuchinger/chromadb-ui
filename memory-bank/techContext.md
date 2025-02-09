@@ -48,9 +48,32 @@ src/
   - Vite
   - TypeScript
   - PostCSS
+- Testing
+  - Cypress for E2E testing
+  - Vitest for unit testing
+  - Vue Test Utils
 - Styling
   - TailwindCSS
   - PostCSS plugins
+
+## Testing Infrastructure
+### E2E Tests (Cypress)
+- Test directory: /tests/e2e/
+- Key test areas:
+  - Navigation flows
+  - Form validations
+  - Responsive design
+  - Collection operations
+
+### Unit Tests (Vitest)
+- Integration with Vue Test Utils
+- Component-level testing
+- Store testing
+
+### CI/CD Integration
+- GitHub Actions workflow
+- Automated test runs on PRs
+- Test report generation
 
 ## Development Environment
 

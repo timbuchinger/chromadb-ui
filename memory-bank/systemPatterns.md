@@ -89,3 +89,49 @@ disabled:opacity-50
 - Dashes
 - Underscores
 - No duplicates allowed
+
+## Testing Patterns
+
+### E2E Test Structure
+- Page Object Model for test organization
+- Custom commands for common operations
+- Viewport configurations for responsive testing
+- Consistent selector patterns
+- Reusable test utilities
+
+### Test Data Management
+- Fixture-based test data
+- Dynamic data generation
+- Clean state between tests
+- Mocked API responses when needed
+
+### Common Test Patterns
+1. Navigation Testing
+   - Route transitions
+   - Protected route handling
+   - Browser history management
+
+2. Form Testing
+   - Input validation
+   - Error message verification
+   - Submit behavior
+   - Success/failure states
+
+3. Responsive Testing
+   - Mobile viewport checks
+   - Tablet viewport checks
+   - Desktop viewport checks
+   - Element visibility/positioning
+
+4. Component Testing
+   - Rendering verification
+   - Props validation
+   - Event handling
+   - State changes
+
+### CI/CD Integration Patterns
+- PR validation workflow
+- Test report generation
+- Screenshot comparisons
+- Performance metrics tracking
+- Test failure notifications
