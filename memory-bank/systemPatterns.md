@@ -14,6 +14,8 @@
 - Pinia stores for state management
   - auth.ts: Authentication state
   - chroma.ts: ChromaDB data and operations
+  - loading.ts: Centralized loading states
+  - notifications.ts: Notification management
 
 ### Routing
 
@@ -37,7 +39,7 @@
 3. UI Components
    - Pure presentation components
    - Theme-aware styling
-   - Examples: ThemeToggle, NavBar
+   - Examples: ThemeToggle, NavBar, LoadingSpinner
 
 ### State Management Patterns
 
@@ -50,6 +52,12 @@
    - Collection state handling
    - Document management
    - API interaction patterns
+
+3. Loading State Management
+   - Centralized loading states
+   - Support for multiple concurrent operations
+   - withLoading helper for async operations
+   - Loading state tracking by operation type
 
 ### UI Patterns
 
@@ -67,6 +75,13 @@
    - Light/Dark mode support
    - Consistent color schemes
    - TailwindCSS utility classes
+
+4. Loading Pattern
+   - Spinner component with size variants
+   - Skeleton loading for content placeholders
+   - Theme-aware loading states
+   - Loading state for buttons and operations
+   - Full-screen loading overlay option
 
 ## Common Implementation Patterns
 
@@ -91,6 +106,25 @@ rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white
 hover:bg-accent-secondary 
 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary 
 disabled:opacity-50
+```
+
+#### Loading Spinner
+
+```css
+/* Base */
+animate-spin rounded-full border-4 border-surface-secondary-light dark:border-surface-secondary-dark
+border-t-accent-primary
+
+/* Sizes */
+sm: h-4 w-4
+md: h-8 w-8
+lg: h-12 w-12
+```
+
+#### Loading Skeleton
+
+```css
+animate-pulse bg-surface-secondary-light dark:bg-surface-secondary-dark rounded
 ```
 
 #### Status Indicators
@@ -120,6 +154,25 @@ text-status-info-text-light dark:text-status-info-text-dark
 - Dashes
 - Underscores
 - No duplicates allowed
+
+### Loading State Management
+
+1. Store Pattern
+   - Centralized loading state in Pinia store
+   - Loading states tracked by operation type
+   - Helper methods for managing loading states
+   - Support for concurrent loading states
+
+2. Component Integration
+   - LoadingSpinner for active operations
+   - LoadingSkeleton for content placeholders
+   - Disabled states during loading
+   - Consistent loading indicators
+
+3. Error Handling
+   - Loading states cleared on error
+   - Error notifications with loading feedback
+   - Graceful error state transitions
 
 ## Testing Patterns
 

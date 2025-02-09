@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useChromaStore } from '../stores/chroma'
+import { useLoadingStore } from '../stores/loading'
 import { useRouter } from 'vue-router'
 import AddCollectionModal from './AddCollectionModal.vue'
 import DeleteConfirmModal from './DeleteConfirmModal.vue'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 const router = useRouter()
 const chromaStore = useChromaStore()
+const loadingStore = useLoadingStore()
 const currentPage = ref(1)
 const itemsPerPage = 20
 const showAddModal = ref(false)
@@ -46,8 +49,8 @@ const viewCollection = (collection: string) => {
         </h1>
       </div>
       <!-- Loading state -->
-      <div v-if="chromaStore.loading" class="mt-6 text-center text-gray-500 dark:text-gray-400">
-        Loading...
+      <div v-if="loadingStore.isLoading('collections')" class="mt-6 flex justify-center">
+        <LoadingSpinner size="lg" text="Loading collections..." />
       </div>
 
       <!-- Error state -->
@@ -63,8 +66,10 @@ const viewCollection = (collection: string) => {
       <!-- Add Collection Button -->
       <button
         @click="showAddModal = true"
-        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        :disabled="loadingStore.isLoading('collections')"
       >
+        <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
         Add Collection
       </button>
 
@@ -89,7 +94,8 @@ const viewCollection = (collection: string) => {
               View
             </button>
             <button
-              class="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
+              class="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="loadingStore.isLoading('collections')"
               @click="() => {
                 collectionToDelete = collection.name;
                 showDeleteConfirm = true;

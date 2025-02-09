@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useChromaStore } from '../stores/chroma'
+import { useLoadingStore } from '../stores/loading'
 import DocumentModal from './DocumentModal.vue'
+import LoadingSpinner from './LoadingSpinner.vue'
 import type { Document } from '../stores/chroma'
 
 const chromaStore = useChromaStore()
+const loadingStore = useLoadingStore()
 const selectedDocument = ref<Document | null>(null)
 const showModal = ref(false)
 const showAddModal = ref(false)
@@ -97,8 +100,8 @@ const handleDeleteDocument = async (id: string) => {
 <template>
   <div>
     <!-- Loading state -->
-    <div v-if="chromaStore.loading" class="text-center text-gray-500 dark:text-gray-400 py-4">
-      Loading...
+    <div v-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')" class="flex justify-center py-8">
+      <LoadingSpinner size="lg" text="Loading documents..." />
     </div>
 
     <!-- Error state -->
@@ -125,8 +128,8 @@ const handleDeleteDocument = async (id: string) => {
         </div>
       </div>
 
-      <!-- Empty state -->
-      <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-4">
+        <!-- Empty state -->
+        <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-8">
         There are no documents in the collection
       </div>
 
@@ -167,7 +170,7 @@ const handleDeleteDocument = async (id: string) => {
           </table>
         </div>
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="mt-4 flex justify-center space-x-2">
+        <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2">
           <button
             :disabled="currentPage === 1"
             @click="currentPage--"
@@ -279,11 +282,13 @@ const handleDeleteDocument = async (id: string) => {
             >
               Cancel
             </button>
-            <button
-              @click="handleCreateDocument"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-            >
-              Add Document
+          <button
+            @click="handleCreateDocument"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="loadingStore.isLoading('documents')"
+          >
+            <LoadingSpinner v-if="loadingStore.isLoading('documents')" size="sm" class="mr-2" />
+            Add Document
             </button>
           </div>
         </div>

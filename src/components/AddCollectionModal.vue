@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useChromaStore } from '../stores/chroma'
+import { useLoadingStore } from '../stores/loading'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 const props = defineProps<{
   show: boolean
@@ -12,6 +14,7 @@ const emit = defineEmits<{
 }>()
 
 const chromaStore = useChromaStore()
+const loadingStore = useLoadingStore()
 const newCollectionName = ref('')
 const nameError = ref('')
 
@@ -73,15 +76,18 @@ const handleClose = () => {
           <div class="flex justify-end space-x-3">
             <button
               @click="handleClose"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
+              :disabled="loadingStore.isLoading('collections')"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               @click="handleCreate"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+              :disabled="loadingStore.isLoading('collections')"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
             >
-              Create
+              <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
+              <span>Create</span>
             </button>
           </div>
         </div>

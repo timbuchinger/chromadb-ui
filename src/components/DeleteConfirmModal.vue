@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useChromaStore } from '../stores/chroma'
+import { useLoadingStore } from '../stores/loading'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 const props = defineProps<{
   show: boolean
@@ -12,6 +14,7 @@ const emit = defineEmits<{
 }>()
 
 const chromaStore = useChromaStore()
+const loadingStore = useLoadingStore()
 
 const handleDelete = async () => {
   try {
@@ -46,9 +49,11 @@ const handleDelete = async () => {
           </button>
           <button
             @click="handleDelete"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+            :disabled="loadingStore.isLoading('collections')"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
           >
-            Delete
+            <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
+            <span>Delete</span>
           </button>
         </div>
       </div>
