@@ -58,19 +58,21 @@ const handleDeleteDocument = async (id: string) => {
 <template>
   <div>
     <!-- Header with Add Document button -->
-    <div class="mb-6 space-y-4">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-content-primary-light dark:text-content-primary-dark">
-          Documents
-          <span class="ml-2 text-base font-normal text-gray-500">
+    <div class="mb-6">
+      <div class="flex justify-between items-center h-[36px]">
+        <div class="flex items-center">
+          <h2 class="text-xl font-semibold text-content-primary-light dark:text-content-primary-dark">
+            Documents
+          </h2>
+          <span class="ml-2 text-base font-normal text-gray-500 dark:text-gray-400 min-w-[80px]">
             <template v-if="!loadingStore.isLoading('documents')">
               ({{ chromaStore.documents.length }} total)
             </template>
             <template v-else>
-              <LoadingSkeleton width="40px" height="20px" class="inline-block ml-1" />
+              <LoadingSkeleton width="60px" height="20px" class="inline-block ml-1" />
             </template>
           </span>
-        </h2>
+        </div>
         <button
           @click="showAddModal = true"
           class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
@@ -114,8 +116,8 @@ const handleDeleteDocument = async (id: string) => {
       </div>
     </div>
     <div v-else>
-      <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-8">
-        There are no documents in the collection
+      <div v-if="chromaStore.documents.length === 0" class="flex items-center justify-center h-[400px] text-center text-gray-500 dark:text-gray-400">
+        <p>There are no documents in the collection</p>
       </div>
 
       <div v-else>
@@ -152,15 +154,15 @@ const handleDeleteDocument = async (id: string) => {
             </tbody>
           </table>
         </div>
-        <!-- Pagination -->
-        <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2">
-          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-surface-secondary-light/90 dark:hover:bg-surface-secondary-dark/90 transition-colors duration-200">
+        <!-- Pagination with fixed height -->
+        <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2 h-[36px] items-center">
+          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-accent-secondary/10 dark:hover:bg-accent-secondary/10 transition-colors duration-200">
             Previous
           </button>
-          <span class="px-3 py-1 text-sm">
+          <span class="px-3 py-1 text-sm text-content-primary-light dark:text-content-primary-dark">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
-          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-surface-secondary-light/90 dark:hover:bg-surface-secondary-dark/90 transition-colors duration-200">
+          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-accent-secondary/10 dark:hover:bg-accent-secondary/10 transition-colors duration-200">
             Next
           </button>
         </div>
