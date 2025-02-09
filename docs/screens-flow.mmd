@@ -8,12 +8,26 @@ graph TD
 
     %% Collections View
     subgraph Collections
-        B --> D[Collection: notes]
-        B --> E[Collection: pdfs]
-        B --> F[Collection: images]
+        B --> BA[Add Collection]
+        B --> BC[Collections List]
+        BC -->|Paginated 20/page| CL[Collection Items]
 
-        %% Action buttons for each collection
-        D --> G1[View] & H1[Delete]
-        E --> G2[View] & H2[Delete]
-        F --> G3[View] & H3[Delete]
+        %% Collection actions
+        CL --> CV[View Collection]
+        CL --> CD[Delete Collection]
+        CD -->|Confirm| CDC[Delete Confirmation]
+    end
+
+    %% Collection Detail View
+    subgraph Collection View
+        CV --> BB[Back to Collections]
+        CV --> DA[Add Document]
+        CV --> DL[Documents List]
+        DL -->|Paginated 20/page| DI[Document Items]
+
+        %% Document actions
+        DI --> DM[Document Modal]
+        DM --> DMC[Close]
+        DM --> DMD[Delete]
+        DMD -->|Confirm| DMDC[Delete Confirmation]
     end

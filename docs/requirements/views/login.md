@@ -9,7 +9,7 @@ As a user, I want to be able to authenticate with my ChromaDB instance, so that 
   b. When basic authentication is selected, username and password text boxes are shown.
   c. When no authentication is selected, no text boxes for authentication are shown.
 2. The login should support http and https protocols
-3. Use a placeholder value in the server URL text box of '<http://localhost:8000>'
+3. Use a placeholder value in the server URL text box of 'localhost:8000'
 4. A tenant text box is available with the default value 'default_tenant'.
 5. A database text box is available with the default value 'default_database'.
 

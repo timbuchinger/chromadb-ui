@@ -94,7 +94,9 @@ export const useAuthStore = defineStore('auth', {
     getAuthStatus: (state) => state.isAuthenticated,
     getBaseUrl: (state) => `${state.protocol}://${state.serverUrl}`,
     getHeaders(): Record<string, string> {
-      const headers: Record<string, string> = {}
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
 
       if (this.authType === 'token') {
         headers['Authorization'] = `Bearer ${this.token}`
