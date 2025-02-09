@@ -93,7 +93,13 @@
 
 ## Current Considerations
 
-1. Known UI Issues
+1. High Priority Issues
+   - Document deletion not working
+     * Returns "Collection not found" error
+     * Error messages appear in three places
+     * Should consolidate to use notification system only
+
+2. UI Issues
    - Notifications expand too far to the right and need width limiting/text wrapping
    - Missing or hard to see notification close button in top-right corner
    - Content jumps during navigation due to loading indicator placement

@@ -57,35 +57,71 @@ const handleDeleteDocument = async (id: string) => {
 
 <template>
   <div>
-    <!-- Loading state -->
-    <div v-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')" class="flex justify-center py-8">
-      <LoadingSpinner size="lg" text="Loading documents..." />
+    <!-- Header with Add Document button -->
+    <div class="mb-6 space-y-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+          Documents
+          <span class="ml-2 text-base font-normal text-gray-500">
+            <template v-if="!loadingStore.isLoading('documents')">
+              ({{ chromaStore.documents.length }} total)
+            </template>
+            <template v-else>
+              <LoadingSkeleton width="40px" height="20px" class="inline-block ml-1" />
+            </template>
+          </span>
+        </h2>
+        <button
+          @click="showAddModal = true"
+          class="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="loadingStore.isLoading('documents')"
+        >
+          Add Document
+        </button>
+      </div>
     </div>
 
     <!-- Error state -->
-    <div v-else-if="chromaStore.error" class="text-center text-red-500 py-4">
+    <div v-if="chromaStore.error" class="text-center text-red-500 py-4">
       {{ chromaStore.error }}
+    </div>
+
+    <!-- Loading state -->
+    <div v-else-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4">
+                ID
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4">
+                Metadata
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/2">
+                Document
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tr v-for="i in 5" :key="i">
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="150px" />
+              </td>
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="180px" />
+              </td>
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="300px" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Documents list -->
     <div v-else>
-      <div class="mb-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
-            Documents
-            <span class="ml-2 text-base font-normal text-gray-500">
-              ({{ chromaStore.documents.length }} total)
-            </span>
-          </h2>
-          <button
-            @click="showAddModal = true"
-            class="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            Add Document
-          </button>
-        </div>
-      </div>
-
         <!-- Empty state -->
         <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-8">
         There are no documents in the collection

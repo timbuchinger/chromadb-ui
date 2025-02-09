@@ -48,9 +48,26 @@ const viewCollection = (collection: string) => {
           Collections
         </h1>
       </div>
+      <!-- Add Collection Button (always visible) -->
+      <button
+        @click="showAddModal = true"
+        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        :disabled="loadingStore.isLoading('collections')"
+      >
+        <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
+        Add Collection
+      </button>
+
       <!-- Loading state -->
-      <div v-if="loadingStore.isLoading('collections')" class="mt-6 flex justify-center">
-        <LoadingSpinner size="lg" text="Loading collections..." />
+      <div v-if="loadingStore.isLoading('collections')" class="mt-6 space-y-4">
+        <!-- Skeleton rows -->
+        <div v-for="i in 5" :key="i" class="flex items-center justify-between py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+          <LoadingSkeleton height="24px" width="200px" />
+          <div class="flex space-x-2">
+            <LoadingSkeleton height="32px" width="60px" />
+            <LoadingSkeleton height="32px" width="60px" />
+          </div>
+        </div>
       </div>
 
       <!-- Error state -->
@@ -62,16 +79,6 @@ const viewCollection = (collection: string) => {
       <div v-else-if="chromaStore.collections.length === 0" class="mt-6 text-center text-gray-500 dark:text-gray-400">
         There are no collections.
       </div>
-
-      <!-- Add Collection Button -->
-      <button
-        @click="showAddModal = true"
-        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="loadingStore.isLoading('collections')"
-      >
-        <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
-        Add Collection
-      </button>
 
       <!-- Collections list -->
       <div v-if="chromaStore.collections.length > 0" class="mt-6 divide-y divide-gray-200 dark:divide-gray-700">

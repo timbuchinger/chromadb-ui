@@ -165,14 +165,18 @@ text-status-info-text-light dark:text-status-info-text-dark
 
 2. Component Integration
    - LoadingSpinner for active operations
-   - LoadingSkeleton for content placeholders
+   - LoadingSkeleton for content placeholders during data fetching
+   - Skeleton layouts match final content dimensions
+   - Consistent heights between loading/loaded states
+   - Layout preservation during state transitions
+   - Fixed column widths in tables
    - Disabled states during loading
-   - Consistent loading indicators
 
 3. Error Handling
    - Loading states cleared on error
    - Error notifications with loading feedback
    - Graceful error state transitions
+   - Maintains consistent layout during error states
 
 ## Testing Patterns
 

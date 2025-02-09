@@ -77,20 +77,26 @@
 
 ## Known Issues
 
-1. Protocol dropdown in dark mode has white background
+1. Document Deletion (High Priority)
+   - Document deletion fails with "Collection not found" error
+   - Error messages displayed redundantly in three locations
+   - Need to consolidate error handling to use notification system
+   - Requires immediate attention for core functionality
+
+2. Protocol dropdown in dark mode has white background
    - Fixed by adding dark:[&>option]:bg-surface-secondary-dark to select element
    - Now follows dark theme color scheme
 
-2. Favicon not displaying in browser tab
+3. Favicon not displaying in browser tab
    - Need to investigate favicon.ico configuration in index.html
    - Ensure proper path and format for browser compatibility
 
-3. Notifications UI
+4. Notifications UI
    - Notifications expand too far to the right and need width limiting
    - Text should wrap when it exceeds the width limit
    - Close button in top-right corner is missing or hard to see
    
-4. Content Layout
+5. Content Layout
    - Content jumps during navigation when loading indicator appears
    - Need to implement better layout preservation during loading states
 
