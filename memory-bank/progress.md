@@ -49,12 +49,27 @@
 
 ## In Progress
 
-- [ ] Document management interface
+- [x] Document metadata handling
+  - No initial metadata fields shown
+  - Required key validation with immediate feedback
+  - Optional values support
+  - Simultaneous validation error display
+  - Enhanced form validation UX
+- [ ] Document management interface (remaining features)
 - [ ] Advanced collection features
 - [ ] Additional error handling refinements
 
 ## Planned Features
 
+- [ ] Add navbar to Login screen
+  - Ensures consistent UI across all screens
+  - Provides light/dark mode toggle functionality to users on the Login screen
+  - Maintains app's visual identity pre-authentication
+- [ ] Add metadata type selection
+  - Allow users to specify data type for metadata fields
+  - Support strings, integers, floats, and booleans
+  - Add dropdown to select type when adding metadata
+  - Ensures proper data type handling in ChromaDB
 - [ ] Search functionality
 - [ ] Sorting and filtering
 - [ ] Batch operations
@@ -62,7 +77,22 @@
 
 ## Known Issues
 
-1. Colors inconsistent on login screen
+1. Protocol dropdown in dark mode has white background
+   - Fixed by adding dark:[&>option]:bg-surface-secondary-dark to select element
+   - Now follows dark theme color scheme
+
+2. Favicon not displaying in browser tab
+   - Need to investigate favicon.ico configuration in index.html
+   - Ensure proper path and format for browser compatibility
+
+3. Notifications UI
+   - Notifications expand too far to the right and need width limiting
+   - Text should wrap when it exceeds the width limit
+   - Close button in top-right corner is missing or hard to see
+   
+4. Content Layout
+   - Content jumps during navigation when loading indicator appears
+   - Need to implement better layout preservation during loading states
 
 ## Next Development Priorities
 

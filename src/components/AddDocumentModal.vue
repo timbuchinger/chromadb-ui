@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
+import { useNotificationStore } from '../stores/notifications'
 import LoadingSpinner from './LoadingSpinner.vue'
 
 const props = defineProps<{
@@ -15,10 +16,12 @@ const emit = defineEmits<{
 
 const chromaStore = useChromaStore()
 const loadingStore = useLoadingStore()
+const notificationStore = useNotificationStore()
 const newDocumentId = ref('')
 const newDocumentContent = ref('')
-const metadataPairs = ref([{ key: '', value: '' }])
+const metadataPairs = ref<Array<{ key: string; value: string }>>([])
 const documentError = ref('')
+const metadataError = ref('')
 
 const addMetadataPair = () => {
   metadataPairs.value.push({ key: '', value: '' })
@@ -29,16 +32,36 @@ const removeMetadataPair = (index: number) => {
 }
 
 const handleCreateDocument = async () => {
+  // Reset error states
+  documentError.value = ''
+  metadataError.value = ''
+
+  // Collect all validation errors
+  let hasErrors = false
+
   if (!newDocumentContent.value) {
     documentError.value = 'Document content is required'
+    hasErrors = true
+  }
+
+  if (metadataPairs.value.length > 0) {
+    const emptyKeys = metadataPairs.value.some(pair => !pair.key.trim())
+    if (emptyKeys) {
+      metadataError.value = 'All metadata fields require a key'
+      hasErrors = true
+    }
+  }
+
+  // Only proceed if there are no validation errors
+  if (hasErrors) {
     return
   }
 
   if (chromaStore.currentCollection) {
     try {
       const metadata = metadataPairs.value.reduce((acc, pair) => {
-        if (pair.key && pair.value) {
-          acc[pair.key] = pair.value
+        if (pair.key.trim()) {
+          acc[pair.key.trim()] = pair.value.trim()
         }
         return acc
       }, {} as Record<string, string>)
@@ -50,8 +73,10 @@ const handleCreateDocument = async () => {
       })
       handleClose()
       emit('documentAdded')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to add document:', error)
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to add document'
+      notificationStore.error(errorMessage)
     }
   }
 }
@@ -59,7 +84,8 @@ const handleCreateDocument = async () => {
 const handleClose = () => {
   newDocumentId.value = ''
   newDocumentContent.value = ''
-  metadataPairs.value = [{ key: '', value: '' }]
+  metadataPairs.value = []
+  metadataError.value = ''
   documentError.value = ''
   emit('close')
 }
@@ -108,7 +134,13 @@ const handleClose = () => {
           <div>
             <div class="flex justify-between items-center mb-2">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Metadata (Optional)
+                Metadata
+                <span v-if="metadataPairs.length > 0" class="text-xs text-gray-500 dark:text-gray-400">
+                  (key required, value optional)
+                </span>
+                <span v-else class="text-xs text-gray-500 dark:text-gray-400">
+                  (optional)
+                </span>
               </label>
               <button
                 @click="addMetadataPair"
@@ -123,12 +155,15 @@ const handleClose = () => {
                 :key="index"
                 class="flex gap-2 items-start"
               >
-                <input
-                  v-model="pair.key"
-                  type="text"
-                  class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                  placeholder="Key"
-                />
+                <div class="flex-1">
+                  <input
+                    v-model="pair.key"
+                    type="text"
+                    class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
+                    :class="{'border-red-500 dark:border-red-500': metadataError && !pair.key.trim()}"
+                    placeholder="Key*"
+                  />
+                </div>
                 <input
                   v-model="pair.value"
                   type="text"
@@ -144,6 +179,7 @@ const handleClose = () => {
                 </button>
               </div>
             </div>
+            <p v-if="metadataError" class="mt-1 text-sm text-red-600">{{ metadataError }}</p>
           </div>
 
           <!-- Buttons -->

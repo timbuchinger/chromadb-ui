@@ -78,7 +78,7 @@ async function handleSubmit() {
           <div class="flex">
             <select
               v-model="protocol"
-              class="relative block w-1/4 rounded-l-md border-0 bg-transparent py-1.5 text-content-primary-light dark:text-content-primary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
+              class="relative block w-1/4 rounded-l-md border-0 bg-transparent py-1.5 text-content-primary-light dark:text-content-primary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6 dark:[&>option]:bg-surface-secondary-dark"
             >
               <option value="http">http://</option>
               <option value="https">https://</option>
@@ -191,7 +191,7 @@ async function handleSubmit() {
           <button
             type="submit"
             :disabled="loading"
-            class="group relative flex w-full justify-center rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white hover:bg-accent-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary disabled:opacity-50"
+            class="group relative flex w-full justify-center rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary disabled:opacity-50"
           >
             <span v-if="loading">Connecting...</span>
             <span v-else>Connect</span>

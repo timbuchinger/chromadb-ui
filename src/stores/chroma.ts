@@ -182,6 +182,8 @@ export const useChromaStore = defineStore('chroma', {
     },
 
     async addDocument(collectionName: string, params: { id?: string; document: string; metadata: Record<string, any> }) {
+      const crypto = window.crypto
+      const getRandomId = () => crypto.randomUUID()
       const authStore = useAuthStore()
       const notificationStore = useNotificationStore()
       const loadingStore = useLoadingStore()
@@ -203,7 +205,7 @@ export const useChromaStore = defineStore('chroma', {
           data: {
             documents: [params.document],
             metadatas: [params.metadata],
-            ids: params.id ? [params.id] : undefined,
+            ids: [params.id || getRandomId()],
             tenant: DEFAULT_PARAMS.tenant,
             database: DEFAULT_PARAMS.database
           },
