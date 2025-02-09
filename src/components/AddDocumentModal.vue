@@ -19,11 +19,11 @@ const loadingStore = useLoadingStore()
 const notificationStore = useNotificationStore()
 const newDocumentId = ref('')
 const newDocumentContent = ref('')
-const metadataPairs = ref<Array<{ key: string; value: string }>>([])
+const metadataPairs = ref<Array<{ key: string; value: string; type: string }>>([])
 const documentError = ref('')
 
 const addMetadataPair = () => {
-  metadataPairs.value.push({ key: '', value: '' })
+  metadataPairs.value.push({ key: '', value: '', type: 'string' })
 }
 
 const removeMetadataPair = (index: number) => {
@@ -42,12 +42,36 @@ const handleCreateDocument = async () => {
 
   // Validate metadata pairs and set individual errors
   let hasMetadataErrors = false;
-  metadataPairs.value.forEach((pair, index) => {
-    if (!pair.key.trim()) {
-      documentError.value = 'All metadata fields require a key';
-      hasMetadataErrors = true;
-    }
-  });
+
+  const validateMetadata = () => {
+    metadataPairs.value.forEach((pair, index) => {
+      if (!pair.key.trim()) {
+        documentError.value = 'All metadata fields require a key';
+        hasMetadataErrors = true;
+        return;
+      }
+
+      if (pair.type === 'integer' && isNaN(Number(pair.value))) {
+        documentError.value = `Metadata field "${pair.key}" must be an integer`;
+        hasMetadataErrors = true;
+        return;
+      }
+
+      if (pair.type === 'float' && isNaN(Number(pair.value))) {
+        documentError.value = `Metadata field "${pair.key}" must be a float`;
+        hasMetadataErrors = true;
+        return;
+      }
+
+      if (pair.type === 'boolean' && pair.value !== 'true' && pair.value !== 'false') {
+        documentError.value = `Metadata field "${pair.key}" must be a boolean (true or false)`;
+        hasMetadataErrors = true;
+        return;
+      }
+    });
+  }
+
+  validateMetadata();
 
   if (hasMetadataErrors) {
     return; // Stop if metadata is invalid
@@ -57,10 +81,18 @@ const handleCreateDocument = async () => {
     try {
       const metadata = metadataPairs.value.reduce((acc, pair) => {
         if (pair.key.trim()) {
-          acc[pair.key.trim()] = pair.value.trim()
+          let value: any = pair.value.trim();
+          if (pair.type === 'integer') {
+            value = parseInt(value);
+          } else if (pair.type === 'float') {
+            value = parseFloat(value);
+          } else if (pair.type === 'boolean') {
+            value = value === 'true';
+          }
+          acc[pair.key.trim()] = value;
         }
         return acc
-      }, {} as Record<string, string>);
+      }, {} as Record<string, any>);
 
       await chromaStore.addDocument(chromaStore.currentCollection.name, {
         id: newDocumentId.value || undefined,
@@ -139,14 +171,14 @@ const handleClose = () => {
               </label>
               <button
                 @click="addMetadataPair"
-                class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                class="flex-shrink-0 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 + Add Field
               </button>
               <button
                 v-if="metadataPairs.length > 0"
                 @click="metadataPairs = []"
-                class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
+                class="flex-shrink-0 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Clear All
               </button>
@@ -155,9 +187,9 @@ const handleClose = () => {
               <div
                 v-for="(pair, index) in metadataPairs"
                 :key="index"
-                class="flex gap-2 items-start"
+                class="flex gap-2 items-center"
               >
-                <div class="flex-1">
+                <div class="flex-1 flex flex-col">
                   <input
                     v-model="pair.key"
                     type="text"
@@ -165,6 +197,15 @@ const handleClose = () => {
                     :class="{'border-red-500 dark:border-red-500': documentError && !pair.key.trim()}"
                     placeholder="Key*"
                   />
+                  <select
+                    v-model="pair.type"
+                    class="mt-1 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
+                  >
+                    <option value="string">String</option>
+                    <option value="integer">Integer</option>
+                    <option value="float">Float</option>
+                    <option value="boolean">Boolean</option>
+                  </select>
                 </div>
                 <input
                   v-model="pair.value"
@@ -173,7 +214,6 @@ const handleClose = () => {
                   placeholder="Value"
                 />
                 <button
-                  v-if="true"
                   @click="removeMetadataPair(index)"
                   class="p-2 text-red-600 hover:text-red-700"
                 >

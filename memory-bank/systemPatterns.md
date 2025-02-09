@@ -59,6 +59,19 @@
    - withLoading helper for async operations
    - Loading state tracking by operation type
 
+### Authentication Persistence
+
+1.  **Storage:**
+    -   Utilizes `localStorage` to persist authentication state across page reloads.
+
+2.  **Token Management:**
+    -   Authentication tokens are stored in `localStorage` upon successful login.
+    -   Tokens are removed from `localStorage` upon logout.
+
+3.  **Session Recovery:**
+    -   On page load, the application checks for existing authentication data in `localStorage`.
+    -   If valid data is found, the authentication state is restored, allowing the user to bypass the login screen.
+
 ### UI Patterns
 
 1. Modal Pattern
@@ -82,6 +95,21 @@
    - Theme-aware loading states
    - Loading state for buttons and operations
    - Full-screen loading overlay option
+
+### Metadata Management
+
+1.  **Type Selection:**
+    -   Users can select the data type for each metadata field using a dropdown menu.
+    -   Supported data types: String, Integer, Float, Boolean.
+
+2.  **Validation:**
+    -   The application validates the metadata values based on the selected data type.
+    -   Error messages are displayed if the values do not match the selected data type.
+
+3.  **UI Interactions:**
+    -   Add Field button to add new metadata fields.
+    -   Clear All button to clear all metadata fields.
+    -   Remove button to remove individual metadata fields.
 
 ## Common Implementation Patterns
 

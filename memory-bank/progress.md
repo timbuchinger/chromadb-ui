@@ -30,6 +30,9 @@
 - [x] Session management
 - [x] Protected routes
 - [x] Logout functionality
+- [x] Authentication Persistence
+    - Once logged in, refreshing the page redirects to the login screen
+    - Users should remain authenticated after a refresh
 
 ### Layout & Theme
 
@@ -48,7 +51,7 @@
 - [x] Empty state handling
 - [x] Loading states for all operations
 
-## In Progress
+### Document Management
 
 - [x] Document metadata handling
   - No initial metadata fields shown
@@ -56,6 +59,11 @@
   - Optional values support
   - Simultaneous validation error display
   - Enhanced form validation UX
+  - Metadata type selection
+  - Improved UI interactions
+
+## In Progress
+
 - [ ] Document management interface (remaining features)
 - [ ] Advanced collection features
 - [ ] Additional error handling refinements
@@ -128,10 +136,6 @@
    - Header has the same color as the active row
    - Need to improve color contrast for better visual hierarchy
 
-12. Authentication Persistence Issue
-    - Once logged in, refreshing the page redirects to the login screen
-    - Users should remain authenticated after a refresh
-
 14. Navbar UI Enhancements
     - Add app name to the right of the logo with distinct styling
     - Add GitHub link beside the light/dark toggle
@@ -140,53 +144,385 @@
 15. Add Document Modal UI Issue
     - When adding the first field, the 'Add Field' button jumps
     - 'Clear All' button should be placed to the left of 'Add Field'
-
-## Next Development Priorities
-
-1. Complete document management interface
-2. Implement advanced collection features
-3. Further error handling enhancements
-4. Add automated tests
-5. Document loading system usage patterns
-
-## Testing Status
-
-Planned implementation:
-
-- E2E Testing (Cypress)
-  - Navigation flows validation
-  - Form input testing
-  - Responsive design verification
-  - Collection operations
-  - Cross-browser compatibility
-  - Loading state transitions
-
-- Unit Testing (Vitest)
-  - Component testing
-  - Store testing
-  - Utility function testing
-  - API integration testing
-  - Loading state management testing
-
-- CI/CD Integration
-  - GitHub Actions workflow setup
-  - Automated test runs on PRs
-  - Test reporting and metrics
-  - Cross-browser testing (planned: Playwright)
-
-## Documentation Status
-
-- [x] Core requirements documented
-- [x] Memory bank initialized
-- [x] Loading system patterns documented
-- [ ] API documentation
-- [ ] User guide
-- [ ] Development guide
-
-### Layout & Theme
-
-- [x] Basic layout structure
-- [x] Navigation bar
-- [x] Dark/Light mode toggle
-- [x] Consistent theme implementation
-- [x] Fixed height containers in CollectionsScreen and CollectionScreen
+</file_content>
+</error>
+</tool_code>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>
+</step>
+<step>
+<tool_code>
+<tool_name>
+</tool_name>

@@ -170,3 +170,11 @@ Usage:
    - 10-second auto-dismiss
    - Manual dismiss option
    - Four notification types (Success, Info, Warning, Error)
+
+### Metadata Validation
+
+1.  **Type Constraints:**
+    -   String: Any string value.
+    -   Integer: A valid integer number.
+    -   Float: A valid floating-point number.
+    -   Boolean: "true" or "false" (case-sensitive).
