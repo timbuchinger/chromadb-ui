@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import NavBar from './NavBar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -65,8 +66,10 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-surface-primary-light dark:bg-surface-primary-dark px-4">
-    <div class="max-w-md w-full space-y-8">
+  <div class="min-h-screen bg-surface-primary-light dark:bg-surface-primary-dark">
+    <NavBar />
+    <div class="flex items-center justify-center px-4 h-[calc(100vh-4rem)]">
+      <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-content-primary-light dark:text-content-primary-dark">
           Connect to ChromaDB
@@ -198,6 +201,7 @@ async function handleSubmit() {
           </button>
         </div>
       </form>
+      </div>
     </div>
   </div>
 </template>

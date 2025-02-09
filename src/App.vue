@@ -14,7 +14,7 @@ const authStore = useAuthStore()
 <template>
   <NotificationList />
   <div class="min-h-screen bg-white dark:bg-gray-900">
-    <NavBar v-if="authStore.isAuthenticated" />
+    <NavBar />
     <router-view />
   </div>
 </template>

@@ -59,7 +59,7 @@ const viewCollection = (collection: string) => {
       </button>
 
       <!-- Content Container with Transition -->
-      <div class="mt-6 transition-all duration-300">
+      <div class="mt-6 transition-all duration-300 min-h-[400px]">
         <!-- Loading state -->
         <div v-if="loadingStore.isLoading('collections')" class="space-y-4">
           <!-- Skeleton rows -->
@@ -104,7 +104,7 @@ const viewCollection = (collection: string) => {
                   View
                 </button>
                 <button
-                  class="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  class="px-3 py-1 text-sm bg-accent-error text-white rounded-md hover:bg-accent-error/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                   :disabled="loadingStore.isLoading('collections')"
                   @click="() => {
                     collectionToDelete = collection.name;
@@ -122,7 +122,7 @@ const viewCollection = (collection: string) => {
             <button
               :disabled="currentPage === 1"
               @click="currentPage--"
-              class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md disabled:opacity-50 transition-colors duration-200"
+              class="px-3 py-1 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 transition-colors duration-200"
             >
               Previous
             </button>
@@ -132,7 +132,7 @@ const viewCollection = (collection: string) => {
             <button
               :disabled="currentPage === totalPages"
               @click="currentPage++"
-              class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md disabled:opacity-50 transition-colors duration-200"
+              class="px-3 py-1 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 transition-colors duration-200"
             >
               Next
             </button>

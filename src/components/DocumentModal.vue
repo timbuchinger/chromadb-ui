@@ -88,32 +88,36 @@ const stringifyMetadata = (metadata: Record<string, any>) => {
         </div>
 
         <!-- Footer -->
-        <div class="mt-6 flex justify-end space-x-3">
-          <button
-            v-if="!showDeleteConfirm"
-            @click="showDeleteConfirm = true"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
-          >
-            Delete
-          </button>
-          <div v-if="showDeleteConfirm" class="flex space-x-3">
+        <div class="mt-6 flex justify-between">
+          <!-- Left side: Delete actions -->
+          <div class="flex space-x-3">
             <button
-              @click="showDeleteConfirm = false"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
+              v-if="!showDeleteConfirm"
+              @click="showDeleteConfirm = true"
+              class="px-4 py-2 text-sm font-medium text-white bg-accent-error hover:bg-accent-error/90 focus:ring-2 focus:ring-accent-error/20 rounded-md transition-colors duration-200"
             >
-              Cancel
+              Delete
             </button>
-            <button
-              @click="handleDelete"
-              class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
-            >
-              Confirm Delete
-            </button>
+            <template v-if="showDeleteConfirm">
+              <button
+                @click="handleDelete"
+                class="px-4 py-2 text-sm font-medium text-white bg-accent-error hover:bg-accent-error/90 focus:ring-2 focus:ring-accent-error/20 rounded-md transition-colors duration-200"
+              >
+                Confirm Delete
+              </button>
+              <button
+                @click="showDeleteConfirm = false"
+                class="px-4 py-2 text-sm font-medium text-content-primary-light dark:text-content-primary-dark bg-surface-secondary-light hover:bg-surface-secondary-light/90 dark:bg-surface-secondary-dark dark:hover:bg-surface-secondary-dark/90 rounded-md transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            </template>
           </div>
+          <!-- Right side: Close button -->
           <button
             v-if="!showDeleteConfirm"
             @click="closeModal"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
+            class="px-4 py-2 text-sm font-medium text-content-primary-light dark:text-content-primary-dark bg-surface-secondary-light hover:bg-surface-secondary-light/90 dark:bg-surface-secondary-dark dark:hover:bg-surface-secondary-dark/90 rounded-md transition-colors duration-200"
           >
             Close
           </button>

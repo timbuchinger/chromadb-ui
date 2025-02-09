@@ -60,7 +60,7 @@ const handleDeleteDocument = async (id: string) => {
     <!-- Header with Add Document button -->
     <div class="mb-6 space-y-4">
       <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+        <h2 class="text-xl font-semibold text-content-primary-light dark:text-content-primary-dark">
           Documents
           <span class="ml-2 text-base font-normal text-gray-500">
             <template v-if="!loadingStore.isLoading('documents')">
@@ -81,18 +81,18 @@ const handleDeleteDocument = async (id: string) => {
       </div>
     </div>
 
-    <div v-if="loadingStore.isLoading('collections') || loadingStore.isLoading('documents')">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
-          <thead class="bg-gray-50 dark:bg-gray-700">
+    <div v-if="(loadingStore.isLoading('collections') || loadingStore.isLoading('documents')) && chromaStore.currentCollection">
+      <div class="overflow-x-auto min-h-[400px] max-h-[calc(100vh-20rem)]">
+        <table class="min-w-full divide-y divide-border-primary-light dark:divide-border-primary-dark">
+          <thead class="bg-surface-secondary-light dark:bg-surface-secondary-dark sticky top-0 z-10 shadow-sm">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4">
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/4">
                 ID
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/4">
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/4">
                 Metadata
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/2">
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/2">
                 Document
               </th>
             </tr>
@@ -119,30 +119,33 @@ const handleDeleteDocument = async (id: string) => {
       </div>
 
       <div v-else>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
-            <thead class="bg-gray-50 dark:bg-gray-700">
+        <div class="overflow-x-auto min-h-[400px] max-h-[calc(100vh-20rem)]">
+          <table class="min-w-full divide-y divide-border-primary-light dark:divide-border-primary-dark">
+            <thead class="bg-surface-secondary-light dark:bg-surface-secondary-dark sticky top-0 z-10 shadow-sm">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   ID
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   Metadata
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   Document
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr v-for="doc in paginatedDocuments" :key="doc.id" @click="openDocument(doc)" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+            <tbody class="bg-surface-primary-light dark:bg-surface-primary-dark divide-y divide-border-primary-light dark:divide-border-primary-dark">
+              <tr v-for="doc in paginatedDocuments"
+                  :key="doc.id"
+                  @click="openDocument(doc)"
+                  class="hover:bg-surface-secondary-light dark:hover:bg-surface-secondary-dark cursor-pointer transition-colors duration-200">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ doc.id }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                <td class="px-6 py-4 text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ truncateText(stringifyMetadata(doc.metadata)) }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                <td class="px-6 py-4 text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ truncateText(doc.document) }}
                 </td>
               </tr>
@@ -151,13 +154,13 @@ const handleDeleteDocument = async (id: string) => {
         </div>
         <!-- Pagination -->
         <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2">
-          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50">
+          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-surface-secondary-light/90 dark:hover:bg-surface-secondary-dark/90 transition-colors duration-200">
             Previous
           </button>
           <span class="px-3 py-1 text-sm">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
-          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50">
+          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-surface-secondary-light/90 dark:hover:bg-surface-secondary-dark/90 transition-colors duration-200">
             Next
           </button>
         </div>

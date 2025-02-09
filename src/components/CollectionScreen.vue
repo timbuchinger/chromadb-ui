@@ -27,6 +27,7 @@ onMounted(async () => {
 
 const handleReturnToCollections = () => {
   chromaStore.currentCollection = null
+  chromaStore.documents = []
   router.push('/')
 }
 </script>

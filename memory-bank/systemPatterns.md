@@ -107,10 +107,21 @@
    - Auto-dismiss after 10 seconds
    - Manual dismiss option
 
-3. Theme Pattern
-   - Light/Dark mode support
-   - Consistent color schemes
-   - TailwindCSS utility classes
+3. ChromaDB Theme Pattern
+   - Light/Dark mode support with consistent surface colors
+   - ChromaDB-inspired accent color palette:
+     - accent-primary (blue-600): Main CTAs, focus states
+     - accent-secondary (orange-500): Hover states, interactive elements
+     - accent-tertiary (yellow-500): Highlights, indicators
+     - accent-error (red-500): Error states, destructive actions
+   - Consistent interaction patterns:
+     - Primary buttons transition to secondary on hover
+     - Delete buttons use error state with opacity hover
+     - Form elements use primary accent for focus
+   - Color accessibility considerations:
+     - High contrast text colors in both modes
+     - Clear visual hierarchy using accent colors
+     - Consistent interactive element styling
 
 ### Metadata Management
 

@@ -27,6 +27,11 @@
 - [x] Basic layout structure
 - [x] Navigation bar
 - [x] Dark/Light mode toggle
+- [x] ChromaDB color scheme implementation
+  - accent-primary (blue-600) for main CTAs and focus states
+  - accent-secondary (orange-500) for hover states
+  - accent-tertiary (yellow-500) for highlights
+  - accent-error (red-500) for destructive actions
 - [x] Consistent theme implementation
 - [x] Fixed height containers in CollectionsScreen and CollectionScreen
 - [x] Loading States and Layout Stability
