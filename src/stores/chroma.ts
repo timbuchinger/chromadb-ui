@@ -4,7 +4,7 @@ import { useAuthStore } from './auth'
 
 export interface CollectionInfo {
   name: string
-  id?: string
+  id: string
 }
 
 interface DatabaseParams {
@@ -26,6 +26,7 @@ export interface Document {
 type IncludeEnum = 'documents' | 'embeddings' | 'metadatas' | 'distances' | 'uris' | 'data'
 
 interface GetEmbedding {
+  collection_name?: string
   ids?: string[]
   where?: Record<string, any>
   where_document?: Record<string, any>
@@ -33,6 +34,8 @@ interface GetEmbedding {
   limit?: number
   offset?: number
   include?: IncludeEnum[]
+  tenant?: string
+  database?: string
 }
 
 interface GetResponse {
@@ -53,11 +56,17 @@ interface DeleteEmbedding {
 export const useChromaStore = defineStore('chroma', {
   state: () => ({
     collections: [] as CollectionInfo[],
-    currentCollection: null as string | null,
+    currentCollection: null as CollectionInfo | null,
     documents: [] as Document[],
     loading: false,
     error: null as string | null
   }),
+
+  getters: {
+    getCollectionByName: (state) => (name: string) => {
+      return state.collections.find(c => c.name === name)
+    }
+  },
 
   actions: {
     async fetchCollections() {
@@ -66,11 +75,10 @@ export const useChromaStore = defineStore('chroma', {
       this.error = null
 
       try {
-        const response = await axios.get<{ name: string }[]>(
-          `${authStore.getBaseUrl}/api/v1/collections`,
+        const response = await axios.get<{ id: string; name: string }[]>(
+          `${authStore.getBaseUrl}/api/v1/collections?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
           {
-            headers: authStore.getHeaders,
-            params: DEFAULT_PARAMS
+            headers: authStore.getHeaders
           }
         )
         this.collections = response.data
@@ -90,18 +98,28 @@ export const useChromaStore = defineStore('chroma', {
       const authStore = useAuthStore()
       this.loading = true
       this.error = null
-      this.currentCollection = name
+
+      const collection = this.getCollectionByName(name)
+      if (!collection) {
+        this.error = 'Collection not found'
+        throw new Error('Collection not found')
+      }
+
+      this.currentCollection = collection
 
       try {
         const response = await axios.post<GetResponse>(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(name)}/get`,
+          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/get`,
           {
+            collection_name: name,
             include: ['documents', 'metadatas'] as IncludeEnum[],
-            limit: 100
-          } as GetEmbedding,
+            // where: { $and: [] }, // Use $and operator with empty condition array to match all documents
+            limit: 100,
+            tenant: DEFAULT_PARAMS.tenant,
+            database: DEFAULT_PARAMS.database
+          } as GetEmbedding & { tenant?: string; database?: string },
           {
-            headers: authStore.getHeaders,
-            params: DEFAULT_PARAMS
+            headers: authStore.getHeaders
           }
         )
 
@@ -113,11 +131,15 @@ export const useChromaStore = defineStore('chroma', {
           metadata: metadatas[index] || {}
         }))
       } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error) && error.response?.status === 404
-            ? 'Collection not found'
-            : 'Failed to fetch documents'
+        if (axios.isAxiosError(error)) {
+          console.error('Full error response:', error.response?.data)
+          this.error = error.response?.data?.message ||
+            `API Error ${error.response?.status}: ${error.response?.data ? JSON.stringify(error.response.data) : error.message}`
+        } else if (error instanceof Error) {
+          this.error = error.message
+        } else {
+          this.error = 'Failed to fetch documents'
+        }
         throw error
       } finally {
         this.loading = false
@@ -129,13 +151,22 @@ export const useChromaStore = defineStore('chroma', {
       this.loading = true
       this.error = null
 
+      const collection = this.getCollectionByName(collectionName)
+      if (!collection) {
+        this.error = 'Collection not found'
+        throw new Error('Collection not found')
+      }
+
       try {
         await axios.post(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collectionName)}/delete`,
-          { ids: [documentId] } as DeleteEmbedding,
+          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/delete`,
           {
-            headers: authStore.getHeaders,
-            params: DEFAULT_PARAMS
+            ids: [documentId],
+            tenant: DEFAULT_PARAMS.tenant,
+            database: DEFAULT_PARAMS.database
+          } as DeleteEmbedding & { tenant?: string; database?: string },
+          {
+            headers: authStore.getHeaders
           }
         )
 
@@ -147,6 +178,114 @@ export const useChromaStore = defineStore('chroma', {
           : axios.isAxiosError(error) && error.response?.status === 404
             ? 'Document or collection not found'
             : 'Failed to delete document'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async createCollection(name: string) {
+      const authStore = useAuthStore()
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await axios.post<{ id: string; name: string }>(
+          `${authStore.getBaseUrl}/api/v1/collections`,
+          {
+            name,
+            tenant: DEFAULT_PARAMS.tenant,
+            database: DEFAULT_PARAMS.database
+          },
+          {
+            headers: authStore.getHeaders
+          }
+        )
+        // Add the new collection to local state
+        this.collections.push(response.data)
+      } catch (error) {
+        this.error = error instanceof Error
+          ? error.message
+          : axios.isAxiosError(error)
+            ? error.response?.data?.message || 'Failed to create collection'
+            : 'Failed to create collection'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async addDocument(collectionName: string, params: { id?: string; document: string; metadata: Record<string, any> }) {
+      const authStore = useAuthStore()
+      this.loading = true
+      this.error = null
+
+      const collection = this.getCollectionByName(collectionName)
+      if (!collection) {
+        this.error = 'Collection not found'
+        throw new Error('Collection not found')
+      }
+
+      try {
+        // Use put for ID-specified documents, post for auto-generated IDs
+        const method = params.id ? 'put' : 'post'
+        await axios.request({
+          method,
+          url: `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/upsert`,
+          data: {
+            documents: [params.document],
+            metadatas: [params.metadata],
+            ids: params.id ? [params.id] : undefined,
+            tenant: DEFAULT_PARAMS.tenant,
+            database: DEFAULT_PARAMS.database
+          },
+          headers: authStore.getHeaders
+        })
+
+        // Refresh documents list
+        await this.fetchCollectionDocuments(collectionName)
+      } catch (error) {
+        this.error = error instanceof Error
+          ? error.message
+          : axios.isAxiosError(error)
+            ? error.response?.data?.message || 'Failed to add document'
+            : 'Failed to add document'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async deleteCollection(name: string) {
+      const authStore = useAuthStore()
+      this.loading = true
+      this.error = null
+
+      const collection = this.getCollectionByName(name)
+      if (!collection) {
+        this.error = 'Collection not found'
+        throw new Error('Collection not found')
+      }
+
+      try {
+        await axios.delete(
+          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
+          {
+            headers: authStore.getHeaders
+          }
+        )
+        // Remove the collection from local state
+        this.collections = this.collections.filter(col => col.name !== name)
+        if (this.currentCollection?.name === name) {
+          this.currentCollection = null
+          this.documents = []
+        }
+      } catch (error) {
+        this.error = error instanceof Error
+          ? error.message
+          : axios.isAxiosError(error) && error.response?.status === 404
+            ? 'Collection not found'
+            : 'Failed to delete collection'
         throw error
       } finally {
         this.loading = false

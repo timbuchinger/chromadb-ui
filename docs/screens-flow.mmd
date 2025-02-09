@@ -1,0 +1,33 @@
+graph TD
+    %% Login Flow
+    A[Login Screen] -->|Successful Auth| B[Collections Screen]
+    A -->|Failed Auth| A
+
+    %% Authentication Guard
+    C[Any Screen] -->|No Auth| A
+
+    %% Collections View
+    subgraph Collections
+        B --> BA[Add Collection]
+        B --> BC[Collections List]
+        BC -->|Paginated 20/page| CL[Collection Items]
+
+        %% Collection actions
+        CL --> CV[View Collection]
+        CL --> CD[Delete Collection]
+        CD -->|Confirm| CDC[Delete Confirmation]
+    end
+
+    %% Collection Detail View
+    subgraph Collection View
+        CV --> BB[Back to Collections]
+        CV --> DA[Add Document]
+        CV --> DL[Documents List]
+        DL -->|Paginated 20/page| DI[Document Items]
+
+        %% Document actions
+        DI --> DM[Document Modal]
+        DM --> DMC[Close]
+        DM --> DMD[Delete]
+        DMD -->|Confirm| DMDC[Delete Confirmation]
+    end

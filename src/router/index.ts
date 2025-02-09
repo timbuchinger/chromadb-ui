@@ -18,6 +18,15 @@ const router = createRouter({
         requiresAuth: true,
         title: 'ChromaDB UI - Collections'
       }
+    },
+    {
+      path: '/collection/:name',
+      name: 'collection',
+      component: () => import('../components/CollectionScreen.vue'),
+      meta: {
+        requiresAuth: true,
+        title: 'ChromaDB UI - Collection'
+      }
     }
   ]
 })

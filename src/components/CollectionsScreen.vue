@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useViewStore } from '../stores/view'
+import { computed, onMounted, ref } from 'vue'
 import { useChromaStore } from '../stores/chroma'
-import DocumentsList from './DocumentsList.vue'
+import { useRouter } from 'vue-router'
+import AddCollectionModal from './AddCollectionModal.vue'
+import DeleteConfirmModal from './DeleteConfirmModal.vue'
 
-const viewStore = useViewStore()
+const router = useRouter()
 const chromaStore = useChromaStore()
+const currentPage = ref(1)
+const itemsPerPage = 20
+const showAddModal = ref(false)
+const showDeleteConfirm = ref(false)
+const collectionToDelete = ref('')
 
-const showDocuments = computed(() => chromaStore.currentCollection !== null)
+const totalPages = computed(() =>
+  Math.ceil(chromaStore.collections.length / itemsPerPage)
+)
+
+const paginatedCollections = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return chromaStore.collections.slice(start, end)
+})
 
 // Fetch collections when component mounts
 onMounted(async () => {
@@ -18,16 +32,8 @@ onMounted(async () => {
   }
 })
 
-const viewCollection = async (collection: string) => {
-  try {
-    await chromaStore.fetchCollectionDocuments(collection)
-  } catch (error) {
-    console.error('Failed to fetch collection documents:', error)
-  }
-}
-
-const handleReturnToCollections = () => {
-  chromaStore.currentCollection = null
+const viewCollection = (collection: string) => {
+  router.push(`/collection/${collection}`)
 }
 </script>
 
@@ -36,15 +42,8 @@ const handleReturnToCollections = () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
-          {{ showDocuments ? `Collection: ${chromaStore.currentCollection}` : 'Collections' }}
+          Collections
         </h1>
-        <button
-          v-if="showDocuments"
-          @click="handleReturnToCollections"
-          class="px-3 py-1 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
-        >
-          ← Back to Collections
-        </button>
       </div>
       <!-- Loading state -->
       <div v-if="chromaStore.loading" class="mt-6 text-center text-gray-500 dark:text-gray-400">
@@ -57,50 +56,89 @@ const handleReturnToCollections = () => {
       </div>
 
       <!-- Empty state -->
-      <div v-else-if="!showDocuments && chromaStore.collections.length === 0" class="mt-6 text-center text-gray-500 dark:text-gray-400">
+      <div v-else-if="chromaStore.collections.length === 0" class="mt-6 text-center text-gray-500 dark:text-gray-400">
         There are no collections.
       </div>
 
+      <!-- Add Collection Button -->
+      <button
+        @click="showAddModal = true"
+        class="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      >
+        Add Collection
+      </button>
+
       <!-- Collections list -->
-      <div v-else-if="!showDocuments && chromaStore.collections.length > 0" :class="[
-        'mt-6',
-        viewStore.isTableView ? 'divide-y divide-gray-200 dark:divide-gray-700' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-      ]">
+      <div v-if="chromaStore.collections.length > 0" class="mt-6 divide-y divide-gray-200 dark:divide-gray-700">
         <div
-          v-for="collection in chromaStore.collections"
+          v-for="collection in paginatedCollections"
           :key="collection.name"
-          :class="[
-            'flex items-center justify-between',
-            viewStore.isTableView
-              ? 'py-4 px-6'
-              : 'bg-white dark:bg-[#111827] border border-[#E5E7EB] dark:border-[#374151] rounded-lg p-4'
-          ]"
+          class="flex items-center justify-between py-4 px-6"
         >
-            <h2 :class="[
-              'font-medium text-[#1F2937] dark:text-[#F9FAFB]',
-              viewStore.isTableView ? 'text-base' : 'text-lg'
-            ]">
-              {{ collection.name }}
-          </h2>
+          <button
+            @click="viewCollection(collection.name)"
+            class="font-medium text-[#1F2937] dark:text-[#F9FAFB] text-base hover:text-blue-500 dark:hover:text-blue-400 text-left"
+          >
+            {{ collection.name }}
+          </button>
           <div class="flex space-x-2">
             <button
               class="px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                @click="viewCollection(collection.name)"
+              @click="viewCollection(collection.name)"
             >
               View
             </button>
             <button
-              class="px-3 py-1 text-sm bg-red-500 text-white rounded-md opacity-50 cursor-not-allowed"
-              disabled
+              class="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
+              @click="() => {
+                collectionToDelete = collection.name;
+                showDeleteConfirm = true;
+              }"
             >
               Delete
             </button>
           </div>
         </div>
+
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="mt-4 flex justify-center space-x-2">
+          <button
+            :disabled="currentPage === 1"
+            @click="currentPage--"
+            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span class="px-3 py-1 text-sm">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+          <button
+            :disabled="currentPage === totalPages"
+            @click="currentPage++"
+            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
-      <div v-else class="mt-6">
-        <DocumentsList />
-      </div>
+
+      <!-- Add Collection Modal -->
+      <AddCollectionModal
+        :show="showAddModal"
+        @close="showAddModal = false"
+        @created="showAddModal = false"
+      />
+
+      <!-- Delete Confirmation Modal -->
+      <DeleteConfirmModal
+        :show="showDeleteConfirm"
+        :collection-name="collectionToDelete"
+        @close="showDeleteConfirm = false"
+        @deleted="() => {
+          showDeleteConfirm = false;
+          collectionToDelete = '';
+        }"
+      />
     </div>
   </div>
 </template>
