@@ -82,11 +82,34 @@ src/
 - Component-level testing
 - Store testing
 
+### Docker Configuration
+
+- Multi-stage Dockerfile
+  - Build stage with Node.js
+  - Production stage with nginx
+  - Optimized for size and security
+
+- Environment Configuration
+  - .env file support
+  - Runtime environment variables
+  - Secure secrets handling
+
 ### CI/CD Integration
 
-- GitHub Actions workflow
-- Automated test runs on PRs
-- Test report generation
+1. Build Pipeline (On every commit)
+   - GitHub Actions workflow
+   - Docker image build automation
+   - Version control integration
+   - Build status notifications
+   - Automated test runs on PRs
+   - Test report generation
+
+2. Release Pipeline (On-demand)
+   - Manual trigger from main branch
+   - Semantic version tagging
+   - Docker Hub deployment
+   - Release documentation
+   - Version tracking
 
 ## Development Environment
 
@@ -173,8 +196,35 @@ Usage:
 
 ### Metadata Validation
 
-1.  **Type Constraints:**
-    -   String: Any string value.
-    -   Integer: A valid integer number.
-    -   Float: A valid floating-point number.
-    -   Boolean: "true" or "false" (case-sensitive).
+1. **Type Definitions:**
+   - String: UTF-8 encoded text
+   - Integer: Whole numbers (positive/negative)
+   - Float: Decimal numbers with precision
+   - Boolean: Strict "true" or "false"
+
+2. **Validation Rules:**
+   - String:
+     * No length restrictions
+     * Supports special characters
+     * Trims whitespace
+     * Required if key present
+   - Integer:
+     * Whole numbers only
+     * No decimal points
+     * Scientific notation not allowed
+     * Supports negative values
+   - Float:
+     * Decimal numbers allowed
+     * Scientific notation supported
+     * Handles precision appropriately
+     * Supports negative values
+   - Boolean:
+     * Case-sensitive "true" or "false"
+     * No other values accepted
+     * No type coercion
+
+3. **Error Handling:**
+   - Type-specific error messages
+   - Real-time validation
+   - Clear user feedback
+   - Validation state tracking

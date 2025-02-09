@@ -39,22 +39,20 @@ const handleReturnToCollections = () => {
       <div class="transition-all duration-300">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-          <div class="flex items-center space-x-4">
-            <button
-              @click="handleReturnToCollections"
-              class="px-3 py-1 text-sm text-accent-primary hover:text-accent-secondary dark:text-accent-primary dark:hover:text-accent-secondary font-medium transition-colors duration-200"
-            >
-              ← Back to Collections
-            </button>
-            <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
-              <template v-if="!loadingStore.isLoading('collections') && !loadingStore.isLoading('documents')">
-                Collection: {{ route.params.name }}
-              </template>
-              <template v-else>
-                <LoadingSkeleton width="200px" height="32px" />
-              </template>
-            </h1>
-          </div>
+          <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+            <template v-if="!loadingStore.isLoading('collections') && !loadingStore.isLoading('documents')">
+              Collection: {{ route.params.name }}
+            </template>
+            <template v-else>
+              <LoadingSkeleton width="200px" height="32px" />
+            </template>
+          </h1>
+          <button
+            @click="handleReturnToCollections"
+            class="px-4 py-2 text-sm text-accent-primary hover:text-accent-secondary dark:text-accent-primary dark:hover:text-accent-secondary font-medium transition-colors duration-200 rounded-md border border-accent-primary hover:border-accent-secondary"
+          >
+            ← Back to Collections
+          </button>
         </div>
 
         <!-- Error state -->

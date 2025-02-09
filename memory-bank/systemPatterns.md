@@ -83,17 +83,31 @@
 
 ### Authentication Persistence
 
-1.  **Storage:**
-    - Utilizes `localStorage` to persist authentication state across page reloads
+1. **Storage Implementation:**
+   - Utilizes `localStorage` for secure token storage
+   - Encrypted token format for enhanced security
+   - Automatic token cleanup on session expiry
 
-2.  **Token Management:**
-    - Authentication tokens stored in `localStorage` upon login
-    - Tokens removed from `localStorage` upon logout
+2. **Token Management:**
+   - Authentication tokens stored upon successful login
+   - Token validation on each page load
+   - Automatic token refresh mechanism
+   - Complete token removal on logout
+   - Error handling for invalid/expired tokens
 
-3.  **Session Recovery:**
-    - Checks for existing authentication data on page load
-    - Restores authentication state if valid data found
-    - Bypasses login screen for authenticated users
+3. **Session Recovery:**
+   - Automatic authentication state restoration
+   - Last visited page remembered and restored
+   - Smart redirect handling after refresh
+   - Graceful handling of expired sessions
+   - Protected route management integration
+
+4. **Security Considerations:**
+   - Token encryption in localStorage
+   - Session timeout handling
+   - CSRF protection implementation
+   - Secure token transmission
+   - XSS prevention measures
 
 ### UI Patterns
 
@@ -125,18 +139,39 @@
 
 ### Metadata Management
 
-1.  **Type Selection:**
-    - Data type selection via dropdown menu
-    - Supported types: String, Integer, Float, Boolean
+1. **Type Selection:**
+   - Dropdown menu for type selection
+   - Supported types:
+     * String: Text values
+     * Integer: Whole numbers
+     * Float: Decimal numbers
+     * Boolean: True/false values
+   - Default type: String
+   - Type persistence across sessions
 
-2.  **Validation:**
-    - Type-based value validation
-    - Error messages for invalid data
+2. **Validation System:**
+   - Real-time type validation
+   - Type-specific error messages
+   - Format requirements by type:
+     * String: Any text value
+     * Integer: Whole numbers only
+     * Float: Valid decimal numbers
+     * Boolean: true/false (case-sensitive)
+   - Custom validation error display
+   - Immediate feedback on type mismatch
 
-3.  **UI Interactions:**
-    - Add Field button for new fields
-    - Clear All button for reset
-    - Remove button per field
+3. **UI/UX Implementation:**
+   - Add Field button with type selection
+   - Type indicator per field
+   - Clear All with type reset
+   - Remove button per field
+   - Type-based input constraints
+   - Visual feedback on type validation
+   - Keyboard navigation support
+   - Accessibility considerations:
+     * ARIA labels for type selection
+     * Screen reader support
+     * Keyboard focus management
 
 ## Common Implementation Patterns
 
@@ -251,11 +286,34 @@ text-status-info-text-light dark:text-status-info-text-dark
 
 ### CI/CD Integration Patterns
 
-- PR validation workflow
-- Test report generation
-- Screenshot comparisons
-- Performance metrics tracking
-- Test failure notifications
+1. Build Pipeline
+   - Triggers on every commit
+   - Docker image build automation
+   - Version control integration
+   - Build status notifications
+   - Artifact management
+
+2. Release Pipeline
+   - On-demand execution
+   - Main branch deployments
+   - Semantic versioning
+   - Docker Hub integration
+   - Release tagging automation
+   - Version tracking
+
+3. Docker Implementation
+   - Multi-stage build process
+   - Production-optimized image
+   - Environment configuration
+   - Build caching strategy
+   - Security best practices
+
+4. Testing Integration
+   - PR validation workflow
+   - Test report generation
+   - Screenshot comparisons
+   - Performance metrics tracking
+   - Test failure notifications
 
 ## Documentation Patterns
 

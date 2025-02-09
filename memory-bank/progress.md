@@ -19,8 +19,10 @@
 - [x] Protected routes
 - [x] Logout functionality
 - [x] Authentication Persistence
-    - Once logged in, refreshing the page redirects to the login screen
-    - Users should remain authenticated after a refresh
+    - Session state maintained across page refreshes
+    - Automatic redirect to last viewed page after refresh
+    - Secure token storage in localStorage
+    - Proper session cleanup on logout
 
 ### Layout & Theme
 
@@ -66,15 +68,49 @@
 - [ ] Advanced collection features
 - [ ] Additional error handling refinements
 
-## Planned Features
+## Implemented Features
 
-- [x] Add Gemini Flash 2.0 Provider (High Priority)
+### AI Integration
+
+- [x] Gemini Flash 2.0 Provider Integration
   - Enhanced AI capabilities for Cline
-  - Integration with OpenRouter API
+  - OpenRouter API integration
   - Configuration and authentication setup
   - Provider-specific optimizations
   - Testing and performance evaluation
   - Documentation updates
+
+## Planned Features
+
+### Documentation
+
+- [ ] Contributing Guidelines (High Priority)
+  - Create CONTRIBUTING.md following GitHub best practices
+  - Exclude test automation details (not implemented yet)
+  - Maintain clear, concise guidelines
+
+- [ ] README Enhancement (High Priority)
+  - Create brief project description
+  - Add local development setup instructions
+  - Document running instructions
+
+### Infrastructure
+
+- [ ] Docker Support (High Priority)
+  - Create Docker image for the application
+  - Document Docker usage
+  - Ensure consistent build process
+
+- [ ] CI Pipeline (High Priority)
+  - Implement build pipeline
+  - Build Docker image on every commit
+  - Ensure consistent build process
+
+- [ ] Release Pipeline (Medium Priority)
+  - On-demand execution
+  - Main branch deployment
+  - Code tagging support
+  - Docker Hub integration with versioned tags
 
 - [ ] Add navbar to Login screen
   - Ensures consistent UI across all screens
@@ -92,44 +128,100 @@
 - [ ] Batch operations
 - [ ] Performance optimizations
 
+### UI/UX Improvements
+
+- [ ] Collections List Sorting (Medium Priority)
+  - Implement alphabetical sorting for collections
+  - Maintain consistent sort order
+
+- [ ] Pagination Label Contrast (Medium Priority)
+  - Fix black pagination label in dark mode
+  - Verify and adjust Collections screen pagination
+  - Ensure consistent contrast in both themes
+
+- [ ] Basic Auth Option (High Priority)
+  - Hide but preserve Basic Auth functionality
+  - Maintain code for future reintegration
+  - Document status in technical context
+
+- [ ] Add Document Metadata UX (High Priority)
+  - Fix document content validation display
+  - Address validation state persistence issues
+  - Improve validation message styling
+  - Fix metadata key validation overlay
+  - Standardize validation message styles
+
+- [ ] Document Term Consistency (Medium Priority)
+  - Align "Document" vs "Content" terminology with ChromaDB API
+  - Update UI labels for consistency
+  - Document terminology standards
+
+- [ ] Document/Metadata Order (Medium Priority)
+  - Standardize order across views
+  - Move metadata section before document
+  - Maintain consistent layout
+
+### Technical Debt
+
+- [ ] Refactor AddDocumentModal (Low Priority)
+  - Reduce component complexity
+  - Improve maintainability
+  - Extract reusable components
+  - Maintain current functionality
+
 ## Known Issues
 
 1. Double Notifications on Document Deletion
    - Two success notifications appear when deleting a document
    - Need to consolidate notification handling to a single point
 
-3. Navigation Content Layout
+2. Navigation Content Layout
    - Content jumps during navigation due to loading indicator
    - Need to implement fixed height containers or skeleton placeholders
    - Affects user experience during page transitions
 
-4. Delete Confirmation UX
-   - In DocumentModal, delete and confirm buttons are red and far apart
-   - Should switch position of confirm button for better flow
-
-5. Protocol Dropdown Theme Issue
-   - White background in dark mode
-   - Fixed with dark:[&>option]:bg-surface-secondary-dark
-
-6. Favicon Missing
-   - Not displaying in browser tab
-   - Need to verify favicon.ico configuration
-
-7. Notifications UI
-   - Width needs limiting and text wrapping
-   - Close button visibility needs improvement
-   - Better layout management needed
-
-8. Documents Screen Contrast
+3. Documents Screen Contrast
    - Header color matches active row
    - Need to improve color contrast for visual hierarchy
 
-9. Navbar Enhancements Needed
+4. Navbar Enhancements Needed
    - Add app name with distinct styling
    - Add GitHub link
    - Fix hover states for navigation links
 
-10. Field Validation Enhancement
-    - Add clearer validation messages
-    - Show validation status icons
-    - Improve form field feedback
+5. Field Validation Enhancement
+   - Add clearer validation messages
+   - Show validation status icons
+   - Improve form field feedback
+
+6. Accessibility Improvements
+   - Add keyboard navigation support
+   - Improve ARIA labels
+   - Enhance focus indicators
+
+## Recently Fixed Issues
+
+1. 'Back to Collections' Link
+   - Repositioned to right side
+   - Added border and improved hover states
+   - Fixed layout consistency
+
+2. Document Delete Confirmation
+   - Improved button placement
+   - Fixed layout stability
+   - Enhanced visual hierarchy
+
+3. Protocol Dropdowns
+   - Fixed dark mode background
+   - Improved theme consistency
+   - Added proper hover states
+
+4. Notifications System
+   - Limited width with proper wrapping
+   - Enhanced close button visibility
+   - Added backdrop blur for better readability
+
+5. Favicon Implementation
+   - Added proper favicon.ico support
+   - Included PNG version for modern browsers
+   - Added theme-color meta tags
