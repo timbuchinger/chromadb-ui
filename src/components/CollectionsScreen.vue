@@ -26,7 +26,9 @@ const totalPages = computed(() =>
 const paginatedCollections = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
-  return chromaStore.collections.slice(start, end)
+  return chromaStore.collections
+    .slice(start, end)
+    .sort((a, b) => a.name.localeCompare(b.name))
 })
 
 const { currentIndex, handleKeyDown } = useKeyboardNavigation(paginatedCollections.value)
