@@ -185,6 +185,7 @@
    - Focus on high-priority improvements
    - Maintain consistent user experience
    - Address critical layout issues
+   - Fix Collections/Documents screen scrollbar issue (navbar height calculation)
 
 4. Technical Debt
    - Regularly review component complexity

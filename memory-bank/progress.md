@@ -207,7 +207,12 @@
    - Show validation status icons
    - Improve form field feedback
 
-6. Accessibility Improvements (Ongoing)
+6. Collections/Documents Screen Scrollbar Issue
+   - Unnecessary scrollbar appears on Collections and Documents screen
+   - Likely caused by navbar height not being accounted for in layout calculations
+   - Affects user experience and visual cleanliness
+
+7. Accessibility Improvements (Ongoing)
    - Modal Accessibility (✓ Completed)
      * ✓ Added keyboard navigation support
      * ✓ Implemented ARIA labels and roles

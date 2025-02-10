@@ -75,6 +75,10 @@
        - Consistent dimensions between states
        - Fixed column widths in tables
        - Content placement preservation
+       - Known Issue: Navbar height calculation
+         * Collections and Documents screen scrollbar issue
+         * Container height needs to account for navbar
+         * Affects overall layout stability
      - Error State Handling
        - Clear loading on error
        - Error notifications
