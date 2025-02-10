@@ -14,32 +14,60 @@
 ## Current Focus
 
 ### Critical Bug Fixes (High Priority)
-- Collection Deletion
-  * Fix modal persistence after deletion
-  * Investigate collection deletion failure
-  * Ensure proper cleanup after deletion
-- Metadata Validation
-  * Review validation logic after refactor
-  * Fix broken validation functionality
-  * Test all metadata field types
-- Accessibility improvements
-  * Add keyboard navigation
-  * Improve ARIA labels
-  * Enhance focus indicators
+- Collection Deletion (✓ Completed)
+  * ✓ Fixed modal persistence after deletion
+  * ✓ Added proper cleanup in all scenarios
+  * ✓ Ensured consistent modal behavior
+- Metadata Validation (✓ Completed)
+  * ✓ Enhanced validation with type-specific checks
+  * ✓ Added duplicate key detection
+  * ✓ Implemented optional value support
+  * ✓ Improved error messaging
+- Accessibility Improvements (✓ Completed)
+  * Modal Accessibility (✓ Completed)
+    - ✓ Added keyboard navigation for modals
+    - ✓ Implemented ARIA roles and labels
+    - ✓ Added focus trap directive
+    - ✓ Enhanced error announcements
+  * Collection List (✓ Completed)
+    - ✓ Added keyboard navigation with arrow keys
+    - ✓ Implemented proper ARIA roles and labels
+    - ✓ Added live region for dynamic updates
+    - ✓ Enhanced pagination accessibility
+  * Navigation Menu (✓ Completed)
+    - ✓ Added skip to main content link
+    - ✓ Implemented keyboard navigation
+    - ✓ Added proper ARIA landmarks
+    - ✓ Enhanced theme toggle controls
+    - ✓ Improved focus management
+  * Form Accessibility (✓ Completed)
+    - ✓ Added fieldset/legend grouping
+    - ✓ Enhanced field descriptions
+    - ✓ Improved validation feedback
+    - ✓ Added proper ARIA states
+    - ✓ Implemented live error regions
+  * Keyboard Shortcuts (✓ Completed)
+    - ✓ Added global keyboard shortcut support
+    - ✓ Created shortcuts help dialog
+    - ✓ Added navigation shortcuts
+    - ✓ Implemented theme toggle shortcut
+    - ✓ Created reusable shortcut composable
+- Focus Indicators (In Progress)
+    - Improve focus indicator visibility
+    - Create consistent focus ring styles
+    - Ensure focus contrast in both themes
+    - Add focus styles documentation
 
 ### Recently Completed
-- AddDocumentModal Refactoring
-  * Extracted metadata handling to dedicated components
-  * Created reusable MetadataEditor component
-  * Implemented type system in documentTypes.ts
-  * Added validation composable for document/metadata
-  * Improved component maintainability
-  * Enhanced code organization
-  * Reduced component complexity
+- Keyboard Shortcuts Implementation
+  * Added global shortcut support
+  * Created shortcuts help dialog
+  * Added navigation shortcuts
+  * Implemented theme toggle shortcut
+  * Created reusable shortcut composable
 - Layout stability improvements
-  * Added fixed height containers for consistent layout
-  * Enhanced loading state transitions
-  * Improved skeleton placeholder design
+  * Added fixed height containers
+  * Enhanced skeleton loading states
   * Fixed content jumps during navigation
 - Collection screen improvements
   * Added min-height constraints
@@ -80,11 +108,22 @@
 
 ## Next Steps
 
-1. Bug Fixes (High Priority)
-   - Fix collection deletion modal and functionality
-   - Restore metadata validation in AddDocumentModal
-   - Test and verify fixes across all scenarios
-   - Update documentation after fixes
+1. Collections Enhancement (High Priority)
+   - Implement alphabetical sorting
+   - Fix any remaining layout stability issues
+   - Update progress.md with new features
+
+2. Focus Management (High Priority)
+   - Improve focus indicator visibility
+   - Create consistent focus ring styles
+   - Ensure focus contrast in both themes
+   - Add focus styles documentation
+
+2. UI Component Improvements (Medium Priority)
+   - Add keyboard shortcut tips to buttons
+   - Enhance focus style transitions
+   - Test focus with screen readers
+   - Document focus patterns
 
 2. UI/UX Improvements (High Priority)
    - Implement consistent terminology across views

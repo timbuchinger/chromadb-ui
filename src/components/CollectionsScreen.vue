@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useKeyboardNavigation } from '../composables/useKeyboardNavigation'
 import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
 import { useRouter } from 'vue-router'
@@ -15,6 +16,8 @@ const itemsPerPage = 20
 const showAddModal = ref(false)
 const showDeleteConfirm = ref(false)
 const collectionToDelete = ref('')
+const listRef = ref<HTMLDivElement | null>(null)
+const announcementText = ref('')
 
 const totalPages = computed(() =>
   Math.ceil(chromaStore.collections.length / itemsPerPage)
@@ -25,6 +28,24 @@ const paginatedCollections = computed(() => {
   const end = start + itemsPerPage
   return chromaStore.collections.slice(start, end)
 })
+
+const { currentIndex, handleKeyDown } = useKeyboardNavigation(paginatedCollections.value)
+
+// Reset current index when page changes
+watch(currentPage, () => {
+  currentIndex.value = -1
+})
+
+// Update announcement for screen readers
+watch(chromaStore.collections, (newCollections) => {
+  if (loadingStore.isLoading('collections')) {
+    announcementText.value = 'Loading collections...'
+  } else if (newCollections.length === 0) {
+    announcementText.value = 'No collections available.'
+  } else {
+    announcementText.value = `${newCollections.length} collections loaded.`
+  }
+}, { immediate: true })
 
 // Fetch collections when component mounts
 onMounted(async () => {
@@ -44,7 +65,7 @@ const viewCollection = (collection: string) => {
   <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-10rem)]">
       <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+        <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]" tabindex="-1">
           Collections
         </h1>
       </div>
@@ -84,15 +105,32 @@ const viewCollection = (collection: string) => {
 
         <!-- Collections list -->
         <template v-else>
-          <div class="divide-y divide-gray-200 dark:divide-gray-700">
+          <!-- Live region for announcements -->
+          <div
+            role="status"
+            aria-live="polite"
+            class="sr-only"
+          >{{ announcementText }}</div>
+
+          <div
+            ref="listRef"
+            class="divide-y divide-gray-200 dark:divide-gray-700"
+            role="listbox"
+            aria-label="Collections"
+            @keydown="(e) => handleKeyDown(e, (item) => viewCollection(item.name))"
+          >
             <div
-              v-for="collection in paginatedCollections"
+              v-for="(collection, index) in paginatedCollections"
               :key="collection.name"
               class="flex items-center justify-between h-16 py-4 px-6 transition-colors duration-200 hover:bg-surface-secondary-light/10 dark:hover:bg-surface-secondary-dark/10 rounded-md"
             >
               <button
+                :id="`collection-${index}`"
                 @click="viewCollection(collection.name)"
                 class="font-medium text-[#1F2937] dark:text-[#F9FAFB] text-base hover:text-accent-primary dark:hover:text-accent-primary text-left transition-colors duration-200"
+                role="option"
+                :aria-selected="currentIndex === index"
+                :tabindex="currentIndex === index ? 0 : -1"
               >
                 {{ collection.name }}
               </button>
@@ -118,15 +156,22 @@ const viewCollection = (collection: string) => {
           </div>
 
           <!-- Pagination -->
-          <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2">
+          <div
+            v-if="totalPages > 1"
+            class="mt-6 flex justify-center space-x-2"
+            role="navigation"
+            aria-label="Pagination"
+          >
             <button
               :disabled="currentPage === 1"
               @click="currentPage--"
               class="px-3 py-1 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 transition-colors duration-200"
             >
+              <span class="sr-only">Go to</span>
               Previous
+              <span class="sr-only">page</span>
             </button>
-            <span class="px-3 py-1 text-sm">
+            <span class="px-3 py-1 text-sm" aria-current="page">
               Page {{ currentPage }} of {{ totalPages }}
             </span>
             <button
@@ -134,7 +179,9 @@ const viewCollection = (collection: string) => {
               @click="currentPage++"
               class="px-3 py-1 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 transition-colors duration-200"
             >
+              <span class="sr-only">Go to</span>
               Next
+              <span class="sr-only">page</span>
             </button>
           </div>
         </template>

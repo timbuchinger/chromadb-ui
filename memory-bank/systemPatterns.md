@@ -115,8 +115,36 @@
    - Used for collection creation
    - Confirmation dialogs
    - Document viewing/editing
+   - Accessibility features:
+     * ARIA roles and labels
+     * Focus management and trapping
+     * Keyboard navigation
+     * Screen reader support
+     * Error announcements
 
-2. Notification Pattern
+2. Accessibility Pattern
+   - Focus Management:
+     * Focus trap directive for modals
+     * Initial focus placement
+     * Focus restoration on close
+     * Keyboard navigation within components
+   - ARIA Implementation:
+     * Descriptive labels and roles
+     * Live regions for updates
+     * Error announcements
+     * State indicators
+   - Screen Reader Support:
+     * Clear content structure
+     * Hidden descriptive text
+     * Status updates
+     * Action descriptions
+   - Keyboard Navigation:
+     * Tab order management
+     * Escape key handling
+     * Arrow key navigation
+     * Intuitive shortcuts
+
+3. Notification Pattern
    - Success/Error/Warning/Info types
    - Auto-dismiss after 10 seconds
    - Manual dismiss option
@@ -133,9 +161,9 @@
      - Delete buttons use error state with opacity hover
      - Form elements use primary accent for focus
    - Color accessibility considerations:
-     - High contrast text colors in both modes
-     - Clear visual hierarchy using accent colors
-     - Consistent interactive element styling
+     * High contrast text colors in both modes
+     * Clear visual hierarchy using accent colors
+     * Consistent interactive element styling
 
 ### Metadata Management
 
@@ -167,15 +195,21 @@
    - Type persistence across sessions
 
 4. **Validation System:**
-   - Real-time type validation
-   - Type-specific error messages
+   - Real-time type validation with immediate feedback
+   - Type-specific error messages with clear guidance
+   - Optional values support (empty values allowed)
+   - Duplicate key detection and prevention
    - Format requirements by type:
      * String: Any text value
-     * Integer: Whole numbers only
-     * Float: Valid decimal numbers
-     * Boolean: true/false (case-sensitive)
-   - Custom validation error display
-   - Immediate feedback on type mismatch
+     * Integer: Whole numbers only (no decimals)
+     * Float: Valid decimal numbers (scientific notation supported)
+     * Boolean: Strict "true" or "false" (case-sensitive)
+   - Error message improvements:
+     * Clear error identification
+     * Type-specific validation messages
+     * Helpful suggestions for correction
+   - Value trimming before validation
+   - Validation state persistence
 
 5. **UI/UX Implementation:**
    - Add Field button with type selection
@@ -189,6 +223,83 @@
      * ARIA labels for type selection
      * Screen reader support
      * Keyboard focus management
+
+### Keyboard Shortcuts Pattern
+
+1.  Composable Implementation:
+    *   Reusable `useKeyboardShortcuts` composable
+    *   Centralized shortcut handling
+    *   Dynamic shortcut registration
+    *   Automatic event listener management
+
+2.  Shortcut Configuration:
+    *   Clear shortcut definitions
+    *   Modifier key support (Ctrl, Shift, Alt)
+    *   Descriptive shortcut labels
+    *   Centralized shortcut configuration
+
+3.  Help Dialog:
+    *   Dynamic shortcut listing
+    *   Clear keybinding display
+    *   Easy-to-access help information
+    *   Keyboard navigable interface
+
+### Focus Indicator Pattern
+
+1. Consistent Focus Styles:
+    *   Use clear and visible focus indicators
+    *   Ensure sufficient contrast
+    *   Maintain consistent focus ring styles
+
+2. Keyboard Navigation:
+    *   Ensure logical tab order
+    *   Implement arrow key navigation
+    *   Provide skip links
+    *   Support Home/End keys
+
+3. Screen Reader Compatibility:
+    *   Test focus with screen readers
+    *   Provide descriptive labels
+    *   Use ARIA attributes for state
+    *   Ensure dynamic updates are announced
+
+## Common Implementation Patterns
+
+1. Consistent Focus Styles:
+    *   Use clear and visible focus indicators
+    *   Ensure sufficient contrast
+    *   Maintain consistent focus ring styles
+
+2. Keyboard Navigation:
+    *   Ensure logical tab order
+    *   Implement arrow key navigation
+    *   Provide skip links
+    *   Support Home/End keys
+
+3. Screen Reader Compatibility:
+    *   Test focus with screen readers
+    *   Provide descriptive labels
+    *   Use ARIA attributes for state
+    *   Ensure dynamic updates are announced
+
+## Common Implementation Patterns
+
+1. Consistent Focus Styles:
+    *   Use clear and visible focus indicators
+    *   Ensure sufficient contrast
+    *   Maintain consistent focus ring styles
+
+2. Keyboard Navigation:
+    *   Ensure logical tab order
+    *   Implement arrow key navigation
+    *   Provide skip links
+    *   Support Home/End keys
+
+3. Screen Reader Compatibility:
+    *   Test focus with screen readers
+    *   Provide descriptive labels
+    *   Use ARIA attributes for state
+    *   Ensure dynamic updates are announced
 
 ## Common Implementation Patterns
 

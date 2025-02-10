@@ -22,6 +22,8 @@ const handleDelete = async () => {
     emit('deleted', props.collectionName)
   } catch (error) {
     // Error handled by chromaStore
+  } finally {
+    emit('close')
   }
 }
 </script>

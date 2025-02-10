@@ -171,16 +171,17 @@
 
 ## Known Issues
 
-1. Delete Collection Modal (High Priority)
-   - Collection deletion confirmation modal stays visible after deletion
-   - Collection not being deleted properly
-   - Collection list refreshes correctly in background
-   - Needs immediate attention to fix core functionality
+1. Delete Collection Modal (Fixed)
+   - ✓ Fixed modal persistence after deletion
+   - ✓ Added proper cleanup in both success and error cases
+   - ✓ Modal now closes automatically after operation completion
+   - ✓ Collection list updates correctly in background
 
-2. Metadata Validation Issues (High Priority)
-   - Document metadata validation not functioning
-   - Issue likely introduced in recent component refactor
-   - Requires validation logic review and fix
+2. Metadata Validation Issues (Fixed)
+   - ✓ Enhanced validation with improved error messages
+   - ✓ Added duplicate key detection
+   - ✓ Implemented proper type validation
+   - ✓ Added support for optional values
 
 3. Double Notifications on Document Deletion
    - Two success notifications appear when deleting a document
@@ -206,10 +207,39 @@
    - Show validation status icons
    - Improve form field feedback
 
-6. Accessibility Improvements
-   - Add keyboard navigation support
-   - Improve ARIA labels
-   - Enhance focus indicators
+6. Accessibility Improvements (Ongoing)
+   - Modal Accessibility (✓ Completed)
+     * ✓ Added keyboard navigation support
+     * ✓ Implemented ARIA labels and roles
+     * ✓ Added focus management and trapping
+     * ✓ Enhanced error announcements
+   - Collection List Accessibility (✓ Completed)
+     * ✓ Added keyboard navigation with arrow keys
+     * ✓ Implemented proper ARIA roles and labels
+     * ✓ Added live region for dynamic updates
+     * ✓ Enhanced pagination accessibility
+   - Navigation Menu Accessibility (✓ Completed)
+     * ✓ Added skip to main content link
+     * ✓ Implemented keyboard navigation
+     * ✓ Enhanced ARIA roles and states
+     * ✓ Added descriptive labels
+     * ✓ Improved focus indicators
+   - Form Field Accessibility (✓ Completed)
+     * ✓ Added fieldset and legend for groups
+     * ✓ Enhanced form field descriptions
+     * ✓ Improved validation feedback
+     * ✓ Added proper ARIA states
+     * ✓ Enhanced screen reader support
+   - Remaining tasks:
+     * Additional field group patterns
+     * Enhanced app-wide focus indicators
+
+7. Keyboard Shortcuts (✓ Completed)
+   - ✓ Added global keyboard shortcut support
+   - ✓ Implemented shortcuts help dialog
+   - ✓ Added navigation shortcuts
+   - ✓ Implemented theme toggle shortcut
+   - ✓ Added descriptive shortcut texts
 
 ## Recently Fixed Issues
 

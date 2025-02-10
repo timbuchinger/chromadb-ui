@@ -22,7 +22,8 @@ const updateField = (field: keyof MetadataPair, value: string) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr,auto,1fr,auto] gap-2 items-start group">
+  <fieldset class="grid grid-cols-[1fr,auto,1fr,auto] gap-2 items-start group">
+    <legend class="sr-only">Metadata Field</legend>
     <!-- Key Input -->
     <div class="relative w-full">
       <input
@@ -35,6 +36,10 @@ const updateField = (field: keyof MetadataPair, value: string) => {
           'border-green-500 dark:border-green-500': pair.key.trim()
         }"
         placeholder="Key*"
+        aria-label="Metadata key"
+        aria-required="true"
+        :aria-invalid="error && !pair.key.trim() && showValidation ? 'true' : 'false'"
+        :aria-describedby="error && !pair.key.trim() && showValidation ? `key-error-${pair.key}` : undefined"
       />
       <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
         <!-- Success Icon -->
@@ -46,11 +51,16 @@ const updateField = (field: keyof MetadataPair, value: string) => {
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
         </svg>
       </div>
-      <div v-if="error && !pair.key.trim() && showValidation" class="absolute -bottom-5 left-0 text-sm font-medium text-red-500 flex items-center">
-        <svg class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+      <div
+        v-if="error && !pair.key.trim() && showValidation"
+        :id="`key-error-${pair.key}`"
+        class="absolute -bottom-5 left-0 text-sm font-medium text-red-500 flex items-center"
+        role="alert"
+      >
+        <svg class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
         </svg>
-        Key is required
+        <span>Key is required</span>
       </div>
     </div>
 
@@ -60,6 +70,8 @@ const updateField = (field: keyof MetadataPair, value: string) => {
       @change="updateField('type', ($event.target as HTMLSelectElement).value)"
       class="h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
       :title="getTypeDescription(pair.type)"
+      aria-label="Metadata type"
+      :aria-describedby="`type-desc-${pair.key}`"
     >
       <option value="string">String</option>
       <option value="integer">Integer</option>
@@ -74,6 +86,7 @@ const updateField = (field: keyof MetadataPair, value: string) => {
         :value="pair.value"
         @change="updateField('value', ($event.target as HTMLSelectElement).value)"
         class="w-full h-10 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3"
+        aria-label="Boolean value"
       >
         <option value="true">true</option>
         <option value="false">false</option>
@@ -89,6 +102,9 @@ const updateField = (field: keyof MetadataPair, value: string) => {
             'border-green-500 dark:border-green-500': isValidValue(pair)
           }"
           :placeholder="getTypePlaceholder(pair.type)"
+          :aria-label="`Value for ${pair.key || 'metadata field'}`"
+          :aria-invalid="error && pair.key.includes(pair.key) && showValidation ? 'true' : 'false'"
+          :aria-describedby="`value-desc-${pair.key} ${error && pair.key.includes(pair.key) && showValidation ? `value-error-${pair.key}` : ''}`"
         />
         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <!-- Success Icon -->
@@ -101,7 +117,12 @@ const updateField = (field: keyof MetadataPair, value: string) => {
           </svg>
         </div>
       </div>
-      <div v-if="error && pair.key.includes(pair.key) && showValidation" class="absolute -bottom-5 left-0 text-sm font-medium text-red-500 flex items-center">
+      <div
+        v-if="error && pair.key.includes(pair.key) && showValidation"
+        :id="`value-error-${pair.key}`"
+        class="absolute -bottom-5 left-0 text-sm font-medium text-red-500 flex items-center"
+        role="alert"
+      >
         <svg class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
         </svg>
@@ -112,11 +133,18 @@ const updateField = (field: keyof MetadataPair, value: string) => {
     <!-- Remove Button -->
     <button
       @click="emit('remove')"
-      class="h-10 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
-      title="Remove field"
+      class="h-10 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors focus:ring-2 focus:ring-accent-primary focus:outline-none"
+      :aria-label="`Remove metadata field ${pair.key || 'without key'}`"
     >
-      <span class="sr-only">Remove field</span>
-      ×
+      <span aria-hidden="true">×</span>
     </button>
-  </div>
+
+    <!-- Hidden descriptions for screen readers -->
+    <span :id="`type-desc-${pair.key}`" class="sr-only">
+      {{ getTypeDescription(pair.type) }}
+    </span>
+    <span :id="`value-desc-${pair.key}`" class="sr-only">
+      Enter a {{ pair.type }} value for this metadata field
+    </span>
+  </fieldset>
 </template>

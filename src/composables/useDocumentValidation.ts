@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import type { MetadataPair } from '../utils/documentTypes'
+import { isValidValue } from '../utils/documentTypes'
 
 export interface ValidationResult {
   isValid: boolean
@@ -23,6 +24,7 @@ export function useDocumentValidation() {
   }
 
   const validateMetadata = (pairs: MetadataPair[]): ValidationResult => {
+    // Check for empty keys
     for (const pair of pairs) {
       if (!pair.key.trim()) {
         return {
@@ -30,25 +32,44 @@ export function useDocumentValidation() {
           error: 'All metadata fields require a key'
         }
       }
+    }
 
-      if (pair.type === 'integer' && isNaN(Number(pair.value))) {
-        return {
-          isValid: false,
-          error: `Metadata field "${pair.key}" must be an integer`
-        }
+    // Check for duplicate keys
+    const keys = pairs.map(p => p.key.trim())
+    const duplicates = keys.filter((key, index) => keys.indexOf(key) !== index)
+    if (duplicates.length > 0) {
+      return {
+        isValid: false,
+        error: `Duplicate metadata keys found: ${duplicates.join(', ')}`
+      }
+    }
+
+    // Validate values using existing type validation
+    for (const pair of pairs) {
+      const trimmedValue = pair.value.trim()
+
+      // Skip empty values as they're optional
+      if (!trimmedValue) {
+        continue
       }
 
-      if (pair.type === 'float' && isNaN(Number(pair.value))) {
-        return {
-          isValid: false,
-          error: `Metadata field "${pair.key}" must be a float`
-        }
-      }
+      if (!isValidValue(pair)) {
+        const typeSpecificError = (() => {
+          switch (pair.type) {
+            case 'integer':
+              return 'must be a whole number'
+            case 'float':
+              return 'must be a valid decimal number'
+            case 'boolean':
+              return 'must be exactly "true" or "false"'
+            default:
+              return 'has an invalid value'
+          }
+        })()
 
-      if (pair.type === 'boolean' && pair.value !== 'true' && pair.value !== 'false') {
         return {
           isValid: false,
-          error: `Metadata field "${pair.key}" must be a boolean (true or false)`
+          error: `Metadata field "${pair.key}" ${typeSpecificError}`
         }
       }
     }
