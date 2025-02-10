@@ -171,7 +171,18 @@
 
 ## Known Issues
 
-1. Double Notifications on Document Deletion
+1. Delete Collection Modal (High Priority)
+   - Collection deletion confirmation modal stays visible after deletion
+   - Collection not being deleted properly
+   - Collection list refreshes correctly in background
+   - Needs immediate attention to fix core functionality
+
+2. Metadata Validation Issues (High Priority)
+   - Document metadata validation not functioning
+   - Issue likely introduced in recent component refactor
+   - Requires validation logic review and fix
+
+3. Double Notifications on Document Deletion
    - Two success notifications appear when deleting a document
    - Need to consolidate notification handling to a single point
 

@@ -13,11 +13,15 @@
 
 ## Current Focus
 
-### UI/UX Improvements (High Priority)
-- Form validation improvements
-  * Add field-specific error states
-  * Improve validation feedback
-  * Enhance error message presentation
+### Critical Bug Fixes (High Priority)
+- Collection Deletion
+  * Fix modal persistence after deletion
+  * Investigate collection deletion failure
+  * Ensure proper cleanup after deletion
+- Metadata Validation
+  * Review validation logic after refactor
+  * Fix broken validation functionality
+  * Test all metadata field types
 - Accessibility improvements
   * Add keyboard navigation
   * Improve ARIA labels
@@ -76,7 +80,13 @@
 
 ## Next Steps
 
-1. UI/UX Improvements (High Priority)
+1. Bug Fixes (High Priority)
+   - Fix collection deletion modal and functionality
+   - Restore metadata validation in AddDocumentModal
+   - Test and verify fixes across all scenarios
+   - Update documentation after fixes
+
+2. UI/UX Improvements (High Priority)
    - Implement consistent terminology across views
    - Add keyboard navigation improvements
    - Enhance form field accessibility
