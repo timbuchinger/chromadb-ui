@@ -96,21 +96,21 @@
 
 ### Infrastructure
 
-- [ ] Docker Support (High Priority)
-  - Create Docker image for the application
-  - Document Docker usage
-  - Ensure consistent build process
+- [x] Docker Support (Completed)
+  - ✓ Created multi-stage Dockerfile
+  - ✓ Added Docker documentation
+  - ✓ Ensured efficient build process
 
-- [ ] CI Pipeline (High Priority)
-  - Implement build pipeline
-  - Build Docker image on every commit
-  - Ensure consistent build process
+- [x] CI Pipeline (Completed)
+  - ✓ Implemented GitHub Actions workflow
+  - ✓ Added Docker image builds
+  - ✓ Set up caching and optimization
 
-- [ ] Release Pipeline (Medium Priority)
-  - On-demand execution
-  - Main branch deployment
-  - Code tagging support
-  - Docker Hub integration with versioned tags
+- [x] Release Pipeline (Completed)
+  - ✓ Added version-based releases
+  - ✓ Configured automated tagging
+  - ✓ Set up Docker Hub integration
+  - ✓ Added release documentation
 
 - [ ] Add navbar to Login screen
   - Ensures consistent UI across all screens
