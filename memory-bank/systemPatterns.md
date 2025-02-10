@@ -139,7 +139,24 @@
 
 ### Metadata Management
 
-1. **Type Selection:**
+1. **Component Architecture:**
+   - MetadataEditor/
+     * index.vue: Main metadata management component
+     * MetadataField.vue: Individual metadata field component
+   - Shared utility types in documentTypes.ts
+   - Validation logic in useDocumentValidation composable
+
+2. **Type System:**
+   - Centralized type definitions in documentTypes.ts
+   - MetadataType: 'string' | 'integer' | 'float' | 'boolean'
+   - MetadataPair interface for consistent structure
+   - Type helper functions:
+     * getTypeDescription: User-friendly type descriptions
+     * getTypePlaceholder: Context-aware input placeholders
+     * isValidValue: Type-specific validation
+     * parseMetadataValue: Safe type conversion
+
+3. **Type Selection:**
    - Dropdown menu for type selection
    - Supported types:
      * String: Text values
@@ -149,7 +166,7 @@
    - Default type: String
    - Type persistence across sessions
 
-2. **Validation System:**
+4. **Validation System:**
    - Real-time type validation
    - Type-specific error messages
    - Format requirements by type:
@@ -160,7 +177,7 @@
    - Custom validation error display
    - Immediate feedback on type mismatch
 
-3. **UI/UX Implementation:**
+5. **UI/UX Implementation:**
    - Add Field button with type selection
    - Type indicator per field
    - Clear All with type reset

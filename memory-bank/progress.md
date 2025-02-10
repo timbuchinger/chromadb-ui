@@ -163,11 +163,11 @@
 
 ### Technical Debt
 
-- [ ] Refactor AddDocumentModal (Low Priority)
-  - Reduce component complexity
-  - Improve maintainability
-  - Extract reusable components
-  - Maintain current functionality
+- [x] Refactor AddDocumentModal (Completed)
+  - Extracted metadata handling to MetadataEditor components
+  - Created reusable documentTypes utility
+  - Added dedicated validation composable
+  - Improved code organization and maintainability
 
 ## Known Issues
 
@@ -202,7 +202,15 @@
 
 ## Recently Fixed Issues
 
-1. Navigation and Layout Stability
+1. AddDocumentModal Refactoring
+   - Extracted metadata handling into dedicated components
+   - Implemented type system and validation logic
+   - Improved component organization and maintainability
+   - Enhanced code quality and testability
+   - Reduced component complexity
+   - Added proper TypeScript types
+
+2. Navigation and Layout Stability
    - Added fixed height containers to prevent content jumps
    - Implemented consistent min-height across views
    - Enhanced loading state transitions
