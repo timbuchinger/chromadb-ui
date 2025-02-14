@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import NavBar from './NavBar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -67,7 +66,6 @@ async function handleSubmit() {
 
 <template>
   <div class="min-h-screen bg-surface-primary-light dark:bg-surface-primary-dark">
-    <NavBar />
     <div class="flex items-center justify-center px-4 h-[calc(100vh-4rem)]">
       <div class="max-w-md w-full space-y-8">
       <div>
@@ -106,15 +104,6 @@ async function handleSubmit() {
               class="form-radio text-accent-primary"
             />
             <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Token</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="basic"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Basic Auth</span>
           </label>
           <label class="inline-flex items-center">
             <input
