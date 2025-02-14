@@ -33,10 +33,10 @@ module.exports = {
           }
         },
         accent: {
-          primary: colors.blue[600], // #2563eb
-          secondary: colors.orange[500], // #f97316
+          primary: "#007a99", //"#367c39", // #2563eb
+          secondary: "#008fb3", // #f97316
           tertiary: colors.yellow[500], // #eab308
-          error: colors.red[500]
+          error: "#b32400", //colors.red[500]
         },
         status: {
           success: {
