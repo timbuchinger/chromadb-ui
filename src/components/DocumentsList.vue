@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useChromaStore } from '../stores/chroma'
 import DocumentModal from './DocumentModal.vue'
+import AddDocumentModal from './AddDocumentModal.vue'
 import type { Document } from '../stores/chroma'
 
 const chromaStore = useChromaStore()

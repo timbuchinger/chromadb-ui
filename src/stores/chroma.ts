@@ -63,6 +63,7 @@ export const useChromaStore = defineStore('chroma', {
     async fetchCollections() {
       const authStore = useAuthStore()
       this.loading = true
+      const loadingStore = useLoadingStore()
       this.error = null
 
       try {
