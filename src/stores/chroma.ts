@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from './auth'
+import { useNotificationStore } from './notifications'
+import { useLoadingStore } from './loading'
 
 export interface CollectionInfo {
   name: string
@@ -58,7 +60,6 @@ export const useChromaStore = defineStore('chroma', {
     collections: [] as CollectionInfo[],
     currentCollection: null as CollectionInfo | null,
     documents: [] as Document[],
-    loading: false,
     error: null as string | null
   }),
 
@@ -71,10 +72,12 @@ export const useChromaStore = defineStore('chroma', {
   actions: {
     async fetchCollections() {
       const authStore = useAuthStore()
-      this.loading = true
+      const notificationStore = useNotificationStore()
+      const loadingStore = useLoadingStore()
       this.error = null
 
-      try {
+      return loadingStore.withLoading('collections', async () => {
+
         const response = await axios.get<{ id: string; name: string }[]>(
           `${authStore.getBaseUrl}/api/v1/collections?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
           {
@@ -82,38 +85,30 @@ export const useChromaStore = defineStore('chroma', {
           }
         )
         this.collections = response.data
-      } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error) && error.response?.status === 404
-            ? 'Collection not found'
-            : 'Failed to fetch collections'
-        throw error
-      } finally {
-        this.loading = false
-      }
+      })
     },
 
     async fetchCollectionDocuments(name: string) {
       const authStore = useAuthStore()
-      this.loading = true
+      const notificationStore = useNotificationStore()
+      const loadingStore = useLoadingStore()
       this.error = null
 
       const collection = this.getCollectionByName(name)
       if (!collection) {
         this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        notificationStore.error(this.error || 'Collection not found')
+        return
       }
 
       this.currentCollection = collection
 
-      try {
+      return loadingStore.withLoading('documents', async () => {
         const response = await axios.post<GetResponse>(
           `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/get`,
           {
             collection_name: name,
             include: ['documents', 'metadatas'] as IncludeEnum[],
-            // where: { $and: [] }, // Use $and operator with empty condition array to match all documents
             limit: 100,
             tenant: DEFAULT_PARAMS.tenant,
             database: DEFAULT_PARAMS.database
@@ -123,41 +118,32 @@ export const useChromaStore = defineStore('chroma', {
           }
         )
 
-        // Transform the response into Document objects
         const { ids, documents, metadatas } = response.data
         this.documents = ids.map((id, index) => ({
           id,
           document: documents[index] || '',
           metadata: metadatas[index] || {}
         }))
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error('Full error response:', error.response?.data)
-          this.error = error.response?.data?.message ||
-            `API Error ${error.response?.status}: ${error.response?.data ? JSON.stringify(error.response.data) : error.message}`
-        } else if (error instanceof Error) {
-          this.error = error.message
-        } else {
-          this.error = 'Failed to fetch documents'
-        }
-        throw error
-      } finally {
-        this.loading = false
-      }
+      })
     },
 
     async deleteDocument(collectionName: string, documentId: string) {
-      const authStore = useAuthStore()
-      this.loading = true
-      this.error = null
+      const authStore = useAuthStore();
+      const notificationStore = useNotificationStore();
+      const loadingStore = useLoadingStore();
+      this.error = null;
 
-      const collection = this.getCollectionByName(collectionName)
+      const collection = this.getCollectionByName(collectionName);
       if (!collection) {
-        this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        this.error = 'Collection not found';
+        notificationStore.error(this.error || 'Collection not found');
+        return;
       }
 
-      try {
+      const loadingResult = loadingStore.withLoading('documents', async () => {
+        if (!collection) {
+          return;
+        }
         await axios.post(
           `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/delete`,
           {
@@ -168,28 +154,20 @@ export const useChromaStore = defineStore('chroma', {
           {
             headers: authStore.getHeaders
           }
-        )
+        );
 
-        // Remove the document from the local state
-        this.documents = this.documents.filter(doc => doc.id !== documentId)
-      } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error) && error.response?.status === 404
-            ? 'Document or collection not found'
-            : 'Failed to delete document'
-        throw error
-      } finally {
-        this.loading = false
-      }
+        this.documents = this.documents.filter(doc => doc.id !== documentId);
+      });
+      return loadingResult;
     },
 
     async createCollection(name: string) {
       const authStore = useAuthStore()
-      this.loading = true
+      const notificationStore = useNotificationStore()
+      const loadingStore = useLoadingStore()
       this.error = null
 
-      try {
+      return loadingStore.withLoading('collections', async () => {
         const response = await axios.post<{ id: string; name: string }>(
           `${authStore.getBaseUrl}/api/v1/collections`,
           {
@@ -201,95 +179,78 @@ export const useChromaStore = defineStore('chroma', {
             headers: authStore.getHeaders
           }
         )
-        // Add the new collection to local state
         this.collections.push(response.data)
-      } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error)
-            ? error.response?.data?.message || 'Failed to create collection'
-            : 'Failed to create collection'
-        throw error
-      } finally {
-        this.loading = false
-      }
+        notificationStore.success('Collection created successfully')
+      })
     },
 
     async addDocument(collectionName: string, params: { id?: string; document: string; metadata: Record<string, any> }) {
+      const crypto = window.crypto
+      const getRandomId = () => crypto.randomUUID()
       const authStore = useAuthStore()
-      this.loading = true
+      const notificationStore = useNotificationStore()
+      const loadingStore = useLoadingStore()
       this.error = null
 
       const collection = this.getCollectionByName(collectionName)
       if (!collection) {
-        this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        this.error = 'Collection not found';
+        notificationStore.error(this.error || 'Collection not found');
+        return;
       }
 
-      try {
+      return loadingStore.withLoading('documents', async () => {
         // Use put for ID-specified documents, post for auto-generated IDs
-        const method = params.id ? 'put' : 'post'
+        const method = params.id ? 'put' : 'post';
         await axios.request({
-          method,
+          method: method,
           url: `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/upsert`,
           data: {
             documents: [params.document],
             metadatas: [params.metadata],
-            ids: params.id ? [params.id] : undefined,
+            ids: [params.id || getRandomId()],
             tenant: DEFAULT_PARAMS.tenant,
             database: DEFAULT_PARAMS.database
           },
           headers: authStore.getHeaders
-        })
+        });
 
-        // Refresh documents list
-        await this.fetchCollectionDocuments(collectionName)
-      } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error)
-            ? error.response?.data?.message || 'Failed to add document'
-            : 'Failed to add document'
-        throw error
-      } finally {
-        this.loading = false
-      }
+        await this.fetchCollectionDocuments(collectionName);
+        notificationStore.success('Document added successfully');
+      });
     },
 
     async deleteCollection(name: string) {
       const authStore = useAuthStore()
-      this.loading = true
+      const notificationStore = useNotificationStore()
+      const loadingStore = useLoadingStore()
       this.error = null
 
       const collection = this.getCollectionByName(name)
       if (!collection) {
-        this.error = 'Collection not found'
-        throw new Error('Collection not found')
+        this.error = 'Collection not found';
+        notificationStore.error(this.error || 'Collection not found');
+        return;
       }
 
-      try {
+      const loadingResult = loadingStore.withLoading('collections', async () => {
+        if (!collection) {
+          return;
+        }
         await axios.delete(
           `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
           {
             headers: authStore.getHeaders
           }
-        )
-        // Remove the collection from local state
-        this.collections = this.collections.filter(col => col.name !== name)
+        );
+        this.collections = this.collections.filter(col => col.name !== name);
         if (this.currentCollection?.name === name) {
-          this.currentCollection = null
-          this.documents = []
+          this.currentCollection = null;
+          this.documents = [];
         }
-      } catch (error) {
-        this.error = error instanceof Error
-          ? error.message
-          : axios.isAxiosError(error) && error.response?.status === 404
-            ? 'Collection not found'
-            : 'Failed to delete collection'
-        throw error
-      } finally {
-        this.loading = false
-      }
+        notificationStore.success('Collection deleted successfully');
+      });
+      return loadingResult;
     }
   }
 })

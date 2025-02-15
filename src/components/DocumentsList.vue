@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useChromaStore } from '../stores/chroma'
+import { useLoadingStore } from '../stores/loading'
 import DocumentModal from './DocumentModal.vue'
+import AddDocumentModal from './AddDocumentModal.vue'
+import LoadingSpinner from './LoadingSpinner.vue'
 import type { Document } from '../stores/chroma'
 
 const chromaStore = useChromaStore()
+const loadingStore = useLoadingStore()
 const selectedDocument = ref<Document | null>(null)
 const showModal = ref(false)
 const showAddModal = ref(false)
-const newDocumentId = ref('')
-const newDocumentContent = ref('')
-const metadataPairs = ref([{ key: '', value: '' }])
 const currentPage = ref(1)
 const itemsPerPage = 20
-const documentError = ref('')
 
 const paginatedDocuments = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
@@ -24,45 +24,6 @@ const paginatedDocuments = computed(() => {
 const totalPages = computed(() =>
   Math.ceil(chromaStore.documents.length / itemsPerPage)
 )
-
-const addMetadataPair = () => {
-  metadataPairs.value.push({ key: '', value: '' })
-}
-
-const removeMetadataPair = (index: number) => {
-  metadataPairs.value.splice(index, 1)
-}
-
-const handleCreateDocument = async () => {
-  if (!newDocumentContent.value) {
-    documentError.value = 'Document content is required'
-    return
-  }
-
-  if (chromaStore.currentCollection) {
-    try {
-      const metadata = metadataPairs.value.reduce((acc, pair) => {
-        if (pair.key && pair.value) {
-          acc[pair.key] = pair.value
-        }
-        return acc
-      }, {} as Record<string, string>)
-
-      await chromaStore.addDocument(chromaStore.currentCollection.name, {
-        id: newDocumentId.value || undefined,
-        document: newDocumentContent.value,
-        metadata
-      })
-      showAddModal.value = false
-      newDocumentId.value = ''
-      newDocumentContent.value = ''
-      metadataPairs.value = [{ key: '', value: '' }]
-      documentError.value = ''
-    } catch (error) {
-      console.error('Failed to add document:', error)
-    }
-  }
-}
 
 const truncateText = (text: string, maxLength: number = 50) => {
   if (text.length <= maxLength) return text
@@ -88,7 +49,7 @@ const handleDeleteDocument = async (id: string) => {
     try {
       await chromaStore.deleteDocument(chromaStore.currentCollection.name, id)
     } catch (error) {
-      console.error('Failed to delete document:', error)
+      // Error handled by chromaStore
     }
   }
 }
@@ -96,93 +57,112 @@ const handleDeleteDocument = async (id: string) => {
 
 <template>
   <div>
-    <!-- Loading state -->
-    <div v-if="chromaStore.loading" class="text-center text-gray-500 dark:text-gray-400 py-4">
-      Loading...
-    </div>
-
-    <!-- Error state -->
-    <div v-else-if="chromaStore.error" class="text-center text-red-500 py-4">
-      {{ chromaStore.error }}
-    </div>
-
-    <!-- Documents list -->
-    <div v-else>
-      <div class="mb-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]">
+    <!-- Header with Add Document button -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center h-[36px]">
+        <div class="flex items-center">
+          <h2 class="text-xl font-semibold text-content-primary-light dark:text-content-primary-dark">
             Documents
-            <span class="ml-2 text-base font-normal text-gray-500">
-              ({{ chromaStore.documents.length }} total)
-            </span>
           </h2>
-          <button
-            @click="showAddModal = true"
-            class="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            Add Document
-          </button>
+          <span class="ml-2 text-base font-normal text-gray-500 dark:text-gray-400 min-w-[80px]">
+            <template v-if="!loadingStore.isLoading('documents')">
+              ({{ chromaStore.documents.length }} total)
+            </template>
+            <template v-else>
+              <LoadingSkeleton width="60px" height="20px" class="inline-block ml-1" />
+            </template>
+          </span>
         </div>
+        <button
+          @click="showAddModal = true"
+          class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="loadingStore.isLoading('documents')"
+        >
+          Add Document
+        </button>
       </div>
+    </div>
 
-      <!-- Empty state -->
-      <div v-if="chromaStore.documents.length === 0" class="text-center text-gray-500 dark:text-gray-400 py-4">
-        There are no documents in the collection
+    <div v-if="(loadingStore.isLoading('collections') || loadingStore.isLoading('documents')) && chromaStore.currentCollection">
+      <div class="overflow-x-auto min-h-[400px] max-h-[calc(100vh-20rem)]">
+        <table class="min-w-full divide-y divide-border-primary-light dark:divide-border-primary-dark">
+          <thead class="bg-surface-secondary-light dark:bg-surface-secondary-dark sticky top-0 z-10 shadow-sm">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/4">
+                ID
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/4">
+                Metadata
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider w-1/2">
+                Document
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tr v-for="i in 5" :key="i">
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="150px" />
+              </td>
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="180px" />
+              </td>
+              <td class="px-6 py-4">
+                <LoadingSkeleton height="20px" width="300px" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div v-else>
+      <div v-if="chromaStore.documents.length === 0" class="flex items-center justify-center h-[400px] text-center text-gray-500 dark:text-gray-400">
+        <p>There are no documents in the collection</p>
       </div>
 
       <div v-else>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-[#E5E7EB] dark:divide-[#374151]">
-            <thead class="bg-gray-50 dark:bg-gray-700">
+        <div class="overflow-x-auto min-h-[400px] max-h-[calc(100vh-20rem)]">
+          <table class="min-w-full divide-y divide-border-primary-light dark:divide-border-primary-dark">
+            <thead class="bg-surface-secondary-light dark:bg-surface-secondary-dark sticky top-0 z-10 shadow-sm">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   ID
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   Metadata
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-xs font-semibold text-content-primary-light dark:text-content-primary-dark uppercase tracking-wider">
                   Document
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr
-                v-for="doc in paginatedDocuments"
-                :key="doc.id"
-                @click="openDocument(doc)"
-                class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-              >
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+            <tbody class="bg-surface-primary-light dark:bg-surface-primary-dark divide-y divide-border-primary-light dark:divide-border-primary-dark">
+              <tr v-for="doc in paginatedDocuments"
+                  :key="doc.id"
+                  @click="openDocument(doc)"
+                  class="hover:bg-surface-secondary-light dark:hover:bg-surface-secondary-dark cursor-pointer transition-colors duration-200">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ doc.id }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                <td class="px-6 py-4 text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ truncateText(stringifyMetadata(doc.metadata)) }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                <td class="px-6 py-4 text-sm text-content-primary-light dark:text-content-primary-dark">
                   {{ truncateText(doc.document) }}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- Pagination -->
-        <div v-if="totalPages > 1" class="mt-4 flex justify-center space-x-2">
-          <button
-            :disabled="currentPage === 1"
-            @click="currentPage--"
-            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
-          >
+        <!-- Pagination with fixed height -->
+        <div v-if="totalPages > 1" class="mt-6 flex justify-center space-x-2 h-[36px] items-center">
+          <button :disabled="currentPage === 1" @click="currentPage--" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-accent-secondary/10 dark:hover:bg-accent-secondary/10 transition-colors duration-200">
             Previous
           </button>
-          <span class="px-3 py-1 text-sm">
+          <span class="px-3 py-1 text-sm text-content-primary-light dark:text-content-primary-dark">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
-          <button
-            :disabled="currentPage === totalPages"
-            @click="currentPage++"
-            class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
-          >
+          <button :disabled="currentPage === totalPages" @click="currentPage++" class="px-3 py-1 text-sm bg-surface-secondary-light dark:bg-surface-secondary-dark text-content-primary-light dark:text-content-primary-dark rounded-md disabled:opacity-50 hover:bg-accent-secondary/10 dark:hover:bg-accent-secondary/10 transition-colors duration-200">
             Next
           </button>
         </div>
@@ -190,111 +170,7 @@ const handleDeleteDocument = async (id: string) => {
     </div>
   </div>
 
-  <!-- Add Document Modal -->
-  <div v-if="showAddModal" class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4">
-      <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75"></div>
+  <AddDocumentModal :show="showAddModal" @close="showAddModal = false" @document-added="chromaStore.fetchCollectionDocuments(chromaStore.currentCollection!.name)" />
 
-      <div class="relative bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full p-6 overflow-hidden shadow-xl">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-          Add Document
-        </h3>
-
-        <div class="space-y-4">
-          <!-- ID Field (Optional) -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              ID (Optional)
-            </label>
-            <input
-              v-model="newDocumentId"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-              placeholder="Leave empty to generate UUID"
-            />
-          </div>
-
-          <!-- Content Field (Required) -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Content*
-            </label>
-            <textarea
-              v-model="newDocumentContent"
-              rows="4"
-              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-              placeholder="Enter document content"
-              @input="documentError = ''"
-            ></textarea>
-            <p v-if="documentError" class="mt-1 text-sm text-red-600">{{ documentError }}</p>
-          </div>
-
-          <!-- Metadata Fields -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Metadata (Optional)
-              </label>
-              <button
-                @click="addMetadataPair"
-                class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                + Add Field
-              </button>
-            </div>
-            <div class="space-y-2">
-              <div
-                v-for="(pair, index) in metadataPairs"
-                :key="index"
-                class="flex gap-2 items-start"
-              >
-                <input
-                  v-model="pair.key"
-                  type="text"
-                  class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                  placeholder="Key"
-                />
-                <input
-                  v-model="pair.value"
-                  type="text"
-                  class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
-                  placeholder="Value"
-                />
-                <button
-                  v-if="index > 0"
-                  @click="removeMetadataPair(index)"
-                  class="p-2 text-red-600 hover:text-red-700"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Buttons -->
-          <div class="flex justify-end space-x-3 mt-6">
-            <button
-              @click="showAddModal = false"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              @click="handleCreateDocument"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
-            >
-              Add Document
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <DocumentModal
-    :show="showModal"
-    :document="selectedDocument"
-    @close="closeModal"
-    @delete="handleDeleteDocument"
-  />
+  <DocumentModal :show="showModal" :document="selectedDocument" @close="closeModal" @delete="handleDeleteDocument" />
 </template>

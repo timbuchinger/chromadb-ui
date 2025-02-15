@@ -1,0 +1,55 @@
+name: Build & Test Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        load: true
+        tags: chromadb-admin:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Test build
+      run: |
+        docker run --rm chromadb-admin:${{ github.sha }} nginx -t
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: |
+          timbuchinger/chromadb-ui:latest
+          timbuchinger/chromadb-ui:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
