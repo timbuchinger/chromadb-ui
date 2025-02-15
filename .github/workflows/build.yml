@@ -52,4 +52,3 @@ jobs:
           timbuchinger/chromadb-ui:latest
           timbuchinger/chromadb-ui:${{ github.sha }}
         cache-from: type=gha
-        cache-to: type=gha,mode=max
