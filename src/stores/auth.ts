@@ -13,18 +13,25 @@ interface AuthState {
   database: string
 }
 
+const localStorageKey = 'auth';
+
 export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    isAuthenticated: false,
-    serverUrl: 'localhost:8000',
-    protocol: 'http',
-    authType: 'token',
-    token: '',
-    username: '',
-    password: '',
-    tenant: 'default_tenant',
-    database: 'default_database'
-  }),
+  state: (): AuthState => {
+    const storedState = localStorage.getItem(localStorageKey);
+    const initialState: AuthState = {
+      isAuthenticated: false,
+      serverUrl: 'localhost:8000',
+      protocol: 'http',
+      authType: 'token',
+      token: '',
+      username: '',
+      password: '',
+      tenant: 'default_tenant',
+      database: 'default_database'
+    };
+
+    return storedState ? JSON.parse(storedState) : initialState;
+  },
 
   actions: {
     async login(formData: {
@@ -75,6 +82,10 @@ export const useAuthStore = defineStore('auth', {
         await axios.get(`${baseURL}/api/v1/heartbeat`, { headers })
 
         this.isAuthenticated = true
+
+        // Save state to localStorage
+        localStorage.setItem(localStorageKey, JSON.stringify(this.$state));
+
         return true
       } catch (error) {
         this.isAuthenticated = false
@@ -87,6 +98,9 @@ export const useAuthStore = defineStore('auth', {
       this.token = ''
       this.username = ''
       this.password = ''
+
+      // Remove state from localStorage
+      localStorage.removeItem(localStorageKey);
     }
   },
 
@@ -94,7 +108,9 @@ export const useAuthStore = defineStore('auth', {
     getAuthStatus: (state) => state.isAuthenticated,
     getBaseUrl: (state) => `${state.protocol}://${state.serverUrl}`,
     getHeaders(): Record<string, string> {
-      const headers: Record<string, string> = {}
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
 
       if (this.authType === 'token') {
         headers['Authorization'] = `Bearer ${this.token}`

@@ -6,3 +6,24 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Theme transition styles */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Dark mode select styles */
+.dark select {
+  @apply bg-gray-800 text-white border-gray-700;
+}
+
+.dark select option {
+  @apply bg-gray-800 text-white;
+}
+
+/* Fix white background flash on dropdowns */
+select option {
+  @apply bg-white dark:bg-gray-800;
+}

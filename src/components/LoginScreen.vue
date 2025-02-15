@@ -65,10 +65,11 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-    <div class="max-w-md w-full space-y-8">
+  <div class="min-h-screen bg-surface-primary-light dark:bg-surface-primary-dark">
+    <div class="flex items-center justify-center px-4 h-[calc(100vh-4rem)]">
+      <div class="max-w-md w-full space-y-8">
       <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-content-primary-light dark:text-content-primary-dark">
           Connect to ChromaDB
         </h2>
       </div>
@@ -78,7 +79,7 @@ async function handleSubmit() {
           <div class="flex">
             <select
               v-model="protocol"
-              class="relative block w-1/4 rounded-l-md border-0 bg-transparent py-1.5 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-1/4 rounded-l-md border-0 bg-transparent py-1.5 text-content-primary-light dark:text-content-primary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6 dark:[&>option]:bg-surface-secondary-dark"
             >
               <option value="http">http://</option>
               <option value="https">https://</option>
@@ -87,7 +88,7 @@ async function handleSubmit() {
               v-model="serverUrl"
               type="text"
               required
-              class="relative block w-3/4 rounded-r-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-3/4 rounded-r-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="<http://localhost:8000>"
             />
           </div>
@@ -100,27 +101,18 @@ async function handleSubmit() {
               type="radio"
               v-model="authType"
               value="token"
-              class="form-radio text-indigo-600"
+              class="form-radio text-accent-primary"
             />
-            <span class="ml-2 text-gray-900 dark:text-white">Token</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="basic"
-              class="form-radio text-indigo-600"
-            />
-            <span class="ml-2 text-gray-900 dark:text-white">Basic Auth</span>
+            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Token</span>
           </label>
           <label class="inline-flex items-center">
             <input
               type="radio"
               v-model="authType"
               value="none"
-              class="form-radio text-indigo-600"
+              class="form-radio text-accent-primary"
             />
-            <span class="ml-2 text-gray-900 dark:text-white">No Auth</span>
+            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">No Auth</span>
           </label>
         </div>
 
@@ -131,7 +123,7 @@ async function handleSubmit() {
               v-model="token"
               type="password"
               required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="API Token"
             />
           </div>
@@ -144,7 +136,7 @@ async function handleSubmit() {
               v-model="username"
               type="text"
               required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="Username"
             />
           </div>
@@ -153,7 +145,7 @@ async function handleSubmit() {
               v-model="password"
               type="password"
               required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="Password"
             />
           </div>
@@ -166,7 +158,7 @@ async function handleSubmit() {
               v-model="tenant"
               type="text"
               required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="Tenant"
             />
           </div>
@@ -175,14 +167,14 @@ async function handleSubmit() {
               v-model="database"
               type="text"
               required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="Database"
             />
           </div>
         </div>
 
         <!-- Error Message -->
-        <div v-if="error" class="text-red-500 text-sm text-center">
+        <div v-if="error" class="text-accent-error text-sm text-center">
           {{ error }}
         </div>
 
@@ -191,13 +183,14 @@ async function handleSubmit() {
           <button
             type="submit"
             :disabled="loading"
-            class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+            class="group relative flex w-full justify-center rounded-md bg-accent-primary px-3 py-2 text-sm font-semibold text-white hover:bg-accent-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary disabled:opacity-50"
           >
             <span v-if="loading">Connecting...</span>
             <span v-else>Connect</span>
           </button>
         </div>
       </form>
+      </div>
     </div>
   </div>
 </template>
