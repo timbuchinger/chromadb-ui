@@ -37,22 +37,26 @@ docker run -p 8080:80 chromadb/admin:latest
 ### Local Development
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/your-org/chromadb-admin.git
 cd chromadb-admin
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file:
+
 ```
 VITE_CHROMADB_HOST=http://localhost:8000
 ```
 
 4. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -109,13 +113,3 @@ docker build -t chromadb-admin .
 ## License
 
 MIT License - see LICENSE file for details
-
-## Security
-
-For security issues, please email security@your-org.com instead of using the issue tracker.
-
-## Support
-
-- GitHub Issues: For bug reports and feature requests
-- Documentation: [Link to documentation]
-- Email: support@your-org.com

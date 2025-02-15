@@ -1,6 +1,7 @@
 # Contributing to ChromaDB Admin Interface
 
-Thank you for considering contributing to the ChromaDB Admin Interface! This document provides guidelines and instructions for contributing.
+Thank you for considering contributing to the ChromaDB Admin Interface!
+This document provides guidelines and instructions for contributing.
 
 ## Development Process
 
@@ -129,13 +130,6 @@ Example: `feat: Add collection sorting functionality`
 
 Follow our established design system:
 
-### Colors
-
-- Primary: accent-primary (blue-600)
-- Secondary: accent-secondary (orange-500)
-- Tertiary: accent-tertiary (yellow-500)
-- Error: accent-error (red-500)
-
 ### Typography
 
 - Use system font stack
@@ -154,7 +148,8 @@ Follow our established design system:
 ### Commit Messages
 
 Format:
-```
+
+```text
 type(scope): Description in present tense
 
 [optional body]
@@ -163,7 +158,8 @@ type(scope): Description in present tense
 ```
 
 Example:
-```
+
+```text
 feat(collections): Add alphabetical sorting
 
 - Implement sort function
@@ -178,6 +174,7 @@ Closes #123
 Format: `type/description-in-kebab-case`
 
 Examples:
+
 - `feat/add-collection-sorting`
 - `fix/metadata-validation`
 - `docs/update-readme`

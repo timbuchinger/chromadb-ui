@@ -1,6 +1,6 @@
 services:
   chromadb:
-    image: ghcr.io/chroma-core/chroma:0.6.1 #latest
+    image: ghcr.io/chroma-core/chroma:0.6.1
     ports:
       - "8000:8000"
     volumes:
