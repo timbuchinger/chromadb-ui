@@ -4,7 +4,6 @@ import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
 import DocumentModal from './DocumentModal.vue'
 import AddDocumentModal from './AddDocumentModal.vue'
-import LoadingSpinner from './LoadingSpinner.vue'
 import type { Document } from '../stores/chroma'
 
 const chromaStore = useChromaStore()

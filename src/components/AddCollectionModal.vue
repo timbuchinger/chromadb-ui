@@ -4,7 +4,7 @@ import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
 import LoadingSpinner from './LoadingSpinner.vue'
 
-const props = defineProps<{
+const { show } = defineProps<{
   show: boolean
 }>()
 

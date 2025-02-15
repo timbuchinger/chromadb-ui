@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from './stores/auth'
 import NavBar from './components/NavBar.vue'
 import NotificationList from './components/NotificationList.vue'
 import ShortcutHelpModal from './components/ShortcutHelpModal.vue'
@@ -12,7 +11,6 @@ import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 const { cycleTheme } = useTheme()
 
 const router = useRouter()
-const authStore = useAuthStore()
 const showShortcutHelp = ref(false)
 
 // Global keyboard shortcuts

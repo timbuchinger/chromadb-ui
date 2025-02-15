@@ -12,7 +12,6 @@ export const focusTrap = {
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         )
         const firstFocusable = focusableElements[0] as HTMLElement
-        const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement
 
         // If focus is outside the element, bring it back in
         if (!el.contains(event.target as Node)) {

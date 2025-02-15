@@ -28,10 +28,10 @@ A modern web interface for managing ChromaDB collections, documents, and metadat
 
 ```bash
 # Pull the latest image
-docker pull chromadb/admin:latest
+docker pull timbuchinger/chromadb-ui:latest
 
 # Run the container
-docker run -p 8080:80 chromadb/admin:latest
+docker run -p 8080:80 timbuchinger/chromadb-ui:latest
 ```
 
 ### Local Development
@@ -39,8 +39,8 @@ docker run -p 8080:80 chromadb/admin:latest
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-org/chromadb-admin.git
-cd chromadb-admin
+git clone https://github.com/timbuchinger/chromadb-ui.git
+cd chromadb-ui
 ```
 
 2. Install dependencies:
@@ -76,7 +76,7 @@ The built files will be in the `dist` directory.
 Build the image locally:
 
 ```bash
-docker build -t chromadb-admin .
+docker build -t chromadb-ui .
 ```
 
 ## Keyboard Shortcuts

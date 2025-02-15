@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { focusTrap } from '../directives/focus-trap'
 import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
 import { useNotificationStore } from '../stores/notifications'
@@ -72,7 +71,7 @@ watch(() => props.show, (newVal) => {
 const chromaStore = useChromaStore()
 const loadingStore = useLoadingStore()
 const notificationStore = useNotificationStore()
-const { documentError, validateDocument, validateMetadata } = useDocumentValidation()
+const { documentError, validateDocument } = useDocumentValidation()
 
 const newDocumentId = ref('')
 const newDocumentContent = ref('')
