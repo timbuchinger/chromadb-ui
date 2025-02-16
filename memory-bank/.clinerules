@@ -27,16 +27,54 @@
    - Names must be lowercase, numbers, dashes, underscores only
    - No duplicate names allowed
    - List views paginate at 20 items
+   - Layout uses fixed height containers
+   - Loading states use skeleton placeholders
 
 2. Modals:
    - Used for collection creation
    - Used for deletion confirmation
    - Used for document viewing/editing
+   - Include focus trap directive
+   - Support keyboard navigation
+   - Implement ARIA roles/labels
 
 3. Notifications:
    - Auto-dismiss after 10 seconds
    - Manual close option
    - Four types: Success, Info, Warning, Error
+   - Support backdrop blur
+   - Limited width with text wrapping
+
+4. Accessibility:
+   - Keyboard navigation throughout
+   - Focus management with clear indicators
+   - Screen reader compatibility
+   - ARIA roles and labels
+   - Skip navigation links
+   - Keyboard shortcuts support
+
+5. Layout Stability:
+   - Fixed height containers
+   - Content height preservation
+   - Smooth loading transitions
+   - Consistent spacing patterns
+   - Predictable content placement
+
+### Component Patterns
+
+1. Loading States:
+   - Skeleton placeholders during loading
+   - Spinner components for operations
+   - Loading state in Pinia store
+   - Content dimension preservation
+   - Smooth state transitions
+
+2. Form Validation:
+   - Real-time validation feedback
+   - Type-specific error messages
+   - Clear validation indicators
+   - Consistent error styling
+   - Accessible error messages
 
 ## Project Context
 
