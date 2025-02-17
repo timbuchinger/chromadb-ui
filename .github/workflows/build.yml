@@ -22,15 +22,15 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v6
       with:
-        platforms: linux/amd64,linux/arm64
         context: .
-        tags: chromadb-admin:${{ github.sha }}
+        load: true
+        tags: chromadb-ui:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
     - name: Test build
       run: |
-        docker run --rm chromadb-admin:${{ github.sha }} nginx -t
+        docker run --rm chromadb-ui:${{ github.sha }} nginx -t
 
   release:
     needs: build
@@ -52,6 +52,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
+        platforms: linux/amd64,linux/arm64
         context: .
         push: true
         tags: |
