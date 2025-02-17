@@ -24,7 +24,6 @@ jobs:
       with:
         platforms: linux/amd64,linux/arm64
         context: .
-        load: true
         tags: chromadb-admin:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
