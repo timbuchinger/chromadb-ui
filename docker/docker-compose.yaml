@@ -1,19 +1,49 @@
 services:
-  chromadb:
+  chroma-no-auth:
     image: ghcr.io/chroma-core/chroma:0.6.1
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
-      - chroma_data:/chroma/chroma
+      - chroma_data_no_auth:/chroma/chroma
     environment:
       - ALLOW_RESET=true
       - CHROMA_SERVER_HOST=0.0.0.0
       - CHROMA_SERVER_HTTP_PORT=8000
       - CHROMA_SERVER_CORS_ALLOW_ORIGINS=${CHROMA_SERVER_CORS_ALLOW_ORIGINS}
-      # - CHROMA_SERVER_ALLOW_CREDENTIALS=true
-      # - CHROMA_SERVER_AUTHN_CREDENTIALS=test-token
-      # - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.token_authn.TokenAuthenticationServerProvider
+
+  chroma-token-auth:
+    image: ghcr.io/chroma-core/chroma:0.6.1
+    ports:
+      - "8002:8000"
+    volumes:
+      - chroma_data_token:/chroma/chroma
+    environment:
+      - ALLOW_RESET=true
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=${CHROMA_SERVER_CORS_ALLOW_ORIGINS}
+      - CHROMA_SERVER_AUTH_CREDENTIALS=test-token
+      - CHROMA_SERVER_AUTH_PROVIDER=token
+      - CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER=X-Chroma-Token
+
+  chroma-basic-auth:
+    image: ghcr.io/chroma-core/chroma:0.6.1
+    ports:
+      - "8003:8000"
+    volumes:
+      - chroma_data_basic:/chroma/chroma
+    environment:
+      - ALLOW_RESET=true
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=${CHROMA_SERVER_CORS_ALLOW_ORIGINS}
+      - CHROMA_SERVER_AUTH_CREDENTIALS=admin:admin
+      - CHROMA_SERVER_AUTH_PROVIDER=basic
 
 volumes:
-  chroma_data:
+  chroma_data_no_auth:
+    driver: local
+  chroma_data_token:
+    driver: local
+  chroma_data_basic:
     driver: local

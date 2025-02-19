@@ -109,6 +109,15 @@ async function handleSubmit() {
             <input
               type="radio"
               v-model="authType"
+              value="basic"
+              class="form-radio text-accent-primary"
+            />
+            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Basic</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              v-model="authType"
               value="none"
               class="form-radio text-accent-primary"
             />
@@ -174,7 +183,7 @@ async function handleSubmit() {
         </div>
 
         <!-- Error Message -->
-        <div v-if="error" class="text-accent-error text-sm text-center">
+        <div v-if="error" class="text-accent-error text-sm text-center" data-test="error-message">
           {{ error }}
         </div>
 

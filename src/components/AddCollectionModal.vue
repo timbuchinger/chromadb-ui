@@ -65,6 +65,7 @@ const handleClose = () => {
               type="text"
               class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm px-3 py-2"
               placeholder="Enter collection name"
+              data-test="collection-name-input"
               @input="nameError = ''"
             />
             <p v-if="nameError" class="mt-1 text-sm text-red-600">{{ nameError }}</p>
@@ -85,6 +86,7 @@ const handleClose = () => {
               @click="handleCreate"
               :disabled="loadingStore.isLoading('collections')"
               class="px-4 py-2 text-sm font-medium text-white bg-accent-primary hover:bg-accent-secondary rounded-md disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
+              data-test="create-collection-submit"
             >
               <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
               <span>Create</span>

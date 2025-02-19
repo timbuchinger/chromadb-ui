@@ -72,6 +72,7 @@ function handleKeydown(event: KeyboardEvent) {
             <button
               v-if="authStore.isAuthenticated"
               class="text-content-primary-light dark:text-content-primary-dark hover:text-accent-secondary transition-colors duration-200 font-medium"
+              data-test="navbar-home"
               @click="router.push('/')"
             >
               Collections

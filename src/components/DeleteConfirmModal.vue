@@ -19,6 +19,7 @@ const loadingStore = useLoadingStore()
 const handleDelete = async () => {
   try {
     await chromaStore.deleteCollection(props.collectionName)
+    await chromaStore.fetchCollections() // Explicitly refresh collections
     emit('deleted', props.collectionName)
   } catch (error) {
     // Error handled by chromaStore
@@ -53,6 +54,7 @@ const handleDelete = async () => {
             @click="handleDelete"
             :disabled="loadingStore.isLoading('collections')"
             class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center"
+            data-test="confirm-delete-button"
           >
             <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
             <span>Delete</span>
