@@ -238,8 +238,12 @@ export const useChromaStore = defineStore('chroma', {
         }
         // Delete collection
         await axios.delete(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
+          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.name)}`,
           {
+            data: {
+              tenant: DEFAULT_PARAMS.tenant,
+              database: DEFAULT_PARAMS.database
+            },
             headers: authStore.getHeaders
           }
         );
