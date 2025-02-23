@@ -64,7 +64,7 @@ const viewCollection = (collection: string) => {
 </script>
 
 <template>
-  <div class="py-6">
+  <div class="py-6" data-test="collections-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-10rem)]">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]" tabindex="-1">
@@ -75,6 +75,7 @@ const viewCollection = (collection: string) => {
       <button
         @click="showAddModal = true"
         class="mt-4 px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+        data-test="add-collection-button"
         :disabled="loadingStore.isLoading('collections')"
       >
         <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
@@ -119,12 +120,14 @@ const viewCollection = (collection: string) => {
             class="divide-y divide-gray-200 dark:divide-gray-700"
             role="listbox"
             aria-label="Collections"
+            data-test="collections-list"
             @keydown="(e) => handleKeyDown(e, (item) => viewCollection(item.name))"
           >
             <div
               v-for="(collection, index) in paginatedCollections"
               :key="collection.name"
               class="flex items-center justify-between h-16 py-4 px-6 transition-colors duration-200 hover:bg-surface-secondary-light/10 dark:hover:bg-surface-secondary-dark/10 rounded-md"
+              data-test="collection-row"
             >
               <button
                 :id="`collection-${index}`"
@@ -145,6 +148,7 @@ const viewCollection = (collection: string) => {
                 </button>
                 <button
                   class="px-3 py-1 text-sm bg-accent-error text-white rounded-md hover:bg-accent-error/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                  data-test="collection-delete-button"
                   :disabled="loadingStore.isLoading('collections')"
                   @click="() => {
                     collectionToDelete = collection.name;

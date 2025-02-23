@@ -267,47 +267,36 @@
     *   Use ARIA attributes for state
     *   Ensure dynamic updates are announced
 
-## Common Implementation Patterns
+## Common UI/UX Patterns
 
-1. Consistent Focus Styles:
-    *   Use clear and visible focus indicators
-    *   Ensure sufficient contrast
-    *   Maintain consistent focus ring styles
+### Accessibility Patterns
 
-2. Keyboard Navigation:
-    *   Ensure logical tab order
-    *   Implement arrow key navigation
-    *   Provide skip links
-    *   Support Home/End keys
+1. Focus Management
+   - Clear and visible focus indicators
+   - High-contrast focus styles
+   - Logical tab order
+   - Skip navigation links
+   - Support for Home/End keys
+   - Focus state persistence
+   - Focus trap for modals
 
-3. Screen Reader Compatibility:
-    *   Test focus with screen readers
-    *   Provide descriptive labels
-    *   Use ARIA attributes for state
-    *   Ensure dynamic updates are announced
+2. Screen Reader Support
+   - Descriptive ARIA labels
+   - Dynamic state updates
+   - Live regions for changes
+   - Clear content hierarchy
+   - Error announcements
+   - Status notifications
 
-## Common Implementation Patterns
+3. Keyboard Navigation
+   - Full keyboard accessibility
+   - Arrow key support
+   - Shortcut key bindings
+   - Modal escape handling
+   - Form field navigation
+   - Menu navigation support
 
-1. Consistent Focus Styles:
-    *   Use clear and visible focus indicators
-    *   Ensure sufficient contrast
-    *   Maintain consistent focus ring styles
-
-2. Keyboard Navigation:
-    *   Ensure logical tab order
-    *   Implement arrow key navigation
-    *   Provide skip links
-    *   Support Home/End keys
-
-3. Screen Reader Compatibility:
-    *   Test focus with screen readers
-    *   Provide descriptive labels
-    *   Use ARIA attributes for state
-    *   Ensure dynamic updates are announced
-
-## Common Implementation Patterns
-
-### Common UI Patterns
+### Common UI Components
 
 #### Input Fields
 

@@ -18,6 +18,12 @@ export function useKeyboardShortcuts(
   options: ShortcutOptions = { preventDefault: true }
 ) {
   const handleKeydown = (event: KeyboardEvent) => {
+    // Ignore shortcuts when typing in input fields
+    const target = event.target as HTMLElement
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      return
+    }
+
     for (const shortcut of shortcuts) {
       if (
         event.key.toLowerCase() === shortcut.key.toLowerCase() &&

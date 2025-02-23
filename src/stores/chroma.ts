@@ -236,17 +236,22 @@ export const useChromaStore = defineStore('chroma', {
         if (!collection) {
           return;
         }
+        // Delete collection
         await axios.delete(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
+          `${authStore.getBaseUrl}/api/v1/collections/${collection.id}?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
           {
             headers: authStore.getHeaders
           }
         );
-        this.collections = this.collections.filter(col => col.name !== name);
+
+        // Reset current collection if it was deleted
         if (this.currentCollection?.name === name) {
           this.currentCollection = null;
           this.documents = [];
         }
+
+        // Refresh collections list
+        await this.fetchCollections();
         notificationStore.success('Collection deleted successfully');
       });
       return loadingResult;
