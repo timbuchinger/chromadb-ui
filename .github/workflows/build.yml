@@ -5,9 +5,39 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Start Chroma instances
+      run: |
+        docker-compose -f docker/docker-compose.yaml up -d
+        # Wait for services to be ready
+        sleep 10
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - run: npm ci
+
+    - name: Cypress tests
+      run: npm run test:e2e
+      env:
+        CHROMA_SERVER_CORS_ALLOW_ORIGINS: "http://localhost:5173"
+
+    - name: Cleanup
+      if: always()
+      run: docker-compose -f docker/docker-compose.yaml down -v
+
   build:
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
