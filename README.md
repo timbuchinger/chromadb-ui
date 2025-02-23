@@ -103,6 +103,32 @@ docker build -t chromadb-ui .
 - Include documentation updates
 - Add tests for new features
 
+### Testing
+
+#### E2E Tests
+
+The project uses Cypress for end-to-end testing, including tests for different authentication modes:
+- No authentication
+- Token authentication
+- Basic authentication 
+
+To run E2E tests:
+
+```bash
+# Start the ChromaDB containers
+docker compose up -d
+
+# Run tests in headless mode
+npm run test:e2e
+
+# Or run tests with Cypress UI
+npm run test:e2e:dev
+```
+
+Notes:
+- Ensure the ChromaDB containers are running before starting tests
+- Tests run against containers configured for different auth modes on ports 8001-8003
+
 ### Code Style
 
 - Use Vue 3 Composition API
