@@ -70,17 +70,17 @@ const viewCollection = (collection: string) => {
         <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]" tabindex="-1">
           Collections
         </h1>
+        <!-- Add Collection Button (always visible) -->
+        <button
+          @click="showAddModal = true"
+          class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+          data-test="add-collection-button"
+          :disabled="loadingStore.isLoading('collections')"
+        >
+          <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
+          Add Collection
+        </button>
       </div>
-      <!-- Add Collection Button (always visible) -->
-      <button
-        @click="showAddModal = true"
-        class="mt-4 px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-        data-test="add-collection-button"
-        :disabled="loadingStore.isLoading('collections')"
-      >
-        <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
-        Add Collection
-      </button>
 
       <!-- Content Container with Transition -->
       <div class="mt-6 transition-all duration-300 min-h-[400px]">
