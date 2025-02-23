@@ -296,6 +296,16 @@
    - Form field navigation
    - Menu navigation support
 
+### ChromaDB API Patterns
+
+1. Collection Operations
+   - Collection identification uses names, not IDs
+   - API endpoints follow pattern: `/api/v1/collections/{collection_name}`
+   - Critical operations:
+     * DELETE: Uses collection name in URL path
+     * GET: Uses collection name for retrieving data
+     * POST: Uses collection name for creating/updating
+
 ### Common UI Components
 
 #### Input Fields
