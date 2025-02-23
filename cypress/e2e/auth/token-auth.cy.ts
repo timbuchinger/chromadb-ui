@@ -1,3 +1,7 @@
+/// <reference types="cypress" />
+
+import '../../support/e2e';
+
 describe('Token Auth Mode', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -81,7 +85,7 @@ describe('Token Auth Mode', () => {
       statusCode: 200,
       body: { id: collectionId, name: collectionName }
     }).as('getCollection');
-    cy.intercept('DELETE', `**/api/v1/collections/${collectionId}*`, {
+    cy.intercept('DELETE', `**/api/v1/collections/${collectionName}*`, {
       statusCode: 200,
       body: {}
     }).as('deleteCollection');
@@ -117,7 +121,7 @@ describe('Token Auth Mode', () => {
     cy.get('[data-test="navbar-home"]').click();
 
     // Setup interceptors for delete flow
-    cy.intercept('DELETE', `**/api/v1/collections/${collectionId}*`, {
+    cy.intercept('DELETE', `**/api/v1/collections/${collectionName}*`, {
       statusCode: 200,
       body: {}
     }).as('deleteCollection');
