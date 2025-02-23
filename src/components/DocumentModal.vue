@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 import type { Document } from '../stores/chroma'
 import { useChromaStore } from '../stores/chroma'
 
