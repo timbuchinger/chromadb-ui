@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { useKeyboardNavigation } from '../composables/useKeyboardNavigation'
 import { useChromaStore } from '../stores/chroma'
 import { useLoadingStore } from '../stores/loading'
@@ -70,16 +71,26 @@ const viewCollection = (collection: string) => {
         <h1 class="text-2xl font-semibold text-[#1F2937] dark:text-[#F9FAFB]" tabindex="-1">
           Collections
         </h1>
-        <!-- Add Collection Button (always visible) -->
-        <button
-          @click="showAddModal = true"
-          class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-          data-test="add-collection-button"
-          :disabled="loadingStore.isLoading('collections')"
-        >
-          <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
-          Add Collection
-        </button>
+        <div class="flex items-center space-x-2">
+          <button
+            @click="chromaStore.fetchCollections()"
+            class="p-2 text-accent-primary hover:text-accent-secondary border border-accent-primary hover:border-accent-secondary rounded-md transition-colors duration-200"
+            :disabled="loadingStore.isLoading('collections')"
+          >
+            <ArrowPathIcon class="w-5 h-5" :class="{ 'animate-spin': loadingStore.isLoading('collections') }" />
+            <span class="sr-only">Refresh collections</span>
+          </button>
+          <!-- Add Collection Button (always visible) -->
+          <button
+            @click="showAddModal = true"
+            class="px-4 py-2 text-sm bg-accent-primary text-white rounded-md hover:bg-accent-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+            data-test="add-collection-button"
+            :disabled="loadingStore.isLoading('collections')"
+          >
+            <LoadingSpinner v-if="loadingStore.isLoading('collections')" size="sm" class="mr-2" />
+            Add Collection
+          </button>
+        </div>
       </div>
 
       <!-- Content Container with Transition -->
