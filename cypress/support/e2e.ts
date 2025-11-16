@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { authFixtures } from '../fixtures/auth'
+
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -24,69 +26,37 @@ declare global {
 
 // Configure Chroma server without authentication
 Cypress.Commands.add('setupNoAuth', () => {
-  cy.intercept({
-    url: '**/api/v1/**'
-  }, (req) => {
-    // Only process if not already handled by a more specific interceptor
-    if (!req.alias || req.alias === 'noAuthRequest') {
-      req.url = req.url.replace(/(:\d+)\//, ':8001/');
-      req.reply({
-        statusCode: 200,
-        body: []
-      });
-    }
+  cy.intercept('GET', '**/api/v1/**', (req) => {
+    req.reply(authFixtures.apiResponses.success);
   }).as('noAuthRequest');
 });
 
 // Configure Chroma server with token authentication
-Cypress.Commands.add('setupTokenAuth', (token = 'test-token') => {
-  cy.intercept({
-    url: '**/api/v1/**'
-  }, (req) => {
-    // Only process if not already handled by a more specific interceptor
-    if (!req.alias || req.alias === 'tokenAuthRequest') {
-      const authHeader = req.headers['authorization'];
-      const expectedAuth = `Bearer test-token`;
-      if (!authHeader || authHeader !== expectedAuth) {
-        req.reply({
-          statusCode: 401,
-          body: { error: 'Invalid token' }
-        });
-        return;
-      }
-      req.headers['Authorization'] = `Bearer ${token}`;
-      req.url = req.url.replace(/(:\d+)\//, ':8002/');
-      req.reply({
-        statusCode: 200,
-        body: []
-      });
+Cypress.Commands.add('setupTokenAuth', (token = authFixtures.credentials.tokenAuth.token) => {
+  cy.intercept('GET', '**/api/v1/**', (req) => {
+    const authHeader = req.headers['authorization'];
+    const expectedAuth = `Bearer ${token}`;
+    if (!authHeader || authHeader !== expectedAuth) {
+      req.reply(authFixtures.apiResponses.unauthorized);
+      return;
     }
+    req.reply(authFixtures.apiResponses.success);
   }).as('tokenAuthRequest');
 });
 
 // Configure Chroma server with basic authentication
-Cypress.Commands.add('setupBasicAuth', (username = 'admin', password = 'admin') => {
-  cy.intercept({
-    url: '**/api/v1/**'
-  }, (req) => {
-    // Only process if not already handled by a more specific interceptor
-    if (!req.alias || req.alias === 'basicAuthRequest') {
-      const authHeader = req.headers['authorization'];
-      const expectedAuth = `Basic ${btoa('admin:admin')}`;
-      if (!authHeader || authHeader !== expectedAuth) {
-        req.reply({
-          statusCode: 401,
-          body: { error: 'Invalid credentials' }
-        });
-        return;
-      }
-      req.headers['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
-      req.url = req.url.replace(/(:\d+)\//, ':8003/');
-      req.reply({
-        statusCode: 200,
-        body: []
-      });
+Cypress.Commands.add('setupBasicAuth', (
+  username = authFixtures.credentials.basicAuth.username,
+  password = authFixtures.credentials.basicAuth.password
+) => {
+  cy.intercept('GET', '**/api/v1/**', (req) => {
+    const authHeader = req.headers['authorization'];
+    const expectedAuth = `Basic ${btoa(`${username}:${password}`)}`;
+    if (!authHeader || authHeader !== expectedAuth) {
+      req.reply(authFixtures.apiResponses.unauthorized);
+      return;
     }
+    req.reply(authFixtures.apiResponses.success);
   }).as('basicAuthRequest');
 });
 
