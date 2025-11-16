@@ -83,7 +83,8 @@ export const useChromaStore = defineStore('chroma', {
             headers: authStore.getHeaders
           }
         )
-        this.collections = response.data
+        // Sort collections alphabetically by name
+        this.collections = response.data.sort((a, b) => a.name.localeCompare(b.name))
       })
     },
 
@@ -179,6 +180,8 @@ export const useChromaStore = defineStore('chroma', {
           }
         )
         this.collections.push(response.data)
+        // Sort collections alphabetically by name after adding
+        this.collections.sort((a, b) => a.name.localeCompare(b.name))
         notificationStore.success('Collection created successfully')
       })
     },
