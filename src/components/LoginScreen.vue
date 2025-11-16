@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -16,6 +16,12 @@ const tenant = ref('default_tenant')
 const database = ref('default_database')
 const error = ref('')
 const loading = ref(false)
+
+// Prefill with last authenticated values
+onMounted(() => {
+  tenant.value = authStore.tenant || 'default_tenant'
+  database.value = authStore.database || 'default_database'
+})
 
 async function handleSubmit() {
   if (loading.value) return
