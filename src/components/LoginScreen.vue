@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useNotificationStore } from '../stores/notifications'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const notificationStore = useNotificationStore()
 
 const serverUrl = ref('localhost:8000')
 const protocol = ref<'http' | 'https'>('http')
@@ -23,12 +25,14 @@ async function handleSubmit() {
   loading.value = true
 
   try {
-    // Validate required fields
+    // Validate required fields - these are client-side validation errors
     if (authType.value === 'token' && !token.value) {
-      throw new Error('Token is required')
+      error.value = 'Token is required'
+      return
     }
     if (authType.value === 'basic' && (!username.value || !password.value)) {
-      throw new Error('Username and password are required')
+      error.value = 'Username and password are required'
+      return
     }
 
     // Test connection with ChromaDB
@@ -40,7 +44,12 @@ async function handleSubmit() {
     })
 
     if (!response.ok) {
-      throw new Error('Authentication failed. Please check your credentials.')
+      // Backend errors - surface through notification system
+      const errorText = await response.text()
+      const backendError = `Authentication failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
+      notificationStore.error(backendError)
+      error.value = 'Authentication failed. Please check your credentials.'
+      return
     }
 
     // Store authentication details if successful
@@ -55,9 +64,14 @@ async function handleSubmit() {
       database: database.value
     })
 
-    router.push('/')
+    // Redirect to last route or home
+    const lastRoute = authStore.getLastRoute()
+    router.push(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Authentication failed'
+    // Network or unexpected errors - surface through notification system
+    const errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred'
+    notificationStore.error(errorMessage)
+    error.value = 'Authentication failed. Please check your credentials.'
   } finally {
     loading.value = false
   }

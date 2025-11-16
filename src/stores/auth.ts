@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { getSecureItem, setSecureItem, removeSecureItem } from '../utils/secureStorage'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -11,13 +12,15 @@ interface AuthState {
   password: string
   tenant: string
   database: string
+  lastRoute?: string
 }
 
-const localStorageKey = 'auth';
+const localStorageKey = 'auth'
+const lastRouteKey = 'lastRoute';
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
-    const storedState = localStorage.getItem(localStorageKey);
+    // Initial state - will be restored asynchronously
     const initialState: AuthState = {
       isAuthenticated: false,
       serverUrl: 'localhost:8000',
@@ -28,12 +31,46 @@ export const useAuthStore = defineStore('auth', {
       password: '',
       tenant: 'default_tenant',
       database: 'default_database'
-    };
+    }
 
-    return storedState ? JSON.parse(storedState) : initialState;
+    return initialState
   },
 
   actions: {
+    async restoreSession(): Promise<boolean> {
+      try {
+        const storedState = await getSecureItem<AuthState>(localStorageKey)
+        if (storedState) {
+          // Restore state
+          this.isAuthenticated = storedState.isAuthenticated
+          this.serverUrl = storedState.serverUrl
+          this.protocol = storedState.protocol
+          this.authType = storedState.authType
+          this.token = storedState.token
+          this.username = storedState.username
+          this.password = storedState.password
+          this.tenant = storedState.tenant
+          this.database = storedState.database
+          this.lastRoute = storedState.lastRoute
+          return true
+        }
+        return false
+      } catch (error) {
+        console.error('Failed to restore session:', error)
+        return false
+      }
+    },
+
+    setLastRoute(route: string) {
+      this.lastRoute = route
+      // Also persist to localStorage directly for quick access
+      localStorage.setItem(lastRouteKey, route)
+    },
+
+    getLastRoute(): string | null {
+      return this.lastRoute || localStorage.getItem(lastRouteKey)
+    },
+
     async login(formData: {
       serverUrl: string
       protocol: 'http' | 'https'
@@ -83,8 +120,8 @@ export const useAuthStore = defineStore('auth', {
 
         this.isAuthenticated = true
 
-        // Save state to localStorage
-        localStorage.setItem(localStorageKey, JSON.stringify(this.$state));
+        // Save state to encrypted localStorage
+        await setSecureItem(localStorageKey, this.$state)
 
         return true
       } catch (error) {
@@ -98,9 +135,11 @@ export const useAuthStore = defineStore('auth', {
       this.token = ''
       this.username = ''
       this.password = ''
+      this.lastRoute = undefined
 
-      // Remove state from localStorage
-      localStorage.removeItem(localStorageKey);
+      // Remove state from encrypted localStorage
+      removeSecureItem(localStorageKey)
+      localStorage.removeItem(lastRouteKey)
     }
   },
 

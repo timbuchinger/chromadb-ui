@@ -31,14 +31,30 @@ const router = createRouter({
   ]
 })
 
+// Flag to track if session restoration has been attempted
+let sessionRestored = false
+
 // Navigation guard
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore()
+
+  // Attempt to restore session on first navigation
+  if (!sessionRestored) {
+    sessionRestored = true
+    await authStore.restoreSession()
+  }
+
+  // Store last route for authenticated users
+  if (authStore.isAuthenticated && to.meta.requiresAuth && to.path !== '/login') {
+    authStore.setLastRoute(to.fullPath)
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')
   } else if (to.path === '/login' && authStore.isAuthenticated) {
-    next('/')
+    // Redirect to last route or home if already authenticated
+    const lastRoute = authStore.getLastRoute()
+    next(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } else {
     next()
   }
