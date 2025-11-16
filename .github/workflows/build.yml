@@ -90,6 +90,8 @@ jobs:
         platforms: linux/amd64,linux/arm64
         context: .
         push: true
+        build-args: |
+          VERSION=latest-${{ github.sha }}
         tags: |
           timbuchinger/chromadb-ui:latest
           timbuchinger/chromadb-ui:${{ github.sha }}

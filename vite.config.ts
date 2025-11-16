@@ -11,5 +11,8 @@ export default defineConfig({
   },
   build: {
     target: 'esnext'
+  },
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(process.env.npm_package_version)
   }
 })

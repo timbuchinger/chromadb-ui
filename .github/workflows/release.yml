@@ -44,6 +44,8 @@ jobs:
       with:
         context: .
         push: true
+        build-args: |
+          VERSION=${{ github.event.inputs.version }}
         tags: |
           timbuchinger/chromadb-ui:${{ github.event.inputs.version }}
         cache-from: type=gha
