@@ -16,19 +16,23 @@ const username = ref('')
 const password = ref('')
 const tenant = ref('default_tenant')
 const database = ref('default_database')
+const error = ref('')
 const loading = ref(false)
 
 async function handleSubmit() {
   if (loading.value) return
+  error.value = ''
   loading.value = true
 
   try {
-    // Validate required fields
+    // Validate required fields - these are client-side validation errors
     if (authType.value === 'token' && !token.value) {
-      throw new Error('Token is required')
+      error.value = 'Token is required'
+      return
     }
     if (authType.value === 'basic' && (!username.value || !password.value)) {
-      throw new Error('Username and password are required')
+      error.value = 'Username and password are required'
+      return
     }
 
     // Test connection with ChromaDB
@@ -40,8 +44,12 @@ async function handleSubmit() {
     })
 
     if (!response.ok) {
+      // Backend errors - surface through notification system
       const errorText = await response.text()
-      throw new Error(`Authentication failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
+      const backendError = `Authentication failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
+      notificationStore.error(backendError)
+      error.value = 'Authentication failed. Please check your credentials.'
+      return
     }
 
     // Store authentication details if successful
@@ -60,8 +68,10 @@ async function handleSubmit() {
     const lastRoute = authStore.getLastRoute()
     router.push(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } catch (e) {
-    const errorMessage = e instanceof Error ? e.message : 'Authentication failed. Please check your credentials.'
+    // Network or unexpected errors - surface through notification system
+    const errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred'
     notificationStore.error(errorMessage)
+    error.value = 'Authentication failed. Please check your credentials.'
   } finally {
     loading.value = false
   }
@@ -184,6 +194,11 @@ async function handleSubmit() {
               placeholder="Database"
             />
           </div>
+        </div>
+
+        <!-- Error Message -->
+        <div v-if="error" class="text-accent-error text-sm text-center" data-test="error-message">
+          {{ error }}
         </div>
 
         <!-- Submit Button -->
