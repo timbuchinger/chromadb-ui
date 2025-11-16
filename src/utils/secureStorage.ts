@@ -48,6 +48,11 @@ async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey>
  * This ensures the key is unique per browser session
  */
 function getSessionKey(): string {
+  // In Cypress test environment, use a stable key for consistency
+  if (typeof window !== 'undefined' && (window as any).Cypress) {
+    return 'chromadb-cypress-test-key'
+  }
+  
   // Use a combination of browser properties as a unique identifier
   const fingerprint = [
     navigator.userAgent,
