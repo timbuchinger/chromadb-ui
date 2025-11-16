@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { getApiClient } from '../utils/api'
 import { useAuthStore } from './auth'
 import { useNotificationStore } from './notifications'
 import { useLoadingStore } from './loading'
@@ -7,16 +7,6 @@ import { useLoadingStore } from './loading'
 export interface CollectionInfo {
   name: string
   id: string
-}
-
-interface DatabaseParams {
-  tenant?: string
-  database?: string
-}
-
-const DEFAULT_PARAMS: DatabaseParams = {
-  tenant: 'default_tenant',
-  database: 'default_database'
 }
 
 export interface Document {
@@ -76,12 +66,9 @@ export const useChromaStore = defineStore('chroma', {
       this.error = null
 
       return loadingStore.withLoading('collections', async () => {
-
-        const response = await axios.get<{ id: string; name: string }[]>(
-          `${authStore.getBaseUrl}/api/v1/collections?tenant=${DEFAULT_PARAMS.tenant}&database=${DEFAULT_PARAMS.database}`,
-          {
-            headers: authStore.getHeaders
-          }
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
+        const response = await apiClient.get<{ id: string; name: string }[]>(
+          `/api/v1/collections?tenant=${authStore.getTenant}&database=${authStore.getDatabase}`
         )
         this.collections = response.data
       })
@@ -103,18 +90,16 @@ export const useChromaStore = defineStore('chroma', {
       this.currentCollection = collection
 
       return loadingStore.withLoading('documents', async () => {
-        const response = await axios.post<GetResponse>(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/get`,
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
+        const response = await apiClient.post<GetResponse>(
+          `/api/v1/collections/${encodeURIComponent(collection.id)}/get`,
           {
             collection_name: name,
             include: ['documents', 'metadatas'] as IncludeEnum[],
             limit: 100,
-            tenant: DEFAULT_PARAMS.tenant,
-            database: DEFAULT_PARAMS.database
-          } as GetEmbedding & { tenant?: string; database?: string },
-          {
-            headers: authStore.getHeaders
-          }
+            tenant: authStore.getTenant,
+            database: authStore.getDatabase
+          } as GetEmbedding & { tenant?: string; database?: string }
         )
 
         const { ids, documents, metadatas } = response.data
@@ -143,16 +128,14 @@ export const useChromaStore = defineStore('chroma', {
         if (!collection) {
           return;
         }
-        await axios.post(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/delete`,
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
+        await apiClient.post(
+          `/api/v1/collections/${encodeURIComponent(collection.id)}/delete`,
           {
             ids: [documentId],
-            tenant: DEFAULT_PARAMS.tenant,
-            database: DEFAULT_PARAMS.database
-          } as DeleteEmbedding & { tenant?: string; database?: string },
-          {
-            headers: authStore.getHeaders
-          }
+            tenant: authStore.getTenant,
+            database: authStore.getDatabase
+          } as DeleteEmbedding & { tenant?: string; database?: string }
         );
 
         this.documents = this.documents.filter(doc => doc.id !== documentId);
@@ -167,15 +150,13 @@ export const useChromaStore = defineStore('chroma', {
       this.error = null
 
       return loadingStore.withLoading('collections', async () => {
-        const response = await axios.post<{ id: string; name: string }>(
-          `${authStore.getBaseUrl}/api/v1/collections`,
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
+        const response = await apiClient.post<{ id: string; name: string }>(
+          `/api/v1/collections`,
           {
             name,
-            tenant: DEFAULT_PARAMS.tenant,
-            database: DEFAULT_PARAMS.database
-          },
-          {
-            headers: authStore.getHeaders
+            tenant: authStore.getTenant,
+            database: authStore.getDatabase
           }
         )
         this.collections.push(response.data)
@@ -199,19 +180,19 @@ export const useChromaStore = defineStore('chroma', {
       }
 
       return loadingStore.withLoading('documents', async () => {
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
         // Use put for ID-specified documents, post for auto-generated IDs
         const method = params.id ? 'put' : 'post';
-        await axios.request({
+        await apiClient.request({
           method: method,
-          url: `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.id)}/upsert`,
+          url: `/api/v1/collections/${encodeURIComponent(collection.id)}/upsert`,
           data: {
             documents: [params.document],
             metadatas: [params.metadata],
             ids: [params.id || getRandomId()],
-            tenant: DEFAULT_PARAMS.tenant,
-            database: DEFAULT_PARAMS.database
-          },
-          headers: authStore.getHeaders
+            tenant: authStore.getTenant,
+            database: authStore.getDatabase
+          }
         });
 
         await this.fetchCollectionDocuments(collectionName);
@@ -236,12 +217,10 @@ export const useChromaStore = defineStore('chroma', {
         if (!collection) {
           return;
         }
+        const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
         // Delete collection
-        await axios.delete(
-          `${authStore.getBaseUrl}/api/v1/collections/${encodeURIComponent(collection.name)}`,
-          {
-            headers: authStore.getHeaders
-          }
+        await apiClient.delete(
+          `/api/v1/collections/${encodeURIComponent(collection.name)}`
         );
 
         // Reset current collection if it was deleted
