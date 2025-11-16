@@ -1,13 +1,3 @@
-import { vi } from 'vitest'
+// Vitest setup file for unit tests
+// happy-dom provides localStorage, so we don't need to mock it
 
-// Mock localStorage
-const localStorageMock: Storage = {
-  length: 0,
-  clear: vi.fn(),
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  key: vi.fn()
-}
-
-global.localStorage = localStorageMock

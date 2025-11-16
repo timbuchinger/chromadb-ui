@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '22'
         cache: 'npm'
 
     - name: Install dependencies
@@ -28,7 +28,7 @@ jobs:
       run: npm run lint
 
     - name: Run unit tests
-      run: npm run test:unit
+      run: npm run test:unit:run
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -37,22 +37,17 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
+    - uses: actions/checkout@v4
 
     - name: Start Chroma instances
       run: |
-        docker-compose -f docker/docker-compose.yaml up -d
+        docker compose -f docker/docker-compose.yaml up -d
         # Wait for services to be ready
         sleep 10
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '22'
         cache: 'npm'
 
     - name: Cache Cypress binary
@@ -73,7 +68,7 @@ jobs:
 
     - name: Cleanup
       if: always()
-      run: docker-compose -f docker/docker-compose.yaml down -v
+      run: docker compose -f docker/docker-compose.yaml down -v
 
   build:
     needs: e2e-test
@@ -82,7 +77,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -109,23 +104,25 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         platforms: linux/amd64,linux/arm64
         context: .
         push: true
+        build-args: |
+          VERSION=latest-${{ github.sha }}
         tags: |
           timbuchinger/chromadb-ui:latest
           timbuchinger/chromadb-ui:${{ github.sha }}

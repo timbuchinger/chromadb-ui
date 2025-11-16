@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { getApiClient } from '../utils/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const serverUrl = ref('localhost:8000')
-const protocol = ref<'http' | 'https'>('http')
+/**
+ * Parse VITE_CHROMADB_HOST from environment
+ * Expected format: http://localhost:8000 or https://example.com:8000
+ */
+function parseEnvHost(): { protocol: 'http' | 'https'; serverUrl: string } {
+  const envHost = import.meta.env.VITE_CHROMADB_HOST || 'http://localhost:8000'
+  const url = new URL(envHost)
+  return {
+    protocol: url.protocol.replace(':', '') as 'http' | 'https',
+    serverUrl: url.host
+  }
+}
+
+const { protocol: defaultProtocol, serverUrl: defaultServerUrl } = parseEnvHost()
+
+const serverUrl = ref(defaultServerUrl)
+const protocol = ref<'http' | 'https'>(defaultProtocol)
 const authType = ref<'token' | 'basic' | 'none'>('token')
 const token = ref('')
 const username = ref('')
@@ -16,6 +32,12 @@ const tenant = ref('default_tenant')
 const database = ref('default_database')
 const error = ref('')
 const loading = ref(false)
+
+// Prefill with last authenticated values
+onMounted(() => {
+  tenant.value = authStore.tenant || 'default_tenant'
+  database.value = authStore.database || 'default_database'
+})
 
 async function handleSubmit() {
   if (loading.value) return
@@ -31,17 +53,17 @@ async function handleSubmit() {
       throw new Error('Username and password are required')
     }
 
-    // Test connection with ChromaDB
-    const response = await fetch(`${protocol.value}://${serverUrl.value}/api/v1/collections`, {
-      headers: {
-        ...(authType.value === 'token' ? { 'Authorization': `Bearer ${token.value}` } : {}),
-        ...(authType.value === 'basic' ? { 'Authorization': `Basic ${btoa(`${username.value}:${password.value}`)}` } : {})
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error('Authentication failed. Please check your credentials.')
+    // Test connection with ChromaDB using shared API client
+    const headers: Record<string, string> = {}
+    if (authType.value === 'token') {
+      headers['Authorization'] = `Bearer ${token.value}`
+    } else if (authType.value === 'basic') {
+      headers['Authorization'] = `Basic ${btoa(`${username.value}:${password.value}`)}`
     }
+    
+    const baseURL = `${protocol.value}://${serverUrl.value}`
+    const apiClient = getApiClient(baseURL, headers)
+    await apiClient.get('/api/v1/collections')
 
     // Store authentication details if successful
     await authStore.login({

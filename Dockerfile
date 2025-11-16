@@ -3,6 +3,9 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
+# Accept version as a build argument
+ARG VERSION=dev
+
 # Copy package files
 COPY package*.json ./
 
@@ -11,6 +14,9 @@ RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Set version environment variable for Vite
+ENV npm_package_version=$VERSION
 
 # Build the application
 RUN npm run build

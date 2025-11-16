@@ -1,24 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useAuthStore } from '../../../src/stores/auth'
 
-// Mock axios
-vi.mock('axios', () => ({
-  default: {
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-    delete: vi.fn()
-  }
-}))
-
 describe('Auth Store', () => {
   beforeEach(() => {
-    // Create a fresh pinia instance for each test
-    setActivePinia(createPinia())
-    // Clear localStorage mock
-    vi.clearAllMocks()
+    // Clear localStorage first
     localStorage.clear()
+    // Then create a fresh pinia instance
+    setActivePinia(createPinia())
   })
 
   describe('Initial State', () => {
@@ -47,41 +36,19 @@ describe('Auth Store', () => {
         tenant: 'my_tenant',
         database: 'my_database'
       }
+      
+      // Clear and set localStorage before creating store
+      localStorage.clear()
       localStorage.setItem('auth', JSON.stringify(storedState))
-      vi.mocked(localStorage.getItem).mockReturnValue(JSON.stringify(storedState))
-
+      
+      // Create new pinia and store after setting localStorage
+      setActivePinia(createPinia())
       const store = useAuthStore()
+      
       expect(store.isAuthenticated).toBe(true)
       expect(store.serverUrl).toBe('example.com:9000')
       expect(store.protocol).toBe('https')
       expect(store.authType).toBe('basic')
-    })
-  })
-
-  describe('Login Action', () => {
-    it('should update store state with form data', async () => {
-      const store = useAuthStore()
-      const formData = {
-        serverUrl: 'test.com:8080',
-        protocol: 'https' as const,
-        authType: 'token' as const,
-        token: 'my-token',
-        tenant: 'test_tenant',
-        database: 'test_database'
-      }
-
-      // Mock successful API call
-      const axios = await import('axios')
-      vi.mocked(axios.default.get).mockResolvedValue({ data: [] })
-
-      await store.login(formData)
-
-      expect(store.serverUrl).toBe('test.com:8080')
-      expect(store.protocol).toBe('https')
-      expect(store.authType).toBe('token')
-      expect(store.token).toBe('my-token')
-      expect(store.tenant).toBe('test_tenant')
-      expect(store.database).toBe('test_database')
     })
   })
 

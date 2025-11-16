@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { getApiClient } from '../utils/api'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -15,13 +15,27 @@ interface AuthState {
 
 const localStorageKey = 'auth';
 
+/**
+ * Parse VITE_CHROMADB_HOST from environment
+ * Expected format: http://localhost:8000 or https://example.com:8000
+ */
+function parseEnvHost(): { protocol: 'http' | 'https'; serverUrl: string } {
+  const envHost = import.meta.env.VITE_CHROMADB_HOST || 'http://localhost:8000'
+  const url = new URL(envHost)
+  return {
+    protocol: url.protocol.replace(':', '') as 'http' | 'https',
+    serverUrl: url.host
+  }
+}
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
     const storedState = localStorage.getItem(localStorageKey);
+    const { protocol, serverUrl } = parseEnvHost();
     const initialState: AuthState = {
       isAuthenticated: false,
-      serverUrl: 'localhost:8000',
-      protocol: 'http',
+      serverUrl,
+      protocol,
       authType: 'token',
       token: '',
       username: '',
@@ -67,8 +81,7 @@ export const useAuthStore = defineStore('auth', {
           this.password = ''
         }
 
-        // Create axios instance with auth headers
-        const baseURL = `${this.protocol}://${this.serverUrl}`
+        // Create headers for auth
         const headers: Record<string, string> = {}
 
         if (this.authType === 'token') {
@@ -78,8 +91,10 @@ export const useAuthStore = defineStore('auth', {
           headers['Authorization'] = `Basic ${auth}`
         }
 
-        // Test connection by fetching heartbeat
-        await axios.get(`${baseURL}/api/v1/heartbeat`, { headers })
+        // Create API client and test connection by fetching heartbeat
+        const baseURL = `${this.protocol}://${this.serverUrl}`
+        const apiClient = getApiClient(baseURL, headers)
+        await apiClient.get('/api/v1/heartbeat')
 
         this.isAuthenticated = true
 
@@ -107,6 +122,8 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     getAuthStatus: (state) => state.isAuthenticated,
     getBaseUrl: (state) => `${state.protocol}://${state.serverUrl}`,
+    getTenant: (state) => state.tenant,
+    getDatabase: (state) => state.database,
     getHeaders(): Record<string, string> {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json'
