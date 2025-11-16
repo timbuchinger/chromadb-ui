@@ -71,7 +71,8 @@ async function handleSubmit() {
     } else if (authType.value === 'basic') {
       headers['Authorization'] = `Basic ${btoa(`${username.value}:${password.value}`)}`
     }
-
+    
+    
     const baseURL = `${protocol.value}://${serverUrl.value}`
     const apiClient = getApiClient(baseURL, headers)
     await apiClient.get('/api/v1/collections')
