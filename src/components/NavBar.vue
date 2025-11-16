@@ -27,22 +27,22 @@ function handleKeydown(event: KeyboardEvent) {
       event.preventDefault()
       nextIndex = currentIndex + 1
       if (nextIndex >= navItems.value.length) nextIndex = 0
-      navItems.value[nextIndex].focus()
+      navItems.value[nextIndex]?.focus()
       break
     case 'ArrowLeft':
     case 'ArrowUp':
       event.preventDefault()
       nextIndex = currentIndex - 1
       if (nextIndex < 0) nextIndex = navItems.value.length - 1
-      navItems.value[nextIndex].focus()
+      navItems.value[nextIndex]?.focus()
       break
     case 'Home':
       event.preventDefault()
-      navItems.value[0].focus()
+      navItems.value[0]?.focus()
       break
     case 'End':
       event.preventDefault()
-      navItems.value[navItems.value.length - 1].focus()
+      navItems.value[navItems.value.length - 1]?.focus()
       break
   }
 }
