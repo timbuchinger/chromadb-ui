@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// AboutModal component displays application information and version
 defineProps<{
   show: boolean
 }>()
