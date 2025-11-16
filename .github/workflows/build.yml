@@ -33,6 +33,8 @@ jobs:
   e2e-test:
     runs-on: ubuntu-latest
     needs: lint-and-test
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v3
@@ -76,6 +78,8 @@ jobs:
   build:
     needs: e2e-test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v3
