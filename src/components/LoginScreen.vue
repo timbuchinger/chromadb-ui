@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useNotificationStore } from '../stores/notifications'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const notificationStore = useNotificationStore()
 
 const serverUrl = ref('localhost:8000')
 const protocol = ref<'http' | 'https'>('http')
@@ -14,12 +16,10 @@ const username = ref('')
 const password = ref('')
 const tenant = ref('default_tenant')
 const database = ref('default_database')
-const error = ref('')
 const loading = ref(false)
 
 async function handleSubmit() {
   if (loading.value) return
-  error.value = ''
   loading.value = true
 
   try {
@@ -40,7 +40,8 @@ async function handleSubmit() {
     })
 
     if (!response.ok) {
-      throw new Error('Authentication failed. Please check your credentials.')
+      const errorText = await response.text()
+      throw new Error(`Authentication failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`)
     }
 
     // Store authentication details if successful
@@ -55,9 +56,12 @@ async function handleSubmit() {
       database: database.value
     })
 
-    router.push('/')
+    // Redirect to last route or home
+    const lastRoute = authStore.getLastRoute()
+    router.push(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Authentication failed'
+    const errorMessage = e instanceof Error ? e.message : 'Authentication failed. Please check your credentials.'
+    notificationStore.error(errorMessage)
   } finally {
     loading.value = false
   }
@@ -180,11 +184,6 @@ async function handleSubmit() {
               placeholder="Database"
             />
           </div>
-        </div>
-
-        <!-- Error Message -->
-        <div v-if="error" class="text-accent-error text-sm text-center" data-test="error-message">
-          {{ error }}
         </div>
 
         <!-- Submit Button -->
