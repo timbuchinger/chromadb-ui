@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { clearSettings } from '../utils/cookies'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -101,6 +102,9 @@ export const useAuthStore = defineStore('auth', {
 
       // Remove state from localStorage
       localStorage.removeItem(localStorageKey);
+      
+      // Clear settings cookie
+      clearSettings();
     }
   },
 
