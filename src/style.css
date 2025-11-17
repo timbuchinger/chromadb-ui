@@ -1,5 +1,43 @@
 @import "tailwindcss";
 
+@theme {
+  --color-surface-primary-light: oklch(0.98 0 0);
+  --color-surface-primary-dark: oklch(0.17 0 0);
+  --color-surface-secondary-light: oklch(0.96 0 0);
+  --color-surface-secondary-dark: oklch(0.24 0 0);
+  
+  --color-content-primary-light: oklch(0.17 0 0);
+  --color-content-primary-dark: oklch(1 0 0);
+  
+  --color-border-primary-light: oklch(0.83 0 0);
+  --color-border-primary-dark: oklch(0.42 0 0);
+  
+  --color-accent-primary: #007a99;
+  --color-accent-secondary: #008fb3;
+  --color-accent-tertiary: oklch(0.85 0.14 102.37);
+  --color-accent-error: #b32400;
+  
+  --color-status-success-bg-light: oklch(0.96 0.05 145.64);
+  --color-status-success-bg-dark: oklch(0.30 0.10 145.64);
+  --color-status-success-text-light: oklch(0.45 0.13 145.64);
+  --color-status-success-text-dark: oklch(0.92 0.03 145.64);
+  
+  --color-status-error-bg-light: oklch(0.97 0.05 27.33);
+  --color-status-error-bg-dark: oklch(0.33 0.13 27.33);
+  --color-status-error-text-light: oklch(0.50 0.18 27.33);
+  --color-status-error-text-dark: oklch(0.93 0.04 27.33);
+  
+  --color-status-warning-bg-light: oklch(0.97 0.08 102.37);
+  --color-status-warning-bg-dark: oklch(0.35 0.14 102.37);
+  --color-status-warning-text-light: oklch(0.55 0.14 102.37);
+  --color-status-warning-text-dark: oklch(0.94 0.03 102.37);
+  
+  --color-status-info-bg-light: oklch(0.96 0.03 241.30);
+  --color-status-info-bg-dark: oklch(0.31 0.10 241.30);
+  --color-status-info-text-light: oklch(0.47 0.11 241.30);
+  --color-status-info-text-dark: oklch(0.91 0.03 241.30);
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
