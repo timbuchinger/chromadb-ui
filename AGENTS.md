@@ -4,11 +4,13 @@ This document provides comprehensive context for AI agents working on the Chroma
 
 ## Project Overview
 
-ChromaDB Admin Interface is a modern web-based user interface for managing ChromaDB collections, documents, and metadata. It provides an intuitive, accessible alternative to command-line and API-based interactions with ChromaDB.
+ChromaDB Admin Interface is a modern web-based user interface for managing ChromaDB collections, documents, and
+metadata. It provides an intuitive, accessible alternative to command-line and API-based interactions with ChromaDB.
 
 ### Purpose
 
 The project addresses the need for a graphical interface that makes ChromaDB more accessible to:
+
 - Non-technical users who prefer visual interfaces
 - Users requiring quick data exploration capabilities
 - Teams managing collections and documents efficiently
@@ -25,31 +27,36 @@ The project addresses the need for a graphical interface that makes ChromaDB mor
 ## Technical Stack
 
 ### Frontend Framework
+
 - **Vue.js 3**: Modern reactive framework using Composition API
 - **Vue Router**: Client-side routing with protected routes
 - **Pinia**: State management for auth, data, loading, and notifications
 - **TypeScript**: Full type safety throughout the application
 
 ### Build Tools
+
 - **Vite**: Fast build tool with hot module replacement
 - **TypeScript**: Strict type checking
 - **PostCSS**: CSS processing pipeline
 
 ### Styling
+
 - **TailwindCSS**: Utility-first CSS framework
 - **Custom Theme System**: Comprehensive light/dark mode support
-- **ChromaDB Color Palette**: 
+- **ChromaDB Color Palette**:
   - Primary (blue-600): Main CTAs and focus states
   - Secondary (orange-500): Hover states and interactive elements
   - Tertiary (yellow-500): Highlights and indicators
   - Error (red-500): Destructive actions and error states
 
 ### Testing
+
 - **Cypress**: E2E testing with multiple authentication scenarios
 - **Vitest**: Unit testing framework
 - **Vue Test Utils**: Component testing utilities
 
 ### Infrastructure
+
 - **Docker**: Multi-stage builds with nginx for production
 - **GitHub Actions**: CI/CD with automated builds and releases
 - **Docker Hub**: Automated image publishing
@@ -142,6 +149,7 @@ All state is managed through Pinia stores:
 ### Modal Pattern
 
 All modals follow consistent patterns:
+
 - Focus trap implementation using custom directive
 - ARIA roles and labels for accessibility
 - Keyboard navigation (Tab, Shift+Tab, Escape)
@@ -288,6 +296,7 @@ onMounted(() => {
    - Support both light and dark themes
 
 2. **Theme-Aware Styling**
+
    ```css
    bg-surface-primary-light dark:bg-surface-primary-dark
    text-content-primary-light dark:text-content-primary-dark
@@ -525,11 +534,11 @@ npm run preview
 
 ## Resources
 
-- **Repository**: https://github.com/timbuchinger/chromadb-ui
-- **Docker Hub**: https://hub.docker.com/r/timbuchinger/chromadb-ui
-- **ChromaDB Docs**: https://docs.trychroma.com/
-- **Vue.js Docs**: https://vuejs.org/
-- **TailwindCSS Docs**: https://tailwindcss.com/
+- **Repository**: <https://github.com/timbuchinger/chromadb-ui>
+- **Docker Hub**: <https://hub.docker.com/r/timbuchinger/chromadb-ui>
+- **ChromaDB Docs**: <https://docs.trychroma.com/>
+- **Vue.js Docs**: <https://vuejs.org/>
+- **TailwindCSS Docs**: <https://tailwindcss.com/>
 
 ## Getting Help
 
