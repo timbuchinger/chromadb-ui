@@ -76,7 +76,8 @@ The built files will be in the `dist` directory.
 Build the image locally:
 
 ```bash
-docker build -t chromadb-ui .
+# Note: Currently requires disabling BuildKit due to npm timeout issue
+DOCKER_BUILDKIT=0 docker build -t chromadb-ui .
 ```
 
 ## Keyboard Shortcuts
