@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { getApiClient } from '../utils/api'
+import { loadSettings, saveSettings } from '../utils/cookies'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -33,10 +34,20 @@ const database = ref('default_database')
 const error = ref('')
 const loading = ref(false)
 
-// Prefill with last authenticated values
+// Load saved settings on mount (prioritize cookies over authStore for settings persistence)
 onMounted(() => {
-  tenant.value = authStore.tenant || 'default_tenant'
-  database.value = authStore.database || 'default_database'
+  const savedSettings = loadSettings()
+  if (savedSettings) {
+    if (savedSettings.serverUrl) serverUrl.value = savedSettings.serverUrl
+    if (savedSettings.protocol) protocol.value = savedSettings.protocol
+    if (savedSettings.authType) authType.value = savedSettings.authType
+    if (savedSettings.tenant) tenant.value = savedSettings.tenant
+    if (savedSettings.database) database.value = savedSettings.database
+  } else {
+    // Fallback to prefill with last authenticated values from authStore
+    tenant.value = authStore.tenant || 'default_tenant'
+    database.value = authStore.database || 'default_database'
+  }
 })
 
 async function handleSubmit() {
@@ -73,6 +84,15 @@ async function handleSubmit() {
       token: token.value,
       username: username.value,
       password: password.value,
+      tenant: tenant.value,
+      database: database.value
+    })
+
+    // Save non-sensitive settings to cookies for future logins
+    saveSettings({
+      serverUrl: serverUrl.value,
+      protocol: protocol.value,
+      authType: authType.value,
       tenant: tenant.value,
       database: database.value
     })
