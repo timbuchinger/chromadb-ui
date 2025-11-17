@@ -15,6 +15,9 @@ ARG VERSION=dev
 # Copy package files
 COPY package*.json ./
 
+# Skip Cypress binary installation as it's not needed for builds
+ENV CYPRESS_INSTALL_BINARY=0
+
 # Install dependencies
 RUN npm ci
 
