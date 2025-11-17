@@ -3,6 +3,12 @@ FROM node:25-alpine AS build
 
 WORKDIR /app
 
+# Workaround for npm 11.x issues: manually install npm 10
+RUN wget --no-check-certificate -qO- https://registry.npmjs.org/npm/-/npm-10.9.2.tgz | tar xz -C /tmp && \
+    rm -rf /usr/local/lib/node_modules/npm && \
+    mv /tmp/package /usr/local/lib/node_modules/npm && \
+    npm --version
+
 # Accept version as a build argument
 ARG VERSION=dev
 
