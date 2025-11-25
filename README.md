@@ -43,25 +43,25 @@ git clone https://github.com/timbuchinger/chromadb-ui.git
 cd chromadb-ui
 ```
 
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Create a `.env` file:
+1. Create a `.env` file:
 
-```
+```text
 VITE_CHROMADB_HOST=http://localhost:8000
 ```
 
-4. Start the development server:
+1. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-5. Visit `http://localhost:3000` in your browser
+1. Visit `http://localhost:5173` in your browser
 
 ## Building for Production
 
@@ -105,6 +105,24 @@ DOCKER_BUILDKIT=0 docker build -t chromadb-ui .
 - Add tests for new features
 
 ### Testing
+
+#### Unit Tests
+
+The project uses Vitest for unit testing:
+
+```bash
+# Run unit tests
+npm run test:unit
+
+# Run unit tests once (for CI)
+npm run test:unit:run
+
+# Run unit tests with UI
+npm run test:unit:ui
+
+# Run tests with coverage
+npm run test:coverage
+```
 
 #### E2E Tests
 
