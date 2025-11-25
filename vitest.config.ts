@@ -26,12 +26,14 @@ export default defineConfig({
         'src/vite-env.d.ts',
         'src/main.ts'
       ]
-      // Coverage thresholds - enable once coverage target is reached
+      // Coverage thresholds - increase incrementally as coverage improves
+      // Current coverage: ~28% overall (composables/directives at 100%)
+      // Enable once coverage target is closer to being met:
       // thresholds: {
-      //   statements: 80,
-      //   lines: 80,
-      //   functions: 80,
-      //   branches: 75
+      //   statements: 50,
+      //   lines: 50,
+      //   functions: 50,
+      //   branches: 40
       // }
     }
   }
