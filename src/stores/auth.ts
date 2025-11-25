@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { getSecureItem, setSecureItem } from '../utils/secureStorage'
 import { getApiClient } from '../utils/api'
 import { clearSettings } from '../utils/cookies'
 
@@ -8,9 +9,11 @@ interface AuthState {
   protocol: 'http' | 'https'
   tenant: string
   database: string
+  lastRoute?: string
 }
 
-const localStorageKey = 'auth';
+const localStorageKey = 'auth'
+const lastRouteKey = 'lastRoute';
 
 /**
  * Parse VITE_CHROMADB_HOST from environment
@@ -27,7 +30,6 @@ function parseEnvHost(): { protocol: 'http' | 'https'; serverUrl: string } {
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
-    const storedState = localStorage.getItem(localStorageKey);
     const { protocol, serverUrl } = parseEnvHost();
     const initialState: AuthState = {
       isAuthenticated: false,
@@ -35,12 +37,42 @@ export const useAuthStore = defineStore('auth', {
       protocol,
       tenant: 'default_tenant',
       database: 'default_database'
-    };
+    }
 
-    return storedState ? JSON.parse(storedState) : initialState;
+    return initialState
   },
 
   actions: {
+    async restoreSession(): Promise<boolean> {
+      try {
+        const storedState = await getSecureItem<AuthState>(localStorageKey)
+        if (storedState) {
+          // Restore state
+          this.isAuthenticated = storedState.isAuthenticated
+          this.serverUrl = storedState.serverUrl
+          this.protocol = storedState.protocol
+          this.tenant = storedState.tenant
+          this.database = storedState.database
+          this.lastRoute = storedState.lastRoute
+          return true
+        }
+        return false
+      } catch (error) {
+        console.error('Failed to restore session:', error)
+        return false
+      }
+    },
+
+    setLastRoute(route: string) {
+      this.lastRoute = route
+      // Also persist to localStorage directly for quick access
+      localStorage.setItem(lastRouteKey, route)
+    },
+
+    getLastRoute(): string | null {
+      return this.lastRoute || localStorage.getItem(lastRouteKey)
+    },
+
     async login(formData: {
       serverUrl: string
       protocol: 'http' | 'https'
@@ -62,8 +94,8 @@ export const useAuthStore = defineStore('auth', {
 
         this.isAuthenticated = true
 
-        // Save state to localStorage
-        localStorage.setItem(localStorageKey, JSON.stringify(this.$state));
+        // Save state to encrypted localStorage
+        await setSecureItem(localStorageKey, this.$state)
 
         return true
       } catch (error) {
@@ -77,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
 
       // Remove state from localStorage
       localStorage.removeItem(localStorageKey);
-      
+
       // Clear settings cookie
       clearSettings();
     }

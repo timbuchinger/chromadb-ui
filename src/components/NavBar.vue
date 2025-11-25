@@ -115,6 +115,7 @@ function handleKeydown(event: KeyboardEvent) {
             role="menuitem"
             ref="el => el && navItems.push(el)"
             aria-label="Sign out of your account"
+            data-test="navbar-logout"
           >
             Logout
           </button>

@@ -72,7 +72,9 @@ async function handleSubmit() {
       database: database.value
     })
 
-    router.push('/')
+    // Redirect to last route or home
+    const lastRoute = authStore.getLastRoute()
+    router.push(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Connection failed'
   } finally {
