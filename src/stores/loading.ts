@@ -40,6 +40,6 @@ export const useLoadingStore = defineStore('loading', {
 
     // Check if any loading state is active
     isAnyLoading: (state): boolean =>
-      Object.values(state).some(loading => loading),
+      state.collections || state.documents || state.authentication || state.navigation,
   },
 });
