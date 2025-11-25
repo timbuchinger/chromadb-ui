@@ -28,7 +28,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",
     "@types/cypress": "^1.1.6",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitejs/plugin-vue": "^6.0.2",
     "@vitest/coverage-v8": "^4.0.13",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
