@@ -1,23 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { useNotificationStore } from '../stores/notifications'
+import { getApiClient } from '../utils/api'
+import { loadSettings, saveSettings } from '../utils/cookies'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const notificationStore = useNotificationStore()
 
-const serverUrl = ref('localhost:8000')
-const protocol = ref<'http' | 'https'>('http')
-const authType = ref<'token' | 'basic' | 'none'>('token')
-const token = ref('')
-const username = ref('')
-const password = ref('')
+/**
+ * Parse VITE_CHROMADB_HOST from environment
+ * Expected format: http://localhost:8000 or https://example.com:8000
+ */
+function parseEnvHost(): { protocol: 'http' | 'https'; serverUrl: string } {
+  const envHost = import.meta.env.VITE_CHROMADB_HOST || 'http://localhost:8000'
+  const url = new URL(envHost)
+  return {
+    protocol: url.protocol.replace(':', '') as 'http' | 'https',
+    serverUrl: url.host
+  }
+}
+
+const { protocol: defaultProtocol, serverUrl: defaultServerUrl } = parseEnvHost()
+
+const serverUrl = ref(defaultServerUrl)
+const protocol = ref<'http' | 'https'>(defaultProtocol)
 const tenant = ref('default_tenant')
 const database = ref('default_database')
 const error = ref('')
 const loading = ref(false)
+
+// Load saved settings on mount (prioritize cookies over authStore for settings persistence)
+onMounted(() => {
+  const savedSettings = loadSettings()
+  if (savedSettings) {
+    if (savedSettings.serverUrl) serverUrl.value = savedSettings.serverUrl
+    if (savedSettings.protocol) protocol.value = savedSettings.protocol
+    if (savedSettings.tenant) tenant.value = savedSettings.tenant
+    if (savedSettings.database) database.value = savedSettings.database
+  } else {
+    // Fallback to prefill with last authenticated values from authStore
+    tenant.value = authStore.tenant || 'default_tenant'
+    database.value = authStore.database || 'default_database'
+  }
+})
 
 async function handleSubmit() {
   if (loading.value) return
@@ -25,41 +51,23 @@ async function handleSubmit() {
   loading.value = true
 
   try {
-    // Validate required fields - these are client-side validation errors
-    if (authType.value === 'token' && !token.value) {
-      error.value = 'Token is required'
-      return
-    }
-    if (authType.value === 'basic' && (!username.value || !password.value)) {
-      error.value = 'Username and password are required'
-      return
-    }
+    // Test connection with ChromaDB using shared API client
+    const baseURL = `${protocol.value}://${serverUrl.value}`
+    const apiClient = getApiClient(baseURL, {})
+    await apiClient.get('/api/v1/collections')
 
-    // Test connection with ChromaDB
-    const response = await fetch(`${protocol.value}://${serverUrl.value}/api/v1/collections`, {
-      headers: {
-        ...(authType.value === 'token' ? { 'Authorization': `Bearer ${token.value}` } : {}),
-        ...(authType.value === 'basic' ? { 'Authorization': `Basic ${btoa(`${username.value}:${password.value}`)}` } : {})
-      }
-    })
-
-    if (!response.ok) {
-      // Backend errors - surface through notification system
-      const errorText = await response.text()
-      const backendError = `Authentication failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
-      notificationStore.error(backendError)
-      error.value = 'Authentication failed. Please check your credentials.'
-      return
-    }
-
-    // Store authentication details if successful
+    // Store connection details if successful
     await authStore.login({
       serverUrl: serverUrl.value,
       protocol: protocol.value,
-      authType: authType.value,
-      token: token.value,
-      username: username.value,
-      password: password.value,
+      tenant: tenant.value,
+      database: database.value
+    })
+
+    // Save settings to cookies for future connections
+    saveSettings({
+      serverUrl: serverUrl.value,
+      protocol: protocol.value,
       tenant: tenant.value,
       database: database.value
     })
@@ -68,10 +76,7 @@ async function handleSubmit() {
     const lastRoute = authStore.getLastRoute()
     router.push(lastRoute && lastRoute !== '/login' ? lastRoute : '/')
   } catch (e) {
-    // Network or unexpected errors - surface through notification system
-    const errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred'
-    notificationStore.error(errorMessage)
-    error.value = 'Authentication failed. Please check your credentials.'
+    error.value = e instanceof Error ? e.message : 'Connection failed'
   } finally {
     loading.value = false
   }
@@ -104,72 +109,6 @@ async function handleSubmit() {
               required
               class="relative block w-3/4 rounded-r-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="<http://localhost:8000>"
-            />
-          </div>
-        </div>
-
-        <!-- Auth Type Selection -->
-        <div class="flex justify-center space-x-4">
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="token"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Token</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="basic"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Basic</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="none"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">No Auth</span>
-          </label>
-        </div>
-
-        <!-- Token Auth Fields -->
-        <div v-if="authType === 'token'" class="mt-4 rounded-md shadow-sm -space-y-px">
-          <div>
-            <input
-              v-model="token"
-              type="password"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="API Token"
-            />
-          </div>
-        </div>
-
-        <!-- Basic Auth Fields -->
-        <div v-else-if="authType === 'basic'" class="mt-4 space-y-2">
-          <div>
-            <input
-              v-model="username"
-              type="text"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="Username"
-            />
-          </div>
-          <div>
-            <input
-              v-model="password"
-              type="password"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="Password"
             />
           </div>
         </div>

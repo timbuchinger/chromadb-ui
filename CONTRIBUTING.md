@@ -123,7 +123,7 @@ Example: `feat: Add collection sorting functionality`
 - Update README.md for new features
 - Add JSDoc comments for functions
 - Include inline comments for complex logic
-- Update systemPatterns.md for patterns
+- Update AGENTS.md for architectural changes and patterns
 - Keep all documentation in sync
 
 ## Design System

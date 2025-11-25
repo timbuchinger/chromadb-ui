@@ -76,7 +76,8 @@ The built files will be in the `dist` directory.
 Build the image locally:
 
 ```bash
-docker build -t chromadb-ui .
+# Note: Currently requires disabling BuildKit due to npm timeout issue
+DOCKER_BUILDKIT=0 docker build -t chromadb-ui .
 ```
 
 ## Keyboard Shortcuts
@@ -108,9 +109,10 @@ docker build -t chromadb-ui .
 #### E2E Tests
 
 The project uses Cypress for end-to-end testing, including tests for different authentication modes:
+
 - No authentication
 - Token authentication
-- Basic authentication 
+- Basic authentication
 
 To run E2E tests:
 
@@ -126,6 +128,7 @@ npm run test:e2e:dev
 ```
 
 Notes:
+
 - Ensure the ChromaDB containers are running before starting tests
 - Tests run against containers configured for different auth modes on ports 8001-8003
 

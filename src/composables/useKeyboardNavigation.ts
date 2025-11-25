@@ -39,7 +39,10 @@ export function useKeyboardNavigation<T>(items: T[]) {
       case ' ':
         event.preventDefault()
         if (currentIndex.value >= 0 && currentIndex.value < items.length) {
-          onSelect(items[currentIndex.value])
+          const item = items[currentIndex.value]
+          if (item !== undefined) {
+            onSelect(item)
+          }
         }
         break
     }

@@ -19,7 +19,7 @@ const EXPIRATION_MS = 24 * 60 * 60 * 1000 // 24 hours
 /**
  * Generates a cryptographic key from a password using PBKDF2
  */
-async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
+async function deriveKey(password: string, salt: BufferSource): Promise<CryptoKey> {
   const encoder = new TextEncoder()
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
@@ -83,8 +83,10 @@ async function encryptData<T>(data: T, expiresAt: number): Promise<EncryptedPayl
   const plaintext = encoder.encode(JSON.stringify(storedData))
 
   // Generate random salt and IV
-  const salt = crypto.getRandomValues(new Uint8Array(16))
-  const iv = crypto.getRandomValues(new Uint8Array(12))
+  const salt = new Uint8Array(16)
+  const iv = new Uint8Array(12)
+  crypto.getRandomValues(salt)
+  crypto.getRandomValues(iv)
 
   // Derive encryption key
   const key = await deriveKey(getSessionKey(), salt)

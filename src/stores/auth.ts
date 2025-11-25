@@ -1,15 +1,12 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
-import { getSecureItem, setSecureItem, removeSecureItem } from '../utils/secureStorage'
+import { getSecureItem, setSecureItem } from '../utils/secureStorage'
+import { getApiClient } from '../utils/api'
+import { clearSettings } from '../utils/cookies'
 
 interface AuthState {
   isAuthenticated: boolean
   serverUrl: string
   protocol: 'http' | 'https'
-  authType: 'token' | 'basic' | 'none'
-  token: string
-  username: string
-  password: string
   tenant: string
   database: string
   lastRoute?: string
@@ -18,17 +15,26 @@ interface AuthState {
 const localStorageKey = 'auth'
 const lastRouteKey = 'lastRoute';
 
+/**
+ * Parse VITE_CHROMADB_HOST from environment
+ * Expected format: http://localhost:8000 or https://example.com:8000
+ */
+function parseEnvHost(): { protocol: 'http' | 'https'; serverUrl: string } {
+  const envHost = import.meta.env.VITE_CHROMADB_HOST || 'http://localhost:8000'
+  const url = new URL(envHost)
+  return {
+    protocol: url.protocol.replace(':', '') as 'http' | 'https',
+    serverUrl: url.host
+  }
+}
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => {
-    // Initial state - will be restored asynchronously
+    const { protocol, serverUrl } = parseEnvHost();
     const initialState: AuthState = {
       isAuthenticated: false,
-      serverUrl: 'localhost:8000',
-      protocol: 'http',
-      authType: 'token',
-      token: '',
-      username: '',
-      password: '',
+      serverUrl,
+      protocol,
       tenant: 'default_tenant',
       database: 'default_database'
     }
@@ -45,10 +51,6 @@ export const useAuthStore = defineStore('auth', {
           this.isAuthenticated = storedState.isAuthenticated
           this.serverUrl = storedState.serverUrl
           this.protocol = storedState.protocol
-          this.authType = storedState.authType
-          this.token = storedState.token
-          this.username = storedState.username
-          this.password = storedState.password
           this.tenant = storedState.tenant
           this.database = storedState.database
           this.lastRoute = storedState.lastRoute
@@ -74,10 +76,6 @@ export const useAuthStore = defineStore('auth', {
     async login(formData: {
       serverUrl: string
       protocol: 'http' | 'https'
-      authType: 'token' | 'basic' | 'none'
-      token?: string
-      username?: string
-      password?: string
       tenant?: string
       database?: string
     }) {
@@ -85,38 +83,14 @@ export const useAuthStore = defineStore('auth', {
         // Update store with form data
         this.serverUrl = formData.serverUrl
         this.protocol = formData.protocol
-        this.authType = formData.authType
 
         this.tenant = formData.tenant || 'default_tenant'
         this.database = formData.database || 'default_database'
 
-        if (formData.authType === 'token') {
-          this.token = formData.token || ''
-          this.username = ''
-          this.password = ''
-        } else if (formData.authType === 'basic') {
-          this.username = formData.username || ''
-          this.password = formData.password || ''
-          this.token = ''
-        } else {
-          this.token = ''
-          this.username = ''
-          this.password = ''
-        }
-
-        // Create axios instance with auth headers
+        // Create API client and test connection by fetching heartbeat
         const baseURL = `${this.protocol}://${this.serverUrl}`
-        const headers: Record<string, string> = {}
-
-        if (this.authType === 'token') {
-          headers['Authorization'] = `Bearer ${this.token}`
-        } else if (this.authType === 'basic') {
-          const auth = btoa(`${this.username}:${this.password}`)
-          headers['Authorization'] = `Basic ${auth}`
-        }
-
-        // Test connection by fetching heartbeat
-        await axios.get(`${baseURL}/api/v1/heartbeat`, { headers })
+        const apiClient = getApiClient(baseURL, {})
+        await apiClient.get('/api/v1/heartbeat')
 
         this.isAuthenticated = true
 
@@ -132,33 +106,24 @@ export const useAuthStore = defineStore('auth', {
 
     logout() {
       this.isAuthenticated = false
-      this.token = ''
-      this.username = ''
-      this.password = ''
-      this.lastRoute = undefined
 
-      // Remove state from encrypted localStorage
-      removeSecureItem(localStorageKey)
-      localStorage.removeItem(lastRouteKey)
+      // Remove state from localStorage
+      localStorage.removeItem(localStorageKey);
+
+      // Clear settings cookie
+      clearSettings();
     }
   },
 
   getters: {
     getAuthStatus: (state) => state.isAuthenticated,
     getBaseUrl: (state) => `${state.protocol}://${state.serverUrl}`,
+    getTenant: (state) => state.tenant,
+    getDatabase: (state) => state.database,
     getHeaders(): Record<string, string> {
-      const headers: Record<string, string> = {
+      return {
         'Content-Type': 'application/json'
       }
-
-      if (this.authType === 'token') {
-        headers['Authorization'] = `Bearer ${this.token}`
-      } else if (this.authType === 'basic') {
-        const auth = btoa(`${this.username}:${this.password}`)
-        headers['Authorization'] = `Basic ${auth}`
-      }
-
-      return headers
     }
   }
 })

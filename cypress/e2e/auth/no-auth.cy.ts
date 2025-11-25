@@ -1,13 +1,10 @@
-describe('No Auth Mode', () => {
+describe('ChromaDB Connection', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.setupNoAuth();
   });
 
-  it('should connect without credentials', () => {
-    // Select No Auth option
-    cy.get('input[type="radio"][value="none"]').check();
-
+  it('should connect to ChromaDB server', () => {
     // Click Connect button
     cy.get('button[type="submit"]').click();
 
@@ -16,8 +13,7 @@ describe('No Auth Mode', () => {
   });
 
   it('should be able to create and delete a collection', () => {
-    // Select No Auth option and connect
-    cy.get('input[type="radio"][value="none"]').check();
+    // Connect
     cy.get('button[type="submit"]').click();
     cy.get('[data-test="collections-screen"]').should('be.visible');
 
@@ -105,8 +101,7 @@ describe('No Auth Mode', () => {
   });
 
   it('should maintain connection for multiple operations', () => {
-    // Select No Auth option and connect
-    cy.get('input[type="radio"][value="none"]').check();
+    // Connect
     cy.get('button[type="submit"]').click();
 
     cy.get('[data-test="collections-screen"]').should('be.visible');
