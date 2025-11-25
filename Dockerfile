@@ -1,5 +1,5 @@
 # Build stage
-FROM node:25-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -8,6 +8,9 @@ ARG VERSION=dev
 
 # Copy package files
 COPY package*.json ./
+
+# Skip Cypress binary installation as it's not needed for builds
+ENV CYPRESS_INSTALL_BINARY=0
 
 # Install dependencies
 RUN npm ci
