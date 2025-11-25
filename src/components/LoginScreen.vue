@@ -25,10 +25,6 @@ const { protocol: defaultProtocol, serverUrl: defaultServerUrl } = parseEnvHost(
 
 const serverUrl = ref(defaultServerUrl)
 const protocol = ref<'http' | 'https'>(defaultProtocol)
-const authType = ref<'token' | 'basic' | 'none'>('token')
-const token = ref('')
-const username = ref('')
-const password = ref('')
 const tenant = ref('default_tenant')
 const database = ref('default_database')
 const error = ref('')
@@ -40,7 +36,6 @@ onMounted(() => {
   if (savedSettings) {
     if (savedSettings.serverUrl) serverUrl.value = savedSettings.serverUrl
     if (savedSettings.protocol) protocol.value = savedSettings.protocol
-    if (savedSettings.authType) authType.value = savedSettings.authType
     if (savedSettings.tenant) tenant.value = savedSettings.tenant
     if (savedSettings.database) database.value = savedSettings.database
   } else {
@@ -56,50 +51,30 @@ async function handleSubmit() {
   loading.value = true
 
   try {
-    // Validate required fields
-    if (authType.value === 'token' && !token.value) {
-      throw new Error('Token is required')
-    }
-    if (authType.value === 'basic' && (!username.value || !password.value)) {
-      throw new Error('Username and password are required')
-    }
-
     // Test connection with ChromaDB using shared API client
-    const headers: Record<string, string> = {}
-    if (authType.value === 'token') {
-      headers['Authorization'] = `Bearer ${token.value}`
-    } else if (authType.value === 'basic') {
-      headers['Authorization'] = `Basic ${btoa(`${username.value}:${password.value}`)}`
-    }
-    
     const baseURL = `${protocol.value}://${serverUrl.value}`
-    const apiClient = getApiClient(baseURL, headers)
+    const apiClient = getApiClient(baseURL, {})
     await apiClient.get('/api/v1/collections')
 
-    // Store authentication details if successful
+    // Store connection details if successful
     await authStore.login({
       serverUrl: serverUrl.value,
       protocol: protocol.value,
-      authType: authType.value,
-      token: token.value,
-      username: username.value,
-      password: password.value,
       tenant: tenant.value,
       database: database.value
     })
 
-    // Save non-sensitive settings to cookies for future logins
+    // Save settings to cookies for future connections
     saveSettings({
       serverUrl: serverUrl.value,
       protocol: protocol.value,
-      authType: authType.value,
       tenant: tenant.value,
       database: database.value
     })
 
     router.push('/')
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Authentication failed'
+    error.value = e instanceof Error ? e.message : 'Connection failed'
   } finally {
     loading.value = false
   }
@@ -132,72 +107,6 @@ async function handleSubmit() {
               required
               class="relative block w-3/4 rounded-r-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
               placeholder="<http://localhost:8000>"
-            />
-          </div>
-        </div>
-
-        <!-- Auth Type Selection -->
-        <div class="flex justify-center space-x-4">
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="token"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Token</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="basic"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">Basic</span>
-          </label>
-          <label class="inline-flex items-center">
-            <input
-              type="radio"
-              v-model="authType"
-              value="none"
-              class="form-radio text-accent-primary"
-            />
-            <span class="ml-2 text-content-primary-light dark:text-content-primary-dark">No Auth</span>
-          </label>
-        </div>
-
-        <!-- Token Auth Fields -->
-        <div v-if="authType === 'token'" class="mt-4 rounded-md shadow-sm -space-y-px">
-          <div>
-            <input
-              v-model="token"
-              type="password"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="API Token"
-            />
-          </div>
-        </div>
-
-        <!-- Basic Auth Fields -->
-        <div v-else-if="authType === 'basic'" class="mt-4 space-y-2">
-          <div>
-            <input
-              v-model="username"
-              type="text"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="Username"
-            />
-          </div>
-          <div>
-            <input
-              v-model="password"
-              type="password"
-              required
-              class="relative block w-full rounded-md border-0 py-1.5 px-3 text-content-primary-light dark:text-content-primary-dark dark:bg-surface-secondary-dark ring-1 ring-inset ring-border-primary-light dark:ring-border-primary-dark placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-accent-primary sm:text-sm sm:leading-6"
-              placeholder="Password"
             />
           </div>
         </div>

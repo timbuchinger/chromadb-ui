@@ -1,16 +1,6 @@
-// Shared fixtures for authentication flows
+// Shared fixtures for API testing
 
 export const authFixtures = {
-  credentials: {
-    noAuth: {},
-    tokenAuth: {
-      token: 'test-token'
-    },
-    basicAuth: {
-      username: 'admin',
-      password: 'admin'
-    }
-  },
   collections: {
     empty: [],
     single: (id: string, name: string) => [{
@@ -22,10 +12,6 @@ export const authFixtures = {
     success: {
       statusCode: 200,
       body: []
-    },
-    unauthorized: {
-      statusCode: 401,
-      body: { error: 'Unauthorized' }
     },
     created: (id: string, name: string) => ({
       statusCode: 200,

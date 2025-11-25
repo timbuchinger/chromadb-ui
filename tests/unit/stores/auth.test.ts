@@ -16,10 +16,6 @@ describe('Auth Store', () => {
       expect(store.isAuthenticated).toBe(false)
       expect(store.serverUrl).toBe('localhost:8000')
       expect(store.protocol).toBe('http')
-      expect(store.authType).toBe('token')
-      expect(store.token).toBe('')
-      expect(store.username).toBe('')
-      expect(store.password).toBe('')
       expect(store.tenant).toBe('default_tenant')
       expect(store.database).toBe('default_database')
     })
@@ -29,10 +25,6 @@ describe('Auth Store', () => {
         isAuthenticated: true,
         serverUrl: 'example.com:9000',
         protocol: 'https',
-        authType: 'basic',
-        token: 'test-token',
-        username: 'admin',
-        password: 'password',
         tenant: 'my_tenant',
         database: 'my_database'
       }
@@ -48,7 +40,8 @@ describe('Auth Store', () => {
       expect(store.isAuthenticated).toBe(true)
       expect(store.serverUrl).toBe('example.com:9000')
       expect(store.protocol).toBe('https')
-      expect(store.authType).toBe('basic')
+      expect(store.tenant).toBe('my_tenant')
+      expect(store.database).toBe('my_database')
     })
   })
 
@@ -59,15 +52,11 @@ describe('Auth Store', () => {
       // Set some state
       store.isAuthenticated = true
       store.serverUrl = 'test.com'
-      store.token = 'test-token'
 
       // Logout
       store.logout()
 
       expect(store.isAuthenticated).toBe(false)
-      expect(store.token).toBe('')
-      expect(store.username).toBe('')
-      expect(store.password).toBe('')
     })
   })
 })

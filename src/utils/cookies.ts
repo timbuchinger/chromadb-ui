@@ -5,7 +5,6 @@
 export interface SavedSettings {
   serverUrl?: string
   protocol?: 'http' | 'https'
-  authType?: 'token' | 'basic' | 'none'
   tenant?: string
   database?: string
 }
