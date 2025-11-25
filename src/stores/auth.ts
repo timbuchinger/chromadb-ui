@@ -6,10 +6,6 @@ interface AuthState {
   isAuthenticated: boolean
   serverUrl: string
   protocol: 'http' | 'https'
-  authType: 'token' | 'basic' | 'none'
-  token: string
-  username: string
-  password: string
   tenant: string
   database: string
 }
@@ -37,10 +33,6 @@ export const useAuthStore = defineStore('auth', {
       isAuthenticated: false,
       serverUrl,
       protocol,
-      authType: 'token',
-      token: '',
-      username: '',
-      password: '',
       tenant: 'default_tenant',
       database: 'default_database'
     };
@@ -52,10 +44,6 @@ export const useAuthStore = defineStore('auth', {
     async login(formData: {
       serverUrl: string
       protocol: 'http' | 'https'
-      authType: 'token' | 'basic' | 'none'
-      token?: string
-      username?: string
-      password?: string
       tenant?: string
       database?: string
     }) {
@@ -63,38 +51,13 @@ export const useAuthStore = defineStore('auth', {
         // Update store with form data
         this.serverUrl = formData.serverUrl
         this.protocol = formData.protocol
-        this.authType = formData.authType
 
         this.tenant = formData.tenant || 'default_tenant'
         this.database = formData.database || 'default_database'
 
-        if (formData.authType === 'token') {
-          this.token = formData.token || ''
-          this.username = ''
-          this.password = ''
-        } else if (formData.authType === 'basic') {
-          this.username = formData.username || ''
-          this.password = formData.password || ''
-          this.token = ''
-        } else {
-          this.token = ''
-          this.username = ''
-          this.password = ''
-        }
-
-        // Create headers for auth
-        const headers: Record<string, string> = {}
-
-        if (this.authType === 'token') {
-          headers['Authorization'] = `Bearer ${this.token}`
-        } else if (this.authType === 'basic') {
-          const auth = btoa(`${this.username}:${this.password}`)
-          headers['Authorization'] = `Basic ${auth}`
-        }
-
         // Create API client and test connection by fetching heartbeat
         const baseURL = `${this.protocol}://${this.serverUrl}`
-        const apiClient = getApiClient(baseURL, headers)
+        const apiClient = getApiClient(baseURL, {})
         await apiClient.get('/api/v1/heartbeat')
 
         this.isAuthenticated = true
@@ -111,9 +74,6 @@ export const useAuthStore = defineStore('auth', {
 
     logout() {
       this.isAuthenticated = false
-      this.token = ''
-      this.username = ''
-      this.password = ''
 
       // Remove state from localStorage
       localStorage.removeItem(localStorageKey);
@@ -129,18 +89,9 @@ export const useAuthStore = defineStore('auth', {
     getTenant: (state) => state.tenant,
     getDatabase: (state) => state.database,
     getHeaders(): Record<string, string> {
-      const headers: Record<string, string> = {
+      return {
         'Content-Type': 'application/json'
       }
-
-      if (this.authType === 'token') {
-        headers['Authorization'] = `Bearer ${this.token}`
-      } else if (this.authType === 'basic') {
-        const auth = btoa(`${this.username}:${this.password}`)
-        headers['Authorization'] = `Basic ${auth}`
-      }
-
-      return headers
     }
   }
 })
