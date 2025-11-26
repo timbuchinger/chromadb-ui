@@ -30,6 +30,12 @@ Cypress.Commands.add('setupTokenAuth', () => {
     statusCode: 200,
     body: []
   }).as('tokenAuthRequest');
+  
+  // Mock the heartbeat endpoint for authentication check
+  cy.intercept('GET', '**/api/v1/heartbeat*', {
+    statusCode: 200,
+    body: { 'nanosecond heartbeat': Date.now() * 1000000 }
+  }).as('heartbeatRequest');
 });
 
 export {};
