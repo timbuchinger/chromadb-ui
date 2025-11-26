@@ -33,18 +33,18 @@ describe('Auth Store', () => {
         tenant: 'my_tenant',
         database: 'my_database'
       }
-      
+
       // Mock getSecureItem to return stored state
       vi.spyOn(secureStorage, 'getSecureItem').mockResolvedValue(storedState)
-      
+
       const store = useAuthStore()
-      
+
       // State should be default initially
       expect(store.isAuthenticated).toBe(false)
-      
+
       // Restore session
       const result = await store.restoreSession()
-      
+
       expect(result).toBe(true)
       expect(store.isAuthenticated).toBe(true)
       expect(store.serverUrl).toBe('example.com:9000')
@@ -55,10 +55,10 @@ describe('Auth Store', () => {
 
     it('should return false when no stored session exists', async () => {
       vi.spyOn(secureStorage, 'getSecureItem').mockResolvedValue(null)
-      
+
       const store = useAuthStore()
       const result = await store.restoreSession()
-      
+
       expect(result).toBe(false)
       expect(store.isAuthenticated).toBe(false)
     })
@@ -83,9 +83,9 @@ describe('Auth Store', () => {
   describe('Last Route', () => {
     it('should set and get last route', () => {
       const store = useAuthStore()
-      
+
       store.setLastRoute('/collections/test')
-      
+
       expect(store.lastRoute).toBe('/collections/test')
       expect(store.getLastRoute()).toBe('/collections/test')
       expect(localStorage.getItem('lastRoute')).toBe('/collections/test')
@@ -93,9 +93,9 @@ describe('Auth Store', () => {
 
     it('should get last route from localStorage if not in state', () => {
       localStorage.setItem('lastRoute', '/stored/route')
-      
+
       const store = useAuthStore()
-      
+
       expect(store.getLastRoute()).toBe('/stored/route')
     })
   })
@@ -103,7 +103,7 @@ describe('Auth Store', () => {
   describe('Logout Action', () => {
     it('should reset authentication state', () => {
       const store = useAuthStore()
-      
+
       // Set some state
       store.isAuthenticated = true
       store.serverUrl = 'test.com'
@@ -116,10 +116,10 @@ describe('Auth Store', () => {
 
     it('should remove auth from localStorage', () => {
       localStorage.setItem('auth', 'test')
-      
+
       const store = useAuthStore()
       store.logout()
-      
+
       expect(localStorage.getItem('auth')).toBeNull()
     })
   })
@@ -127,18 +127,18 @@ describe('Auth Store', () => {
   describe('Getters', () => {
     it('should return correct auth status', () => {
       const store = useAuthStore()
-      
+
       expect(store.getAuthStatus).toBe(false)
-      
+
       store.isAuthenticated = true
       expect(store.getAuthStatus).toBe(true)
     })
 
     it('should return correct base URL', () => {
       const store = useAuthStore()
-      
+
       expect(store.getBaseUrl).toBe('http://localhost:8000')
-      
+
       store.protocol = 'https'
       store.serverUrl = 'example.com:9000'
       expect(store.getBaseUrl).toBe('https://example.com:9000')
@@ -146,25 +146,25 @@ describe('Auth Store', () => {
 
     it('should return correct tenant', () => {
       const store = useAuthStore()
-      
+
       expect(store.getTenant).toBe('default_tenant')
-      
+
       store.tenant = 'my_tenant'
       expect(store.getTenant).toBe('my_tenant')
     })
 
     it('should return correct database', () => {
       const store = useAuthStore()
-      
+
       expect(store.getDatabase).toBe('default_database')
-      
+
       store.database = 'my_database'
       expect(store.getDatabase).toBe('my_database')
     })
 
     it('should return correct headers', () => {
       const store = useAuthStore()
-      
+
       expect(store.getHeaders).toEqual({
         'Content-Type': 'application/json'
       })
