@@ -65,11 +65,18 @@ describe('Auth Store', () => {
 
     it('should return false when restoreSession throws an error', async () => {
       vi.spyOn(secureStorage, 'getSecureItem').mockRejectedValue(new Error('Storage error'))
-      
+
+      // Suppress expected error logging for this test so CI logs stay clean
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const store = useAuthStore()
       const result = await store.restoreSession()
-      
+
       expect(result).toBe(false)
+
+      // Verify we logged the failure and then restore the original
+      expect(errorSpy).toHaveBeenCalled()
+      errorSpy.mockRestore()
     })
   })
 
