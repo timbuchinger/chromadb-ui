@@ -29,17 +29,17 @@ describe('ChromaDB Connection', () => {
     };
 
     // Setup all API mocks
-    cy.intercept('GET', '**/api/v1/collections*', emptyCollections).as('getCollections');
-    cy.intercept('POST', '**/api/v1/collections', {
+    cy.intercept('GET', '**/api/v2/**/collections*', emptyCollections).as('getCollections');
+    cy.intercept('POST', '**/api/v2/**/collections', {
       statusCode: 200,
       body: { id: collectionId, name: collectionName }
     }).as('createCollection');
-    cy.intercept('GET', '**/api/v1/collections*', singleCollection).as('getCollectionsAfterCreate');
-    cy.intercept('GET', `**/api/v1/collections/${collectionId}*`, {
+    cy.intercept('GET', '**/api/v2/**/collections*', singleCollection).as('getCollectionsAfterCreate');
+    cy.intercept('GET', `**/api/v2/**/collections/${collectionId}*`, {
       statusCode: 200,
       body: { id: collectionId, name: collectionName }
     }).as('getCollection');
-    cy.intercept('DELETE', `**/api/v1/collections/${collectionName}*`, {
+    cy.intercept('DELETE', `**/api/v2/**/collections/${collectionName}*`, {
       statusCode: 200,
       body: {}
     }).as('deleteCollection');
@@ -68,13 +68,13 @@ describe('ChromaDB Connection', () => {
     cy.get('[data-test="navbar-home"]').click();
 
     // Setup interceptors for delete flow
-    cy.intercept('DELETE', `**/api/v1/collections/${collectionName}*`, {
+    cy.intercept('DELETE', `**/api/v2/**/collections/${collectionName}*`, {
       statusCode: 200,
       body: {}
     }).as('deleteCollection');
 
     // Set up empty collections response for after delete
-    cy.intercept('GET', '**/api/v1/collections*', {
+    cy.intercept('GET', '**/api/v2/**/collections*', {
       statusCode: 200,
       body: []
     }).as('emptyCollections');

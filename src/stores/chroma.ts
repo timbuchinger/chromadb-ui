@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getApiClient } from '../utils/api'
+import { collectionsBasePath, collectionPath } from '../utils/chromaPaths'
 import { useAuthStore } from './auth'
 import { useNotificationStore } from './notifications'
 import { useLoadingStore } from './loading'
@@ -67,9 +68,8 @@ export const useChromaStore = defineStore('chroma', {
 
       return loadingStore.withLoading('collections', async () => {
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
-        const response = await apiClient.get<{ id: string; name: string }[]>(
-          `/api/v1/collections?tenant=${authStore.getTenant}&database=${authStore.getDatabase}`
-        )
+        const path = collectionsBasePath(authStore.getTenant, authStore.getDatabase)
+        const response = await apiClient.get<{ id: string; name: string }[]>(path)
         // Sort collections alphabetically by name
         this.collections = response.data.sort((a, b) => a.name.localeCompare(b.name))
       })
@@ -92,15 +92,15 @@ export const useChromaStore = defineStore('chroma', {
 
       return loadingStore.withLoading('documents', async () => {
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
+        const path = collectionPath(authStore.getTenant, authStore.getDatabase, collection.id) + '/get'
         const response = await apiClient.post<GetResponse>(
-          `/api/v1/collections/${encodeURIComponent(collection.id)}/get`,
+          path,
           {
             collection_name: name,
             include: ['documents', 'metadatas'] as IncludeEnum[],
             limit: 100,
-            tenant: authStore.getTenant,
-            database: authStore.getDatabase
-          } as GetEmbedding & { tenant?: string; database?: string }
+            offset: 0
+          } as GetEmbedding
         )
 
         const { ids, documents, metadatas } = response.data
@@ -130,14 +130,10 @@ export const useChromaStore = defineStore('chroma', {
           return;
         }
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
-        await apiClient.post(
-          `/api/v1/collections/${encodeURIComponent(collection.id)}/delete`,
-          {
-            ids: [documentId],
-            tenant: authStore.getTenant,
-            database: authStore.getDatabase
-          } as DeleteEmbedding & { tenant?: string; database?: string }
-        );
+        const path = collectionPath(authStore.getTenant, authStore.getDatabase, collection.id) + '/delete'
+        await apiClient.post(path, {
+          ids: [documentId]
+        } as DeleteEmbedding)
 
         this.documents = this.documents.filter(doc => doc.id !== documentId);
       });
@@ -152,14 +148,10 @@ export const useChromaStore = defineStore('chroma', {
 
       return loadingStore.withLoading('collections', async () => {
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
-        const response = await apiClient.post<{ id: string; name: string }>(
-          `/api/v1/collections`,
-          {
-            name,
-            tenant: authStore.getTenant,
-            database: authStore.getDatabase
-          }
-        )
+        const path = collectionsBasePath(authStore.getTenant, authStore.getDatabase)
+        const response = await apiClient.post<{ id: string; name: string }>(path, {
+          name
+        })
         this.collections.push(response.data)
         // Sort collections alphabetically by name after adding
         this.collections.sort((a, b) => a.name.localeCompare(b.name))
@@ -188,13 +180,11 @@ export const useChromaStore = defineStore('chroma', {
         const method = params.id ? 'put' : 'post';
         await apiClient.request({
           method: method,
-          url: `/api/v1/collections/${encodeURIComponent(collection.id)}/upsert`,
+          url: collectionPath(authStore.getTenant, authStore.getDatabase, collection.id) + '/upsert',
           data: {
             documents: [params.document],
             metadatas: [params.metadata],
-            ids: [params.id || getRandomId()],
-            tenant: authStore.getTenant,
-            database: authStore.getDatabase
+            ids: [params.id || getRandomId()]
           }
         });
 
@@ -223,7 +213,7 @@ export const useChromaStore = defineStore('chroma', {
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
         // Delete collection
         await apiClient.delete(
-          `/api/v1/collections/${encodeURIComponent(collection.name)}`
+          collectionPath(authStore.getTenant, authStore.getDatabase, collection.id)
         );
 
         // Reset current collection if it was deleted

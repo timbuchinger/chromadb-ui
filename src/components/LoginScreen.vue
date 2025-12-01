@@ -52,9 +52,10 @@ async function handleSubmit() {
 
   try {
     // Test connection with ChromaDB using shared API client
-    const baseURL = `${protocol.value}://${serverUrl.value}`
-    const apiClient = getApiClient(baseURL, {})
-    await apiClient.get('/api/v1/collections')
+    // Use heartbeat to test connectivity (v2)
+    const testBase = import.meta.env.DEV ? '' : `${protocol.value}://${serverUrl.value}`
+    const apiClient = getApiClient(testBase, {})
+    await apiClient.get('/api/v2/heartbeat')
 
     // Store connection details if successful
     await authStore.login({

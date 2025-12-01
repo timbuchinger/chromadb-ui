@@ -9,6 +9,16 @@ export default defineConfig({
   build: {
     target: 'esnext'
   },
+  server: {
+    proxy: {
+      // Proxy API calls to the backend during development to avoid CORS
+      '/api': {
+        target: process.env.VITE_CHROMADB_HOST || 'http://localhost:8001',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  },
   test: {
     globals: true,
     environment: 'happy-dom',

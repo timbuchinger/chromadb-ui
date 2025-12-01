@@ -88,9 +88,10 @@ export const useAuthStore = defineStore('auth', {
         this.database = formData.database || 'default_database'
 
         // Create API client and test connection by fetching heartbeat
-        const baseURL = `${this.protocol}://${this.serverUrl}`
+        // Use a relative base in development so the Vite proxy handles CORS
+        const baseURL = import.meta.env.DEV ? '' : `${this.protocol}://${this.serverUrl}`
         const apiClient = getApiClient(baseURL, {})
-        await apiClient.get('/api/v1/heartbeat')
+        await apiClient.get('/api/v2/heartbeat')
 
         this.isAuthenticated = true
 
@@ -117,7 +118,8 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     getAuthStatus: (state) => state.isAuthenticated,
-    getBaseUrl: (state) => `${state.protocol}://${state.serverUrl}`,
+    // In development use a relative base so Vite dev-server proxy can forward requests
+    getBaseUrl: (state) => import.meta.env.DEV ? '' : `${state.protocol}://${state.serverUrl}`,
     getTenant: (state) => state.tenant,
     getDatabase: (state) => state.database,
     getHeaders(): Record<string, string> {

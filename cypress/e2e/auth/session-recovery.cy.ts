@@ -30,17 +30,17 @@ describe('Session Recovery and Security', () => {
     const collectionName = 'test-collection';
 
     // Setup API mocks before login
-    cy.intercept('GET', '**/api/v1/heartbeat*', {
+    cy.intercept('GET', '**/api/v2/heartbeat*', {
       statusCode: 200,
       body: { 'nanosecond heartbeat': Date.now() * 1000000 }
     }).as('heartbeat');
 
-    cy.intercept('GET', '**/api/v1/collections*', {
+    cy.intercept('GET', '**/api/v2/**/collections*', {
       statusCode: 200,
       body: [{ id: collectionId, name: collectionName }]
     }).as('getCollections');
 
-    cy.intercept('GET', `**/api/v1/collections/${collectionId}*`, {
+    cy.intercept('GET', `**/api/v2/**/collections/${collectionId}*`, {
       statusCode: 200,
       body: { id: collectionId, name: collectionName }
     }).as('getCollection');
@@ -67,7 +67,7 @@ describe('Session Recovery and Security', () => {
 
   it('should show error message for connection failures', () => {
     // Setup with failing connection
-    cy.intercept('GET', '**/api/v1/collections*', {
+    cy.intercept('GET', '**/api/v2/collections*', {
       statusCode: 500,
       body: { error: 'Connection failed' }
     }).as('failedConnection');

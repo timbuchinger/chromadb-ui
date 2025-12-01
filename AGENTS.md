@@ -342,7 +342,12 @@ onMounted(() => {
 
 1. **Collection Operations**
    - Collections identified by name (not ID)
-   - Endpoint pattern: `/api/v1/collections/{collection_name}`
+   - Endpoint pattern (v2): `/api/v2/tenants/{tenant}/databases/{database}/collections` (list / create)
+   - Collection-specific operations (v2):
+      - Get documents: `/api/v2/tenants/{tenant}/databases/{database}/collections/{collection_id}/get` (POST)
+      - Upsert documents: `/api/v2/tenants/{tenant}/databases/{database}/collections/{collection_id}/upsert` (POST)
+      - Delete documents: `/api/v2/tenants/{tenant}/databases/{database}/collections/{collection_id}/delete` (POST)
+      - Query / search endpoints follow the same tenant/database scoped path shape
    - Name validation: lowercase letters, numbers, dashes, underscores only
    - No duplicate names allowed
 

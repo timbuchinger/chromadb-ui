@@ -137,11 +137,15 @@ describe('Auth Store', () => {
     it('should return correct base URL', () => {
       const store = useAuthStore()
 
-      expect(store.getBaseUrl).toBe('http://localhost:8000')
+      // In development the store returns a relative base (empty string)
+      // because the Vite dev server proxies `/api` to the backend.
+      expect(store.getBaseUrl).toBe('')
 
       store.protocol = 'https'
       store.serverUrl = 'example.com:9000'
-      expect(store.getBaseUrl).toBe('https://example.com:9000')
+      // In development the store still returns a relative base (empty string)
+      // because the Vite dev server proxies `/api` to the backend.
+      expect(store.getBaseUrl).toBe('')
     })
 
     it('should return correct tenant', () => {

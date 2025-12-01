@@ -11,13 +11,14 @@ let apiClient: AxiosInstance | null = null
 export function getApiClient(baseUrl: string, headers?: Record<string, string>): AxiosInstance {
   // Create a new instance with current base URL and headers
   apiClient = axios.create({
-    baseURL: baseUrl,
+    // If baseUrl is falsy (e.g. '' in dev) don't set baseURL so axios will use relative URLs
+    baseURL: baseUrl || undefined,
     headers: {
       'Content-Type': 'application/json',
       ...headers
     }
   })
-  
+
   return apiClient
 }
 

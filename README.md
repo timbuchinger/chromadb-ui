@@ -1,5 +1,7 @@
 # ChromaDB Admin Interface
 
+![ChromaDB UI](icon.png)
+
 A modern web interface for managing ChromaDB collections, documents, and metadata.
 
 ## Features
@@ -49,10 +51,11 @@ cd chromadb-ui
 npm install
 ```
 
-1. Create a `.env` file:
+1. Create a `.env` file (optional):
 
 ```text
-VITE_CHROMADB_HOST=http://localhost:8000
+# URL of the ChromaDB backend used by the Vite dev proxy
+VITE_CHROMADB_HOST=http://localhost:8001
 ```
 
 1. Start the development server:
@@ -62,6 +65,8 @@ npm run dev
 ```
 
 1. Visit `http://localhost:5173` in your browser
+
+Note: The Vite dev server proxies requests under `/api` to the backend defined by `VITE_CHROMADB_HOST`. Use relative API paths (for example `/api/v2/heartbeat`) in development to avoid CORS issues. The frontend uses `/api/v2/heartbeat` as the connectivity check.
 
 ## Building for Production
 
