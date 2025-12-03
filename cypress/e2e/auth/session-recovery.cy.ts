@@ -66,8 +66,8 @@ describe('Session Recovery and Security', () => {
   });
 
   it('should show error message for connection failures', () => {
-    // Setup with failing connection
-    cy.intercept('GET', '**/api/v2/collections*', {
+    // Setup with failing heartbeat (login will fail before reaching collections)
+    cy.intercept('GET', '**/api/v2/heartbeat*', {
       statusCode: 500,
       body: { error: 'Connection failed' }
     }).as('failedConnection');
@@ -75,7 +75,7 @@ describe('Session Recovery and Security', () => {
     // Click connect
     cy.get('button[type="submit"]').click();
 
-    // Should show inline error message
+    // Should show inline error message on login screen
     cy.get('[data-test="error-message"]').should('be.visible');
   });
 
