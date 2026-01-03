@@ -213,7 +213,7 @@ export const useChromaStore = defineStore('chroma', {
         const apiClient = getApiClient(authStore.getBaseUrl, authStore.getHeaders)
         // Delete collection
         await apiClient.delete(
-          collectionPath(authStore.getTenant, authStore.getDatabase, collection.id)
+          collectionsBasePath(authStore.getTenant, authStore.getDatabase) + '/' + encodeURIComponent(collection.name)
         );
 
         // Reset current collection if it was deleted
