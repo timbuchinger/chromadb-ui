@@ -17,6 +17,7 @@ const showAddModal = ref(false)
 const showDeleteConfirm = ref(false)
 const collectionToDelete = ref('')
 const listRef = ref<HTMLDivElement | null>(null)
+void listRef
 const announcementText = ref('')
 
 const totalPages = computed(() =>
